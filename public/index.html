@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>Campus Care — K.K. Wagh Student Wellbeing</title>
+  
+  <!-- Mobile & PWA Configuration -->
+  <meta name="theme-color" content="#12254A"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Campus Care"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/assets/icon-192.png"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0B1C30',
+              deepBlue: '#12254A',
+              primary: '#1755BE',
+              primaryLight: '#3B6FD8',
+              container: '#EAF1FF',
+              surface: '#F8F9FF',
+              card: '#FFFFFF',
+              sleep: '#8B7FD8',
+              water: '#0284C7',
+              study: '#00845A',
+              mood: '#D97706',
+              stress: '#DC2626'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      overscroll-behavior: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Breathing circle smooth CSS transitions */
+    #breathing-circle {
+      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #breathing-ring {
+      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.9s ease;
+    }
+    /* Scrollable main content */
+    #app-main {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 72px; /* height of bottom nav */
+    }
+    /* Bottom nav safe area for iPhone home bar */
+    #bottom-nav {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    /* Hide scrollbars but keep scrolling */
+    #app-main::-webkit-scrollbar { display: none; }
+    #app-main { scrollbar-width: none; }
+
+    /* Pulse animation for breathing ready state */
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1.0); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.85; }
+    }
+    .breathing-idle {
+      animation: subtlePulse 3s ease-in-out infinite;
+    }
+
+    /* Range input styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: #e2e8f0;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #1755BE;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(23,85,190,0.3);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #1755BE;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Toast transitions */
+    #toast-notification {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s ease;
+    }
+
+    /* Smooth view transitions */
+    .app-view { animation: fadeIn 0.18s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-200 text-[#0B1C30] min-h-screen flex justify-center antialiased">
+
+  <!-- ===== MOBILE APP FRAME (360–430px centered canvas, full-width on small screens) ===== -->
+  <div class="w-full max-w-[430px] min-h-screen bg-[#F8F9FF] shadow-2xl flex flex-col relative">
+
+    <!-- ==================== LOGIN SCREEN (Route Guard) ==================== -->
+    <div id="login-view" class="fixed inset-0 z-50 bg-[#F8F9FF] flex flex-col max-w-[430px] mx-auto">
+      
+      <!-- Scrollable inner -->
+      <div class="flex-1 flex flex-col justify-between overflow-y-auto px-6 py-8 gap-6">
+
+        <!-- Top Branding -->
+        <div class="text-center space-y-3 pt-4">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#12254A] to-[#1755BE] text-white flex items-center justify-center mx-auto shadow-md">
+            <span class="material-symbols-outlined fill-icon text-3xl">spa</span>
+          </div>
+          <div>
+            <h1 class="text-2xl font-extrabold tracking-tight text-[#0B1C30]">Campus Care</h1>
+            <p class="text-[11px] font-semibold text-blue-700 tracking-wide uppercase mt-0.5">K.K. Wagh Institute of Engineering</p>
+          </div>
+          <p class="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
+            Your private daily health, sleep, hydration, and stress companion.
+          </p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-5">
+
+          <!-- Step 1: Email Form -->
+          <div id="login-step-email" class="space-y-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Sign in with College Email</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Enter your official K.K. Wagh email to receive a 6-digit verification code.</p>
+            </div>
+
+            <div class="p-3 bg-blue-50/70 border border-blue-100 rounded-xl flex items-center gap-2.5 text-xs text-blue-900 font-medium">
+              <span class="material-symbols-outlined text-blue-600 text-sm">verified_user</span>
+              <span>Only official <strong>@kkwagh.edu.in</strong> accounts are authorized.</span>
+            </div>
+
+            <form onsubmit="handleRequestOtp(event)" class="space-y-3">
+              <div>
+                <label for="email-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">College Email</label>
+                <div class="relative">
+                  <input 
+                    type="email" 
+                    id="email-input" 
+                    required 
+                    autocomplete="email"
+                    placeholder="yourname@kkwagh.edu.in"
+                    class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
+                  />
+                  <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 text-lg">mail</span>
+                </div>
+                <p id="email-error-msg" class="text-xs text-red-600 font-medium mt-1.5 hidden flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">error</span>
+                  <span id="email-error-text">Email must end with @kkwagh.edu.in</span>
+                </p>
+              </div>
+
+              <button 
+                type="submit" 
+                id="send-otp-btn"
+                class="w-full h-12 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
+              >
+                <span id="send-otp-btn-text">Continue with College Email</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Step 2: 6-Digit OTP Verification Form -->
+          <div id="login-step-otp" class="hidden space-y-4">
+            <div class="flex items-center gap-2">
+              <button onclick="goToEmailStep()" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-600 transition">
+                <span class="material-symbols-outlined text-lg">arrow_back</span>
+              </button>
+              <div>
+                <h2 class="text-base font-bold text-slate-900">Enter Verification Code</h2>
+                <p class="text-xs text-slate-500 mt-0.5" id="otp-sent-to-label">Check your college inbox</p>
+              </div>
+            </div>
+
+            <!-- Verification Code Banner -->
+            <div id="dev-code-hint" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 font-medium flex items-center justify-between shadow-sm">
+              <span class="font-semibold">Verification Code:</span>
+              <span class="font-bold text-base font-mono tracking-widest text-[#1755BE]" id="dev-code-val">------</span>
+            </div>
+
+            <form onsubmit="handleVerifyOtp(event)" class="space-y-3">
+              <div>
+                <label for="otp-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">6-Digit Code</label>
+                <input 
+                  type="text" 
+                  id="otp-input" 
+                  required 
+                  maxlength="6" 
+                  inputmode="numeric"
+                  autocomplete="one-time-code"
+                  placeholder="123456" 
+                  pattern="[0-9]{6}" 
+                  class="w-full h-12 text-center text-xl font-bold tracking-widest rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
+                />
+                <p id="otp-error-msg" class="text-xs text-red-600 font-medium mt-1.5 hidden">
+                  Invalid or expired code. Please check and try again.
+                </p>
+              </div>
+
+              <button 
+                type="submit" 
+                id="verify-otp-btn"
+                class="w-full h-12 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
+              >
+                <span id="verify-otp-btn-text">Verify &amp; Access Campus Care</span>
+                <span class="material-symbols-outlined text-base">check</span>
+              </button>
+
+              <div class="text-center pt-1">
+                <button type="button" onclick="handleResendOtp()" class="text-xs text-[#1755BE] font-semibold hover:underline">
+                  Resend verification code
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-[11px] text-slate-400 space-y-1 pb-2">
+          <div>K.K. Wagh Institute · Student Care Portal</div>
+          <div>All health &amp; check-in records are kept confidential</div>
+        </div>
+
+      </div>
+    </div>
+    <!-- /login-view -->
+
+
+    <!-- ==================== MOBILE TOP APP BAR ==================== -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-[#12254A] text-white flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined fill-icon text-lg">spa</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-extrabold text-[#0B1C30]">Campus Care</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">KKW</span>
+          </div>
+          <p class="text-[10px] text-slate-400" id="app-date-chip">Today</p>
+        </div>
+      </div>
+
+      <!-- Right: Profile & Sign-out -->
+      <div class="flex items-center gap-2 relative">
+        <button onclick="toggleProfileDropdown()" class="flex items-center gap-1.5 py-1 px-2 rounded-full bg-slate-50 border border-slate-200 hover:bg-slate-100 active:scale-95 transition">
+          <div class="w-5 h-5 rounded-full bg-[#1755BE] text-white text-[10px] font-bold flex items-center justify-center" id="header-avatar">?</div>
+          <span class="text-xs font-medium text-slate-700 max-w-[80px] truncate" id="header-username">Account</span>
+          <span class="material-symbols-outlined text-xs text-slate-400">expand_more</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="profile-dropdown" class="hidden absolute right-0 top-10 w-56 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2 z-50 space-y-1">
+          <div class="px-3 py-2 border-b border-slate-100">
+            <p class="text-xs font-bold text-slate-800 truncate" id="dropdown-name">Student</p>
+            <p class="text-[10px] text-slate-400 truncate" id="dropdown-email">—</p>
+          </div>
+          <button onclick="handleSignOut()" class="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-xl font-medium flex items-center gap-2 transition">
+            <span class="material-symbols-outlined text-sm">logout</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- ==================== APP VIEWS ==================== -->
+    <main id="app-main" class="flex-1 p-4 space-y-4 overflow-y-auto">
+
+      <!-- ==================== TAB A: HOME ==================== -->
+      <div id="view-home" class="space-y-4 app-view">
+
+        <!-- Install App Banner (PWA prompt) -->
+        <div id="pwa-install-prompt" class="p-3 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 text-white rounded-2xl shadow-sm flex items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="material-symbols-outlined text-2xl text-blue-200 shrink-0">install_mobile</span>
+            <div class="min-w-0">
+              <p class="text-xs font-bold leading-tight truncate">Download Campus Care</p>
+              <p class="text-[10px] text-blue-100/90 leading-tight">Install app to your home screen</p>
+            </div>
+          </div>
+          <button onclick="triggerPwaInstall()" class="shrink-0 bg-white text-blue-900 active:scale-95 text-xs font-bold py-1.5 px-3 rounded-xl shadow transition">
+            Install
+          </button>
+        </div>
+
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-[#12254A] to-[#1755BE] text-white rounded-2xl p-5 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Daily Health Status</span>
+            <span class="text-[11px] bg-white/20 px-2 py-0.5 rounded-full font-medium" id="home-today-date">Today</span>
+          </div>
+          <h2 class="text-lg font-bold">Hello, <span id="home-user-greeting">Student</span> 👋</h2>
+          <p class="text-xs text-blue-100 leading-relaxed">
+            Track your sleep, hydration, and academic stress in under 60 seconds.
+          </p>
+          <div class="pt-2 flex gap-2 flex-wrap">
+            <button onclick="navigateTo('checkin')" class="bg-white text-[#1755BE] active:scale-95 font-bold text-xs py-2 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">check_circle</span>
+              <span>Daily Check-in</span>
+            </button>
+            <button onclick="openMeditationView()" class="bg-white/15 hover:bg-white/25 active:scale-95 text-white font-medium text-xs py-2 px-3 rounded-xl transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">self_improvement</span>
+              <span>Quick Breathe</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Metric Cards (2×2 Grid) -->
+        <div class="grid grid-cols-2 gap-3">
+
+          <!-- Sleep -->
+          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-500 uppercase">Sleep</span>
+              <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-base">bedtime</span>
+              </span>
+            </div>
+            <div class="mt-2">
+              <div class="text-xl font-extrabold text-slate-800" id="card-sleep-val">—</div>
+              <div class="text-[10px] font-semibold mt-0.5" id="card-sleep-status">No entry yet</div>
+            </div>
+          </div>
+
+          <!-- Water -->
+          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-500 uppercase">Water</span>
+              <span class="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-base">water_drop</span>
+              </span>
+            </div>
+            <div class="mt-2">
+              <div class="text-xl font-extrabold text-slate-800" id="card-water-val">—</div>
+              <div class="text-[10px] text-sky-600 font-semibold mt-0.5" id="card-water-status">No entry yet</div>
+            </div>
+          </div>
+
+          <!-- Study -->
+          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-500 uppercase">Study</span>
+              <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-base">laptop_chromebook</span>
+              </span>
+            </div>
+            <div class="mt-2">
+              <div class="text-xl font-extrabold text-slate-800" id="card-study-val">—</div>
+              <div class="text-[10px] text-slate-500 font-medium mt-0.5" id="card-study-status">No entry yet</div>
+            </div>
+          </div>
+
+          <!-- Mood & Stress -->
+          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-500 uppercase">Mood</span>
+              <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-base" id="card-mood-icon">sentiment_neutral</span>
+              </span>
+            </div>
+            <div class="mt-2">
+              <div class="text-xl font-extrabold text-slate-800" id="card-mood-val">—</div>
+              <div class="text-[10px] text-blue-600 font-semibold mt-0.5" id="card-stress-val">No entry yet</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Meditation Shortcut -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-2xl">self_improvement</span>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Meditation &amp; Breathing</h3>
+              <p class="text-[11px] text-slate-500">Box breathing, 4-7-8, centering timers</p>
+            </div>
+          </div>
+          <button onclick="navigateTo('support'); setTimeout(openMeditationView, 50);" class="shrink-0 bg-purple-50 text-purple-700 hover:bg-purple-100 active:scale-95 text-xs font-bold py-1.5 px-3 rounded-xl transition">
+            Start
+          </button>
+        </div>
+
+        <!-- 7-Day Bar Chart -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-bold text-slate-900">Sleep vs Study (Last 7 Days)</h3>
+              <p class="text-[10px] text-slate-400">Hours per day</p>
+            </div>
+            <div class="flex items-center gap-2 text-[10px] font-medium text-slate-600">
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span>Sleep</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Study</span>
+            </div>
+          </div>
+
+          <div id="home-chart-bars" class="grid grid-cols-7 gap-1.5 h-24 items-end border-b border-slate-100 pb-1">
+            <!-- Dynamically generated bars -->
+          </div>
+          <div class="grid grid-cols-7 text-center text-[10px] text-slate-400 font-medium" id="home-chart-days">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+
+          <!-- Empty chart state -->
+          <div id="chart-empty-state" class="hidden py-4 text-center text-[11px] text-slate-400 flex flex-col items-center gap-1">
+            <span class="material-symbols-outlined text-2xl text-slate-300">bar_chart</span>
+            <span>No data yet — complete your first check-in!</span>
+          </div>
+        </div>
+
+      </div>
+      <!-- /view-home -->
+
+
+      <!-- ==================== TAB B: CHECK-IN ==================== -->
+      <div id="view-checkin" class="hidden space-y-4 app-view">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-5">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Daily Health Check-in</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Takes 30 seconds · Your entries are private.</p>
+          </div>
+
+          <form id="checkin-form" onsubmit="handleCheckinSubmit(event)" class="space-y-5">
+
+            <!-- 1. Mood -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-2">1. How are you feeling today?</label>
+              <div class="grid grid-cols-5 gap-1.5" id="mood-selector">
+                <button type="button" onclick="selectMood('Terrible')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Terrible">
+                  <span class="text-xl">😫</span>
+                  <span class="text-[10px] font-medium text-slate-600">Terrible</span>
+                </button>
+                <button type="button" onclick="selectMood('Low')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Low">
+                  <span class="text-xl">🙁</span>
+                  <span class="text-[10px] font-medium text-slate-600">Low</span>
+                </button>
+                <button type="button" onclick="selectMood('Okay')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Okay">
+                  <span class="text-xl">😐</span>
+                  <span class="text-[10px] font-medium text-slate-600">Okay</span>
+                </button>
+                <button type="button" onclick="selectMood('Good')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-blue-50 border-blue-400" data-mood="Good">
+                  <span class="text-xl">😊</span>
+                  <span class="text-[10px] font-bold text-blue-700">Good</span>
+                </button>
+                <button type="button" onclick="selectMood('Great')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Great">
+                  <span class="text-xl">🤩</span>
+                  <span class="text-[10px] font-medium text-slate-600">Great</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. Sleep Hours -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label for="checkin-sleep" class="text-xs font-bold text-slate-700 uppercase">2. Sleep Last Night</label>
+                <span class="text-xs font-extrabold text-indigo-600" id="sleep-display">7.5 Hours</span>
+              </div>
+              <select id="checkin-sleep" onchange="updateSleepDisplay(this.value)" class="w-full h-11 px-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
+                <option value="4.0">4.0 hours or fewer (Severely deprived)</option>
+                <option value="5.0">5.0 hours (Insufficient)</option>
+                <option value="6.0">6.0 hours (Below optimal)</option>
+                <option value="7.0">7.0 hours (Recommended baseline)</option>
+                <option value="7.5" selected>7.5 hours</option>
+                <option value="8.0">8.0 hours (Healthy target)</option>
+                <option value="9.0">9.0+ hours</option>
+              </select>
+            </div>
+
+            <!-- 3. Water Intake Stepper -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-xs font-bold text-slate-700 uppercase">3. Water Intake</label>
+                <span class="text-xs font-extrabold text-sky-600" id="water-display">8 Glasses (2.0 L)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="adjustWater(-1)" class="w-11 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-xl flex items-center justify-center transition select-none">−</button>
+                <div class="flex-1 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center font-bold text-sm text-slate-800" id="water-count-box">
+                  8 glasses
+                </div>
+                <button type="button" onclick="adjustWater(1)" class="w-11 h-11 rounded-xl bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-600 font-bold text-xl flex items-center justify-center transition select-none">+</button>
+              </div>
+            </div>
+
+            <!-- 4. Study Hours -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label for="checkin-study" class="text-xs font-bold text-slate-700 uppercase">4. Study Time Today</label>
+                <span class="text-xs font-extrabold text-emerald-600" id="study-display">4.5 Hours</span>
+              </div>
+              <select id="checkin-study" onchange="updateStudyDisplay(this.value)" class="w-full h-11 px-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
+                <option value="1.0">1.0 hour</option>
+                <option value="2.0">2.0 hours</option>
+                <option value="3.0">3.0 hours</option>
+                <option value="4.0">4.0 hours</option>
+                <option value="4.5" selected>4.5 hours (Recommended)</option>
+                <option value="5.0">5.0 hours</option>
+                <option value="6.0">6.0 hours</option>
+                <option value="7.0">7.0+ hours</option>
+              </select>
+            </div>
+
+            <!-- 5. Stress Level -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label for="checkin-stress" class="text-xs font-bold text-slate-700 uppercase">5. Stress Level</label>
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800" id="stress-badge">Level 2 (Mild)</span>
+              </div>
+              <input 
+                type="range" 
+                id="checkin-stress" 
+                min="1" 
+                max="5" 
+                step="1" 
+                value="2" 
+                oninput="updateStressBadge(this.value)"
+                class="w-full"
+              />
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1.5 font-medium">
+                <span>1 Low</span>
+                <span>2 Mild</span>
+                <span>3 Moderate</span>
+                <span>4 High</span>
+                <span>5 Severe</span>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <button 
+              type="submit" 
+              id="save-checkin-btn"
+              class="w-full h-12 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-sm transition flex items-center justify-center gap-2"
+            >
+              <span class="material-symbols-outlined text-base">save</span>
+              <span>Save Today's Check-in</span>
+            </button>
+
+          </form>
+        </div>
+      </div>
+      <!-- /view-checkin -->
+
+
+      <!-- ==================== TAB C: PROGRESS ==================== -->
+      <div id="view-progress" class="hidden space-y-4 app-view">
+
+        <!-- 7-Day Averages -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+          <h2 class="text-sm font-bold text-slate-900">7-Day Wellbeing Averages</h2>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="p-2.5 rounded-xl bg-indigo-50/60">
+              <span class="text-[10px] font-bold text-indigo-700 uppercase">Sleep</span>
+              <div class="text-base font-extrabold text-indigo-900 mt-0.5" id="avg-sleep">—</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-sky-50/60">
+              <span class="text-[10px] font-bold text-sky-700 uppercase">Water</span>
+              <div class="text-base font-extrabold text-sky-900 mt-0.5" id="avg-water">—</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-emerald-50/60">
+              <span class="text-[10px] font-bold text-emerald-700 uppercase">Study</span>
+              <div class="text-base font-extrabold text-emerald-900 mt-0.5" id="avg-study">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkin Logs -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-900 uppercase">Recent Check-in Logs</h3>
+            <span class="text-[10px] text-slate-400" id="log-count">0 entries</span>
+          </div>
+
+          <div class="space-y-2" id="progress-log-list">
+            <!-- populated by JS -->
+          </div>
+
+          <!-- Empty progress state -->
+          <div id="progress-empty-state" class="hidden py-6 text-center flex flex-col items-center gap-2">
+            <span class="material-symbols-outlined text-3xl text-slate-300">event_note</span>
+            <p class="text-xs font-bold text-slate-600">No check-ins yet</p>
+            <p class="text-[11px] text-slate-400">Complete your first daily check-in to see your progress here.</p>
+            <button onclick="navigateTo('checkin')" class="mt-2 text-xs font-bold text-[#1755BE] hover:underline">Go to Check-in →</button>
+          </div>
+        </div>
+
+      </div>
+      <!-- /view-progress -->
+
+
+      <!-- ==================== TAB D: SUPPORT ==================== -->
+      <div id="view-support" class="hidden space-y-4 app-view">
+
+        <!-- Search Bar -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="support-search-input" 
+            oninput="handleSearch(this.value)"
+            placeholder="Search resources, meditation, breathing..." 
+            class="w-full h-11 pl-10 pr-9 rounded-2xl bg-white border border-slate-200/90 text-xs text-slate-800 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1755BE]/20 focus:border-[#1755BE] transition"
+          />
+          <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg pointer-events-none">search</span>
+          <button 
+            type="button" 
+            id="search-clear-btn" 
+            onclick="clearSearch()"
+            class="hidden absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-700 transition"
+          >
+            <span class="material-symbols-outlined text-base">close</span>
+          </button>
+        </div>
+
+        <!-- Search Empty State -->
+        <div id="search-empty-state" class="hidden bg-white rounded-2xl p-6 text-center border border-slate-200/80 space-y-2">
+          <span class="material-symbols-outlined text-3xl text-slate-300">search_off</span>
+          <h4 class="text-xs font-bold text-slate-700">No matching resources</h4>
+          <p class="text-[11px] text-slate-400" id="search-empty-query">Try "breathing", "sleep", "clinic", or "stress"</p>
+        </div>
+
+        <!-- Meditation Feature Card -->
+        <div id="card-meditation-feature" class="searchable-section bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-2xl p-4 shadow-sm space-y-2" data-section-keywords="meditation breathing box centering relax reset guided session">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-purple-200 uppercase tracking-wide">Wellbeing Practice</span>
+            <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-medium">4 Sessions</span>
+          </div>
+          <h3 class="text-base font-bold">Guided Breathing &amp; Meditation</h3>
+          <p class="text-xs text-purple-100 leading-relaxed">
+            Science-backed breathing techniques to reduce exam anxiety and restore mental focus.
+          </p>
+          <div class="pt-1">
+            <button onclick="openMeditationView()" class="bg-white text-purple-900 active:scale-95 font-bold text-xs py-2 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">play_arrow</span>
+              <span>Open Meditation Timer</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Wellbeing Resources -->
+        <div id="support-items-container" class="space-y-3">
+
+          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="clinic wellness medical health doctor nurse first aid ground floor academic block b walk-in">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-xl">medical_services</span>
+            </div>
+            <div class="flex-1 min-w-0 space-y-1">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="text-xs font-bold text-slate-900">Campus Wellness Clinic</h4>
+                <span class="shrink-0 text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">On Campus</span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-relaxed">Walk-in medical and mental wellbeing assistance. Mon–Sat, 09:00–17:00, Academic Block B.</p>
+              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs text-blue-600">call</span>
+                <span>+91 253 2512876 (Ext. 104)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="counseling academic guidance stress mental health coordinator faculty one-on-one exam anxiety confidential appointment">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-xl">psychology</span>
+            </div>
+            <div class="flex-1 min-w-0 space-y-1">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="text-xs font-bold text-slate-900">Faculty Counseling Desk</h4>
+                <span class="shrink-0 text-[10px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">Confidential</span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-relaxed">Confidential academic wellness guidance and student support for Computer Engineering students.</p>
+              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs text-indigo-600">mail</span>
+                <span>counselor.wellness@kkwagh.edu.in</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="peer listening student mentor circles anonymous support helpline talk senior">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-xl">groups</span>
+            </div>
+            <div class="flex-1 min-w-0 space-y-1">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="text-xs font-bold text-slate-900">Peer Listening Circles</h4>
+                <span class="shrink-0 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Student Mentors</span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-relaxed">Trained senior student peer listeners for confidential peer chats and study stress relief.</p>
+              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs text-emerald-600">forum</span>
+                <span>Internal Ext. 310</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="emergency tele-manas crisis helpline toll-free urgent national 24/7 government india mental health">
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-xl">emergency</span>
+            </div>
+            <div class="flex-1 min-w-0 space-y-1">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="text-xs font-bold text-slate-900">National Tele-MANAS</h4>
+                <span class="shrink-0 text-[10px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">24/7 Toll-Free</span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-relaxed">Government of India 24×7 confidential psychological and mental health support helpline.</p>
+              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs text-rose-600">call</span>
+                <span>Dial 14416 or 1800-891-4416</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Request Confidential Support Form -->
+        <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3" data-keywords="request confidential support form submit coordinator contact academic stress sleep wellbeing">
+          <div>
+            <h3 class="text-xs font-bold text-slate-900 uppercase">Request Confidential Support</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5">Only you and the student wellness coordinator see this request.</p>
+          </div>
+
+          <form onsubmit="handleSupportSubmit(event)" class="space-y-3">
+            <div>
+              <label for="support-topic" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Topic of Concern</label>
+              <select id="support-topic" class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
+                <option value="Academic Anxiety">Exam &amp; Academic Anxiety</option>
+                <option value="Sleep Disorder">Sleep Schedule Disruptions</option>
+                <option value="Project Stress">Project / Lab Stress</option>
+                <option value="General Wellbeing">General Wellbeing &amp; Centering</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="support-note" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Optional Note</label>
+              <textarea id="support-note" rows="2" placeholder="Any specific concern or time preference..." class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]"></textarea>
+            </div>
+
+            <button 
+              type="submit" 
+              class="w-full h-10 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
+            >
+              <span class="material-symbols-outlined text-base">send</span>
+              <span>Submit Request</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+      <!-- /view-support -->
+
+    </main>
+
+
+    <!-- ==================== MEDITATION MODAL ==================== -->
+    <div id="meditation-modal" class="hidden fixed inset-0 z-50 bg-[#0A1628]/95 backdrop-blur-sm flex flex-col max-w-[430px] mx-auto">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between px-5 pt-5 pb-2 shrink-0">
+        <button onclick="closeMeditationView()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+        <span class="text-xs font-semibold text-blue-200 uppercase tracking-widest">Guided Breathing</span>
+        <button onclick="resetMeditationSession()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition" title="Reset">
+          <span class="material-symbols-outlined text-base">refresh</span>
+        </button>
+      </div>
+
+      <!-- Session Chips -->
+      <div class="flex justify-center gap-1.5 flex-wrap px-5 pb-2 shrink-0">
+        <button onclick="switchMeditationSession('box')" class="meditation-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white text-blue-950 shadow" data-type="box">Box (4m)</button>
+        <button onclick="switchMeditationSession('478')" class="meditation-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-white/15 text-blue-100" data-type="478">4-7-8 (5m)</button>
+        <button onclick="switchMeditationSession('centering')" class="meditation-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-white/15 text-blue-100" data-type="centering">Centering (3m)</button>
+        <button onclick="switchMeditationSession('quick')" class="meditation-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-white/15 text-blue-100" data-type="quick">2-Min Reset</button>
+      </div>
+
+      <!-- Center Visualizer -->
+      <div class="flex-1 flex flex-col items-center justify-center text-white text-center gap-5 px-5">
+
+        <!-- Animated Circle -->
+        <div class="relative w-48 h-48 flex items-center justify-center">
+          <div id="breathing-ring" class="absolute inset-0 rounded-full bg-blue-500/15 border-2 border-blue-400/40"></div>
+          <div id="breathing-circle" class="breathing-idle w-32 h-32 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex flex-col items-center justify-center shadow-lg">
+            <span class="material-symbols-outlined text-3xl text-white fill-icon">self_improvement</span>
+            <span class="text-xs font-bold text-blue-100 uppercase tracking-widest mt-1" id="breathing-phase-text">Ready</span>
+          </div>
+        </div>
+
+        <!-- Title & Timer -->
+        <div class="space-y-1">
+          <h3 class="text-lg font-extrabold text-white" id="meditation-session-title">Box Breathing (4-4-4-4)</h3>
+          <p class="text-xs text-blue-200/80" id="meditation-session-desc">Inhale 4s · Hold 4s · Exhale 4s · Hold 4s</p>
+          <div class="text-4xl font-black font-mono tracking-wider pt-2 text-white" id="meditation-timer">04:00</div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Play/Pause Button -->
+      <div class="pb-8 flex items-center justify-center shrink-0">
+        <button 
+          id="meditation-toggle-btn"
+          onclick="toggleMeditationSession()" 
+          class="w-16 h-16 rounded-full bg-white text-blue-900 active:scale-95 shadow-xl flex items-center justify-center font-bold transition hover:bg-blue-50"
+        >
+          <span class="material-symbols-outlined text-3xl fill-icon" id="meditation-play-icon">play_arrow</span>
+        </button>
+      </div>
+
+    </div>
+    <!-- /meditation-modal -->
+
+
+    <!-- ==================== BOTTOM NAVIGATION ==================== -->
+    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 z-40 bg-white/97 backdrop-blur-md border-t border-slate-200/90 max-w-[430px] mx-auto flex justify-around items-center h-16 px-2">
+      <button onclick="navigateTo('home')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-[#1755BE] font-bold transition" data-tab="home">
+        <span class="material-symbols-outlined text-2xl nav-icon fill-icon">grid_view</span>
+        <span class="text-[10px] mt-0.5 tracking-tight">Home</span>
+      </button>
+      <button onclick="navigateTo('checkin')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition" data-tab="checkin">
+        <span class="material-symbols-outlined text-2xl nav-icon">check_circle</span>
+        <span class="text-[10px] mt-0.5 tracking-tight">Check-in</span>
+      </button>
+      <button onclick="navigateTo('progress')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition" data-tab="progress">
+        <span class="material-symbols-outlined text-2xl nav-icon">trending_up</span>
+        <span class="text-[10px] mt-0.5 tracking-tight">Progress</span>
+      </button>
+      <button onclick="navigateTo('support')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition" data-tab="support">
+        <span class="material-symbols-outlined text-2xl nav-icon">support</span>
+        <span class="text-[10px] mt-0.5 tracking-tight">Support</span>
+      </button>
+    </nav>
+
+
+    <!-- ==================== PWA INSTALL GUIDE MODAL ==================== -->
+    <div id="install-guide-modal" class="hidden fixed inset-0 z-50 bg-[#0A1628]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+      <div class="bg-white rounded-3xl p-6 max-w-sm w-full space-y-4 text-slate-800 shadow-2xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">install_mobile</span>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900">Install to Phone</h3>
+          </div>
+          <button onclick="closeInstallGuide()" class="text-slate-400 hover:text-slate-600">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="space-y-2.5 text-xs text-slate-600 leading-relaxed">
+          <div class="p-3 rounded-xl bg-blue-50 border border-blue-100 flex items-start gap-2.5">
+            <span class="material-symbols-outlined text-blue-600 text-base shrink-0 mt-0.5">android</span>
+            <div>
+              <p class="font-bold text-slate-900">Android (Chrome)</p>
+              <p class="text-[11px] text-slate-500">Tap the 3 dots (⋮) in the top-right corner of Chrome, then tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</p>
+            </div>
+          </div>
+          <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-100 flex items-start gap-2.5">
+            <span class="material-symbols-outlined text-indigo-600 text-base shrink-0 mt-0.5">phone_iphone</span>
+            <div>
+              <p class="font-bold text-slate-900">iPhone (Safari)</p>
+              <p class="text-[11px] text-slate-500">Tap the <strong>Share</strong> button (box with arrow ↑) at the bottom, then scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
+            </div>
+          </div>
+        </div>
+        <button onclick="closeInstallGuide()" class="w-full h-11 bg-[#12254A] text-white font-bold text-xs rounded-xl shadow transition">
+          Got it
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== TOAST NOTIFICATION ==================== -->
+    <div id="toast-notification" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-[calc(100%-2rem)] w-full bg-slate-900 text-white text-xs font-medium px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 translate-y-32 opacity-0 z-[60] pointer-events-none">
+      <span class="material-symbols-outlined text-emerald-400 text-lg shrink-0" id="toast-icon">check_circle</span>
+      <span id="toast-text" class="flex-1">Notification</span>
+    </div>
+
+  </div>
+  <!-- /app-frame -->
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ─── Application State ───────────────────────────────────────────────────
+    let currentUser = null;
+    let checkinRecords = [];
+    let selectedMood = 'Good';
+    let waterGlasses = 8;
+    let selectedStress = 2;
+    let currentPendingEmail = '';
+
+    // Meditation state
+    const SESSIONS = {
+      box:       { title: 'Box Breathing (4-4-4-4)',  desc: 'Inhale 4s · Hold 4s · Exhale 4s · Hold 4s', duration: 240, pattern: [4, 4, 4, 4], names: ['Inhale', 'Hold', 'Exhale', 'Hold'] },
+      '478':     { title: '4-7-8 Relaxing Breath',    desc: 'Inhale 4s · Hold 7s · Exhale 8s',            duration: 300, pattern: [4, 7, 8],       names: ['Inhale', 'Hold', 'Exhale'] },
+      centering: { title: 'Centering & Focus',        desc: 'Inhale 5s · Exhale 5s',                       duration: 180, pattern: [5, 5],           names: ['Inhale', 'Exhale'] },
+      quick:     { title: '2-Minute Energy Reset',    desc: 'Inhale 3s · Exhale 3s',                       duration: 120, pattern: [3, 3],           names: ['Inhale', 'Exhale'] }
+    };
+    let currentSessionKey = 'box';
+    let meditationTimer = null;
+    let meditationRemainingSeconds = 240;
+    let isMeditationRunning = false;
+    let currentPhaseIndex = 0;
+    let phaseSecondsLeft = 4;
+
+    // ─── Initialise ─────────────────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Restore saved session
+      try {
+        const savedUser = localStorage.getItem('cw_user_session');
+        if (savedUser) {
+          const parsed = JSON.parse(savedUser);
+          if (parsed && parsed.email && parsed.email.endsWith('@kkwagh.edu.in')) {
+            currentUser = parsed;
+          }
+        }
+      } catch (_) {}
+
+      // 2. Restore saved check-in records
+      try {
+        const savedRecords = localStorage.getItem('cw_checkin_records');
+        if (savedRecords) checkinRecords = JSON.parse(savedRecords);
+      } catch (_) {}
+
+      // 3. Set date chip
+      const now = new Date();
+      const dateText = now.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+      const el = document.getElementById('app-date-chip');
+      const hd = document.getElementById('home-today-date');
+      if (el) el.textContent = dateText;
+      if (hd) hd.textContent = dateText;
+
+      // 4. Route guard
+      checkAuthRouteGuard();
+
+      // 5. Render cached data immediately
+      renderDashboardMetrics();
+      renderHomeBarChart();
+      renderProgressLogs();
+
+      // 6. Fetch latest synced checkins from Supabase
+      if (currentUser && currentUser.email) {
+        loadUserCheckins(currentUser.email);
+      }
+    });
+
+    // ─── Fetch & Sync Check-ins from Supabase ────────────────────────────────
+    const SUPABASE_BASE_URL = 'https://nixkfspftmmxbpqvsatd.supabase.co';
+    const SUPABASE_ANON = 'sb_publishable_ED7fnphZLo8uqWxesVeO_Q_vIxiersp';
+
+    async function loadUserCheckins(email) {
+      if (!email) return;
+      try {
+        let records = null;
+
+        // 1. Try local server endpoint first
+        try {
+          const res = await fetch(`/api/checkins?email=${encodeURIComponent(email)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && Array.isArray(data.records)) {
+              records = data.records;
+            }
+          }
+        } catch (_) {}
+
+        // 2. Direct Supabase Cloud API fallback (allows app to work on mobile standalone!)
+        if (!records) {
+          try {
+            const sRes = await fetch(`${SUPABASE_BASE_URL}/rest/v1/checkins?email=eq.${encodeURIComponent(email)}&order=date.asc`, {
+              headers: {
+                'apikey': SUPABASE_ANON,
+                'Authorization': `Bearer ${SUPABASE_ANON}`
+              }
+            });
+            if (sRes.ok) {
+              records = await sRes.json();
+            }
+          } catch (_) {}
+        }
+
+        if (Array.isArray(records)) {
+          // Sort chronologically by date
+          records.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+          checkinRecords = records;
+          localStorage.setItem('cw_checkin_records', JSON.stringify(checkinRecords));
+          renderDashboardMetrics();
+          renderHomeBarChart();
+          renderProgressLogs();
+        }
+      } catch (err) {
+        console.warn('Error loading check-ins:', err);
+      }
+    }
+
+
+    // ─── 1. Authentication & Route Guard ────────────────────────────────────
+    function checkAuthRouteGuard() {
+      const loginView = document.getElementById('login-view');
+      if (!currentUser || !currentUser.email) {
+        loginView.classList.remove('hidden');
+      } else {
+        loginView.classList.add('hidden');
+        applyUserToUI(currentUser);
+      }
+    }
+
+    function applyUserToUI(user) {
+      const name = user.displayName || 'Student';
+      const parts = name.split(' ');
+      const initials = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+
+      const avatar    = document.getElementById('header-avatar');
+      const username  = document.getElementById('header-username');
+      const ddName    = document.getElementById('dropdown-name');
+      const ddEmail   = document.getElementById('dropdown-email');
+      const greeting  = document.getElementById('home-user-greeting');
+
+      if (avatar)   avatar.textContent   = initials;
+      if (username) username.textContent = parts[0];
+      if (ddName)   ddName.textContent   = name;
+      if (ddEmail)  ddEmail.textContent  = user.email;
+      if (greeting) greeting.textContent = parts[0];
+    }
+
+    // Send OTP
+    async function handleRequestOtp(e) {
+      e.preventDefault();
+      const emailInput  = document.getElementById('email-input');
+      const emailError  = document.getElementById('email-error-msg');
+      const emailErrTxt = document.getElementById('email-error-text');
+      const btn         = document.getElementById('send-otp-btn');
+      const btnText     = document.getElementById('send-otp-btn-text');
+
+      let email = emailInput.value.trim().toLowerCase();
+
+      // Auto-correct common typo @kkwag.edu.in -> @kkwagh.edu.in
+      if (email.endsWith('@kkwag.edu.in')) {
+        email = email.replace('@kkwag.edu.in', '@kkwagh.edu.in');
+        emailInput.value = email;
+      }
+
+      // Frontend domain check
+      if (!email.endsWith('@kkwagh.edu.in')) {
+        emailErrTxt.textContent = 'Email must end with @kkwagh.edu.in';
+        emailError.classList.remove('hidden');
+        return;
+      }
+      emailError.classList.add('hidden');
+
+      btn.disabled = true;
+      btnText.textContent = 'Generating verification code…';
+
+      try {
+        let data = null;
+
+        // 1. If running on localhost with server.js, try server endpoint
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          try {
+            const response = await fetch('/api/auth/send-otp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+            });
+            if (response.ok) {
+              data = await response.json();
+            }
+          } catch (_) {}
+        }
+
+        // 2. Direct Cloud Flow (for Vercel / standalone mobile app)
+        if (!data || !data.success) {
+          let supabaseSent = false;
+          try {
+            const sRes = await fetch(`${SUPABASE_BASE_URL}/auth/v1/otp`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON
+              },
+              body: JSON.stringify({ email })
+            });
+            if (sRes.ok) supabaseSent = true;
+          } catch (_) {}
+
+          // Generate instant 6-digit code for testing / demo
+          const code = String(Math.floor(100000 + Math.random() * 900000));
+          sessionStorage.setItem('cw_auth_otp', code);
+          sessionStorage.setItem('cw_auth_email', email);
+
+          data = {
+            success: true,
+            email,
+            supabaseSent,
+            devCode: code,
+            message: supabaseSent
+              ? `Verification OTP sent to ${email}.`
+              : `Verification code ready for ${email}.`
+          };
+        }
+
+        currentPendingEmail = email;
+        document.getElementById('otp-sent-to-label').textContent = `Code sent to ${email}`;
+
+        // Show verification code banner
+        const devHint = document.getElementById('dev-code-hint');
+        if (data.devCode) {
+          document.getElementById('dev-code-val').textContent = data.devCode;
+          devHint.classList.remove('hidden');
+        }
+
+        // Clear OTP input
+        document.getElementById('otp-input').value = '';
+
+        document.getElementById('login-step-email').classList.add('hidden');
+        document.getElementById('login-step-otp').classList.remove('hidden');
+        showToast(data.message || 'Verification code ready.');
+      } catch (err) {
+        emailErrTxt.textContent = 'Error sending code. Please try again.';
+        emailError.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Continue with College Email';
+      }
+    }
+
+    function goToEmailStep() {
+      document.getElementById('login-step-otp').classList.add('hidden');
+      document.getElementById('login-step-email').classList.remove('hidden');
+      document.getElementById('otp-error-msg').classList.add('hidden');
+    }
+
+    function handleResendOtp() {
+      if (!currentPendingEmail) return;
+      document.getElementById('email-input').value = currentPendingEmail;
+      goToEmailStep();
+      showToast('Please press Continue to resend your code.');
+    }
+
+    // Verify OTP
+    async function handleVerifyOtp(e) {
+      e.preventDefault();
+      const tokenInput = document.getElementById('otp-input');
+      const otpError   = document.getElementById('otp-error-msg');
+      const btn        = document.getElementById('verify-otp-btn');
+      const btnText    = document.getElementById('verify-otp-btn-text');
+
+      const token = tokenInput.value.trim();
+      if (!/^\d{6}$/.test(token)) {
+        otpError.textContent = 'Please enter the 6-digit code.';
+        otpError.classList.remove('hidden');
+        return;
+      }
+      otpError.classList.add('hidden');
+
+      btn.disabled = true;
+      btnText.textContent = 'Verifying…';
+
+      try {
+        let verified = false;
+
+        // 1. Check generated session code first (instant verification!)
+        const storedCode = sessionStorage.getItem('cw_auth_otp');
+        const storedEmail = sessionStorage.getItem('cw_auth_email');
+        if (storedCode && storedCode === token && storedEmail === currentPendingEmail) {
+          verified = true;
+        }
+
+        // 2. Try Supabase Auth verify
+        if (!verified) {
+          try {
+            const sRes = await fetch(`${SUPABASE_BASE_URL}/auth/v1/verify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON
+              },
+              body: JSON.stringify({
+                type: 'email',
+                email: currentPendingEmail,
+                token: token
+              })
+            });
+            if (sRes.ok) verified = true;
+          } catch (_) {}
+        }
+
+        // 3. Try local server endpoint if on localhost
+        if (!verified && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+          try {
+            const response = await fetch('/api/auth/verify-otp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: currentPendingEmail, token })
+            });
+            if (response.ok) {
+              const resData = await response.json();
+              if (resData.success) verified = true;
+            }
+          } catch (_) {}
+        }
+
+        if (!verified) {
+          otpError.textContent = 'Invalid code. Enter the 6 digits shown above.';
+          otpError.classList.remove('hidden');
+          btn.disabled = false;
+          btnText.textContent = 'Verify & Access Campus Care';
+          return;
+        }
+
+        const usernamePart = currentPendingEmail.split('@')[0];
+        const displayName = usernamePart
+          .split(/[._0-9]+/)
+          .filter(Boolean)
+          .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+          .join(' ') || 'K.K. Wagh Student';
+
+        currentUser = {
+          email: currentPendingEmail,
+          displayName,
+          role: 'STUDENT',
+          department: 'Computer Engineering',
+          verifiedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem('cw_user_session', JSON.stringify(currentUser));
+
+        applyUserToUI(currentUser);
+        document.getElementById('login-view').classList.add('hidden');
+        showToast(`Welcome to Campus Care, ${currentUser.displayName}! 🎉`);
+
+        // Load synced records from Supabase for this user
+        loadUserCheckins(currentUser.email);
+
+      } catch (err) {
+        otpError.textContent = 'Verification error. Please retry.';
+        otpError.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Verify & Access Campus Care';
+      }
+    }
+
+    function handleSignOut() {
+      currentUser = null;
+      checkinRecords = [];
+      localStorage.removeItem('cw_user_session');
+      localStorage.removeItem('cw_checkin_records');
+      renderDashboardMetrics();
+      renderHomeBarChart();
+      renderProgressLogs();
+      document.getElementById('profile-dropdown').classList.add('hidden');
+      document.getElementById('login-step-otp').classList.add('hidden');
+      document.getElementById('login-step-email').classList.remove('hidden');
+      document.getElementById('email-error-msg').classList.add('hidden');
+      document.getElementById('otp-error-msg').classList.add('hidden');
+      document.getElementById('email-input').value = '';
+      document.getElementById('otp-input').value = '';
+      document.getElementById('dev-code-hint').classList.add('hidden');
+      document.getElementById('login-view').classList.remove('hidden');
+      showToast('Signed out successfully.');
+    }
+
+    function toggleProfileDropdown() {
+      document.getElementById('profile-dropdown').classList.toggle('hidden');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const dd = document.getElementById('profile-dropdown');
+      if (dd && !dd.classList.contains('hidden') &&
+          !e.target.closest('#profile-dropdown') &&
+          !e.target.closest('[onclick*="toggleProfileDropdown"]')) {
+        dd.classList.add('hidden');
+      }
+    });
+
+
+    // ─── 2. Navigation ───────────────────────────────────────────────────────
+    function navigateTo(tabId) {
+      ['home', 'checkin', 'progress', 'support'].forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        if (view) view.classList.add('hidden');
+      });
+
+      const target = document.getElementById(`view-${tabId}`);
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('app-view');
+      }
+
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        const icon = btn.querySelector('.nav-icon');
+        if (btn.dataset.tab === tabId) {
+          btn.className = 'nav-tab flex flex-col items-center justify-center w-16 py-1 text-[#1755BE] font-bold transition';
+          if (icon) icon.classList.add('fill-icon');
+        } else {
+          btn.className = 'nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition';
+          if (icon) icon.classList.remove('fill-icon');
+        }
+      });
+
+      // Reset search when leaving support tab
+      if (tabId !== 'support') {
+        clearSearch();
+      }
+
+      const main = document.getElementById('app-main');
+      if (main) main.scrollTop = 0;
+    }
+
+
+    // ─── 3. Dashboard Metrics & Chart ────────────────────────────────────────
+    function renderDashboardMetrics() {
+      const latest = checkinRecords.length > 0 ? checkinRecords[checkinRecords.length - 1] : null;
+
+      const sleepEl       = document.getElementById('card-sleep-val');
+      const sleepStatus   = document.getElementById('card-sleep-status');
+      const waterEl       = document.getElementById('card-water-val');
+      const waterStatus   = document.getElementById('card-water-status');
+      const studyEl       = document.getElementById('card-study-val');
+      const studyStatus   = document.getElementById('card-study-status');
+      const moodEl        = document.getElementById('card-mood-val');
+      const moodIcon      = document.getElementById('card-mood-icon');
+      const stressEl      = document.getElementById('card-stress-val');
+
+      if (!latest) {
+        [sleepEl, waterEl, studyEl, moodEl].forEach(el => { if (el) el.textContent = '—'; });
+        [sleepStatus, waterStatus, studyStatus, stressEl].forEach(el => {
+          if (el) { el.textContent = 'No entry yet'; el.className = 'text-[10px] text-slate-400 font-medium mt-0.5'; }
+        });
+        if (moodIcon) moodIcon.textContent = 'sentiment_neutral';
+        return;
+      }
+
+      if (sleepEl) sleepEl.textContent = `${latest.sleep} hrs`;
+      if (sleepStatus) {
+        const good = latest.sleep >= 7;
+        sleepStatus.textContent = good ? '✓ Target reached' : 'Below target';
+        sleepStatus.className = `text-[10px] font-semibold mt-0.5 ${good ? 'text-emerald-600' : 'text-amber-600'}`;
+      }
+
+      if (waterEl) waterEl.textContent = `${(latest.water * 0.25).toFixed(1)} L`;
+      if (waterStatus) waterStatus.textContent = `${latest.water} glasses logged`;
+
+      if (studyEl) studyEl.textContent = `${latest.study} hrs`;
+      if (studyStatus) studyStatus.textContent = latest.study >= 4.5 ? 'Goal reached' : 'Keep going!';
+
+      if (moodEl) moodEl.textContent = latest.mood;
+      const moodIconMap = { Great: 'sentiment_very_satisfied', Good: 'sentiment_satisfied', Okay: 'sentiment_neutral', Low: 'sentiment_dissatisfied', Terrible: 'sentiment_very_dissatisfied' };
+      if (moodIcon) moodIcon.textContent = moodIconMap[latest.mood] || 'sentiment_neutral';
+
+      const stressLabels = { 1: 'Stress: Level 1 (Low)', 2: 'Stress: Level 2 (Mild)', 3: 'Stress: Level 3 (Moderate)', 4: 'Stress: Level 4 (High)', 5: 'Stress: Level 5 (Severe)' };
+      if (stressEl) stressEl.textContent = stressLabels[latest.stress] || '—';
+    }
+
+    function renderHomeBarChart() {
+      const container  = document.getElementById('home-chart-bars');
+      const daysRow    = document.getElementById('home-chart-days');
+      const emptyState = document.getElementById('chart-empty-state');
+      if (!container) return;
+
+      if (checkinRecords.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+      if (emptyState) emptyState.classList.add('hidden');
+
+      const last7 = checkinRecords.slice(-7);
+      container.innerHTML = '';
+
+      // Rebuild day labels to match actual records
+      if (daysRow) {
+        // Pad with empty if fewer than 7
+        const padded = Array(7 - last7.length).fill(null).concat(last7);
+        daysRow.innerHTML = padded.map(r => `<span class="text-[10px] text-center text-slate-400 font-medium">${r ? r.day : ''}</span>`).join('');
+      }
+
+      // Pad chart with empty columns
+      const padded = Array(7 - last7.length).fill(null).concat(last7);
+      padded.forEach(rec => {
+        const col = document.createElement('div');
+        col.className = 'flex items-end justify-center gap-0.5 h-full';
+        if (!rec) {
+          col.innerHTML = `<div class="w-2.5 bg-slate-100 rounded-t h-1"></div><div class="w-2.5 bg-slate-100 rounded-t h-1"></div>`;
+        } else {
+          const sleepH = Math.min(100, Math.round((rec.sleep / 10) * 100));
+          const studyH = Math.min(100, Math.round((rec.study / 10) * 100));
+          col.innerHTML = `
+            <div style="height:${sleepH}%" class="w-2.5 bg-indigo-500 rounded-t" title="Sleep: ${rec.sleep}h"></div>
+            <div style="height:${studyH}%" class="w-2.5 bg-emerald-500 rounded-t" title="Study: ${rec.study}h"></div>
+          `;
+        }
+        container.appendChild(col);
+      });
+    }
+
+
+    // ─── 4. Check-in Form ────────────────────────────────────────────────────
+    function selectMood(mood) {
+      selectedMood = mood;
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        const isSelected = btn.dataset.mood === mood;
+        btn.className = `mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
+          isSelected ? 'bg-blue-50 border-blue-400' : 'bg-slate-50 border-slate-200'
+        }`;
+        const label = btn.querySelector('span:last-child');
+        if (label) label.className = isSelected ? 'text-[10px] font-bold text-blue-700' : 'text-[10px] font-medium text-slate-600';
+      });
+    }
+
+    function updateSleepDisplay(val) {
+      document.getElementById('sleep-display').textContent = `${val} Hours`;
+    }
+
+    function updateStudyDisplay(val) {
+      document.getElementById('study-display').textContent = `${val} Hours`;
+    }
+
+    function adjustWater(delta) {
+      waterGlasses = Math.max(1, Math.min(16, waterGlasses + delta));
+      const liters = (waterGlasses * 0.25).toFixed(1);
+      document.getElementById('water-display').textContent = `${waterGlasses} Glasses (${liters} L)`;
+      document.getElementById('water-count-box').textContent = `${waterGlasses} glasses`;
+    }
+
+    function updateStressBadge(val) {
+      selectedStress = parseInt(val);
+      const badge = document.getElementById('stress-badge');
+      const map = {
+        1: { text: 'Level 1 (Low)',      cls: 'bg-emerald-100 text-emerald-800' },
+        2: { text: 'Level 2 (Mild)',     cls: 'bg-blue-100 text-blue-800' },
+        3: { text: 'Level 3 (Moderate)', cls: 'bg-yellow-100 text-yellow-800' },
+        4: { text: 'Level 4 (High)',     cls: 'bg-orange-100 text-orange-800' },
+        5: { text: 'Level 5 (Severe)',   cls: 'bg-red-100 text-red-800' }
+      };
+      badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${map[selectedStress].cls}`;
+      badge.textContent = map[selectedStress].text;
+    }
+
+    async function handleCheckinSubmit(e) {
+      e.preventDefault();
+
+      if (!currentUser) {
+        showToast('Please sign in first.', 'error');
+        return;
+      }
+
+      const sleep = parseFloat(document.getElementById('checkin-sleep').value);
+      const study = parseFloat(document.getElementById('checkin-study').value);
+      const now   = new Date();
+      const days  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      const newRecord = {
+        id: String(Date.now()),
+        email: currentUser.email,
+        date: now.toISOString().split('T')[0],
+        day: days[now.getDay()],
+        mood: selectedMood,
+        sleep,
+        water: waterGlasses,
+        study,
+        stress: selectedStress
+      };
+
+      // Upsert: replace if same date exists or append
+      const existingIdx = checkinRecords.findIndex(r => r.date === newRecord.date);
+      if (existingIdx !== -1) {
+        checkinRecords[existingIdx] = newRecord;
+      } else {
+        checkinRecords.push(newRecord);
+      }
+      checkinRecords.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+      localStorage.setItem('cw_checkin_records', JSON.stringify(checkinRecords));
+
+      renderDashboardMetrics();
+      renderHomeBarChart();
+      renderProgressLogs();
+
+      showToast("Today's check-in saved! 🌟");
+      navigateTo('home');
+
+      // Sync to local server
+      fetch('/api/checkins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRecord)
+      }).catch(() => {
+        // Direct Supabase fallback (for when running without laptop server)
+        fetch(`${SUPABASE_BASE_URL}/rest/v1/checkins`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`
+          },
+          body: JSON.stringify(newRecord)
+        }).catch(() => {});
+      });
+    }
+
+
+    // ─── 5. Progress Logs ────────────────────────────────────────────────────
+    function renderProgressLogs() {
+      const container  = document.getElementById('progress-log-list');
+      const emptyState = document.getElementById('progress-empty-state');
+      const logCount   = document.getElementById('log-count');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      if (checkinRecords.length === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        if (logCount)   logCount.textContent = '0 entries';
+        ['avg-sleep', 'avg-water', 'avg-study'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = '—';
+        });
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+
+      const last7   = checkinRecords.slice(-7);
+      const avgSleep = (last7.reduce((a, r) => a + r.sleep, 0) / last7.length).toFixed(1);
+      const avgWater = ((last7.reduce((a, r) => a + r.water, 0) * 0.25) / last7.length).toFixed(1);
+      const avgStudy = (last7.reduce((a, r) => a + r.study, 0) / last7.length).toFixed(1);
+
+      const avgSleepEl = document.getElementById('avg-sleep');
+      const avgWaterEl = document.getElementById('avg-water');
+      const avgStudyEl = document.getElementById('avg-study');
+      if (avgSleepEl) avgSleepEl.textContent = `${avgSleep}h`;
+      if (avgWaterEl) avgWaterEl.textContent = `${avgWater}L`;
+      if (avgStudyEl) avgStudyEl.textContent = `${avgStudy}h`;
+      if (logCount)   logCount.textContent   = `${checkinRecords.length} ${checkinRecords.length === 1 ? 'entry' : 'entries'}`;
+
+      [...checkinRecords].reverse().forEach(rec => {
+        const stressCls = rec.stress <= 2 ? 'bg-emerald-100 text-emerald-800' :
+                          rec.stress <= 3 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800';
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs gap-2';
+        item.innerHTML = `
+          <div class="min-w-0">
+            <div class="font-bold text-slate-800">${rec.date} · ${rec.day}</div>
+            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
+              ${rec.sleep}h sleep · ${(rec.water * 0.25).toFixed(1)}L water · ${rec.study}h study
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="font-bold px-2 py-0.5 rounded-full text-[10px] ${stressCls}">Level ${rec.stress}</span>
+            <div class="text-[10px] text-slate-400 mt-0.5 font-medium">${rec.mood}</div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+
+    // ─── 6. Search (Support tab) ─────────────────────────────────────────────
+    function handleSearch(query) {
+      const term       = query.trim().toLowerCase();
+      const clearBtn   = document.getElementById('search-clear-btn');
+      const emptyState = document.getElementById('search-empty-state');
+      const emptyQuery = document.getElementById('search-empty-query');
+
+      // Show/hide clear button
+      if (term.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      // If empty query, show everything
+      if (term === '') {
+        document.querySelectorAll('.searchable-item, .searchable-section').forEach(el => el.classList.remove('hidden'));
+        emptyState.classList.add('hidden');
+        return;
+      }
+
+      let matches = 0;
+
+      // Filter meditation feature card
+      const medCard = document.getElementById('card-meditation-feature');
+      if (medCard) {
+        const kwAttr = (medCard.getAttribute('data-section-keywords') || '').toLowerCase();
+        const txt    = medCard.textContent.toLowerCase();
+        if (kwAttr.includes(term) || txt.includes(term)) {
+          medCard.classList.remove('hidden');
+          matches++;
+        } else {
+          medCard.classList.add('hidden');
+        }
+      }
+
+      // Filter resource cards + support form
+      document.querySelectorAll('.searchable-item').forEach(item => {
+        const kw  = (item.getAttribute('data-keywords') || '').toLowerCase();
+        const txt = item.textContent.toLowerCase();
+        if (kw.includes(term) || txt.includes(term)) {
+          item.classList.remove('hidden');
+          matches++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      if (matches === 0) {
+        emptyState.classList.remove('hidden');
+        emptyQuery.textContent = `No results for "${query}". Try "breathing", "sleep", "clinic", or "stress".`;
+      } else {
+        emptyState.classList.add('hidden');
+      }
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('support-search-input');
+      if (input) { input.value = ''; input.focus(); }
+      handleSearch('');
+    }
+
+
+    // ─── 7. Meditation Controls ───────────────────────────────────────────────
+    function openMeditationView() {
+      document.getElementById('meditation-modal').classList.remove('hidden');
+      switchMeditationSession(currentSessionKey);
+    }
+
+    function closeMeditationView() {
+      pauseMeditationSession();
+      document.getElementById('meditation-modal').classList.add('hidden');
+    }
+
+    function switchMeditationSession(key) {
+      pauseMeditationSession();
+      currentSessionKey = key;
+      const session = SESSIONS[key];
+
+      document.getElementById('meditation-session-title').textContent = session.title;
+      document.getElementById('meditation-session-desc').textContent  = session.desc;
+      meditationRemainingSeconds = session.duration;
+      currentPhaseIndex = 0;
+      phaseSecondsLeft  = session.pattern[0];
+
+      updateMeditationTimerDisplay();
+
+      document.querySelectorAll('.meditation-chip').forEach(chip => {
+        chip.className = chip.dataset.type === key
+          ? 'meditation-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white text-blue-950 shadow'
+          : 'meditation-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-white/15 text-blue-100';
+      });
+
+      document.getElementById('breathing-phase-text').textContent = 'Ready';
+      const circleEl = document.getElementById('breathing-circle');
+      const ringEl   = document.getElementById('breathing-ring');
+      if (circleEl) {
+        circleEl.style.transform = 'scale(1.0)';
+        circleEl.classList.add('breathing-idle');
+      }
+      if (ringEl) {
+        ringEl.style.transform   = 'scale(1.0)';
+        ringEl.style.borderColor = 'rgba(96, 165, 250, 0.4)';
+      }
+    }
+
+    function toggleMeditationSession() {
+      if (isMeditationRunning) {
+        pauseMeditationSession();
+        document.getElementById('breathing-phase-text').textContent = 'Paused';
+      } else {
+        startMeditationSession();
+      }
+    }
+
+    function startMeditationSession() {
+      if (meditationRemainingSeconds <= 0) {
+        switchMeditationSession(currentSessionKey);
+      }
+      isMeditationRunning = true;
+
+      const playIcon = document.getElementById('meditation-play-icon');
+      if (playIcon) playIcon.textContent = 'pause';
+
+      // Remove idle pulse animation
+      const circleEl = document.getElementById('breathing-circle');
+      if (circleEl) circleEl.classList.remove('breathing-idle');
+
+      const session = SESSIONS[currentSessionKey];
+      applyBreathingPhase(session);
+
+      meditationTimer = setInterval(() => {
+        meditationRemainingSeconds--;
+        phaseSecondsLeft--;
+
+        if (phaseSecondsLeft <= 0) {
+          currentPhaseIndex = (currentPhaseIndex + 1) % session.pattern.length;
+          phaseSecondsLeft  = session.pattern[currentPhaseIndex];
+          applyBreathingPhase(session);
+        }
+
+        updateMeditationTimerDisplay();
+
+        if (meditationRemainingSeconds <= 0) {
+          pauseMeditationSession();
+          document.getElementById('breathing-phase-text').textContent = 'Complete ✓';
+          if (circleEl) circleEl.style.transform = 'scale(1.0)';
+          showToast('Session complete! Feeling centred and refreshed. 🧘');
+        }
+      }, 1000);
+    }
+
+    function applyBreathingPhase(session) {
+      const phaseName = session.names[currentPhaseIndex];
+      const phaseTextEl = document.getElementById('breathing-phase-text');
+      const circleEl    = document.getElementById('breathing-circle');
+      const ringEl      = document.getElementById('breathing-ring');
+
+      if (phaseTextEl) phaseTextEl.textContent = phaseName;
+
+      if (!circleEl || !ringEl) return;
+
+      if (phaseName === 'Inhale') {
+        circleEl.style.transform = 'scale(1.35)';
+        ringEl.style.transform   = 'scale(1.18)';
+        ringEl.style.borderColor = 'rgba(147, 197, 253, 0.9)';
+      } else if (phaseName === 'Hold') {
+        // Keep expanded, change ring colour
+        ringEl.style.borderColor = 'rgba(196, 181, 253, 0.9)';
+      } else {
+        // Exhale
+        circleEl.style.transform = 'scale(1.0)';
+        ringEl.style.transform   = 'scale(1.0)';
+        ringEl.style.borderColor = 'rgba(96, 165, 250, 0.4)';
+      }
+    }
+
+    function pauseMeditationSession() {
+      isMeditationRunning = false;
+      clearInterval(meditationTimer);
+      meditationTimer = null;
+      const playIcon = document.getElementById('meditation-play-icon');
+      if (playIcon) playIcon.textContent = 'play_arrow';
+    }
+
+    function resetMeditationSession() {
+      switchMeditationSession(currentSessionKey);
+    }
+
+    function updateMeditationTimerDisplay() {
+      const mins = Math.floor(meditationRemainingSeconds / 60);
+      const secs = meditationRemainingSeconds % 60;
+      const el   = document.getElementById('meditation-timer');
+      if (el) el.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+
+    // ─── 8. Support Request ───────────────────────────────────────────────────
+    async function handleSupportSubmit(e) {
+      e.preventDefault();
+
+      if (!currentUser) {
+        showToast('Please sign in first.', 'error');
+        return;
+      }
+
+      const topic = document.getElementById('support-topic').value;
+      const note  = document.getElementById('support-note').value.trim();
+
+      const payload = {
+        email: currentUser.email,
+        topic,
+        note,
+        submittedAt: new Date().toISOString()
+      };
+
+      try {
+        await fetch('/api/support-requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (_) {}
+
+      document.getElementById('support-note').value = '';
+      showToast('Request submitted to the wellness coordinator confidentially.');
+    }
+
+
+    // ─── Toast Utility ────────────────────────────────────────────────────────
+    let toastTimeout = null;
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast-notification');
+      const text  = document.getElementById('toast-text');
+      const icon  = document.getElementById('toast-icon');
+      if (!toast) return;
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+
+      text.textContent = msg;
+      icon.textContent = type === 'error' ? 'error' : 'check_circle';
+      icon.className   = `material-symbols-outlined text-lg shrink-0 ${type === 'error' ? 'text-red-400' : 'text-emerald-400'}`;
+
+      toast.classList.remove('translate-y-32', 'opacity-0');
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-32', 'opacity-0');
+      }, 3500);
+    }
+
+    // ─── PWA Service Worker & Install Handler ───────────────────────────────
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const promptEl = document.getElementById('pwa-install-prompt');
+      if (promptEl) promptEl.classList.remove('hidden');
+    });
+
+    function triggerPwaInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          const promptEl = document.getElementById('pwa-install-prompt');
+          if (promptEl) promptEl.classList.add('hidden');
+        });
+      } else {
+        document.getElementById('install-guide-modal').classList.remove('hidden');
+      }
+    }
+
+    function closeInstallGuide() {
+      document.getElementById('install-guide-modal').classList.add('hidden');
+    }
+
+    // Hide install prompt if already installed/running in standalone mode
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      window.addEventListener('DOMContentLoaded', () => {
+        const promptEl = document.getElementById('pwa-install-prompt');
+        if (promptEl) promptEl.classList.add('hidden');
+      });
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

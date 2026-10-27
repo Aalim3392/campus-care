@@ -1,0 +1,233 @@
+---
+name: CampusWell
+colors:
+  surface: '#f8f9ff'
+  surface-dim: '#cbdbf5'
+  surface-bright: '#f8f9ff'
+  surface-container-lowest: '#ffffff'
+  surface-container-low: '#eff4ff'
+  surface-container: '#e5eeff'
+  surface-container-high: '#dce9ff'
+  surface-container-highest: '#d3e4fe'
+  on-surface: '#0b1c30'
+  on-surface-variant: '#434653'
+  inverse-surface: '#213145'
+  inverse-on-surface: '#eaf1ff'
+  outline: '#737784'
+  outline-variant: '#c3c6d5'
+  surface-tint: '#1d59c1'
+  primary: '#1755be'
+  on-primary: '#ffffff'
+  primary-container: '#3b6fd8'
+  on-primary-container: '#fcfaff'
+  inverse-primary: '#b0c6ff'
+  secondary: '#4d5e86'
+  on-secondary: '#ffffff'
+  secondary-container: '#c0d1ff'
+  on-secondary-container: '#485981'
+  tertiary: '#006847'
+  on-tertiary: '#ffffff'
+  tertiary-container: '#00845a'
+  on-tertiary-container: '#eefff2'
+  error: '#ba1a1a'
+  on-error: '#ffffff'
+  error-container: '#ffdad6'
+  on-error-container: '#93000a'
+  primary-fixed: '#d9e2ff'
+  primary-fixed-dim: '#b0c6ff'
+  on-primary-fixed: '#001945'
+  on-primary-fixed-variant: '#00419d'
+  secondary-fixed: '#d9e2ff'
+  secondary-fixed-dim: '#b5c6f4'
+  on-secondary-fixed: '#051a3f'
+  on-secondary-fixed-variant: '#35466d'
+  tertiary-fixed: '#6ffbbe'
+  tertiary-fixed-dim: '#4edea3'
+  on-tertiary-fixed: '#002113'
+  on-tertiary-fixed-variant: '#005236'
+  background: '#f8f9ff'
+  on-background: '#0b1c30'
+  surface-variant: '#d3e4fe'
+typography:
+  headline-xl:
+    fontFamily: Inter
+    fontSize: 32px
+    fontWeight: '600'
+    lineHeight: 40px
+    letterSpacing: -0.02em
+  headline-lg:
+    fontFamily: Inter
+    fontSize: 28px
+    fontWeight: '600'
+    lineHeight: 36px
+    letterSpacing: -0.015em
+  headline-lg-mobile:
+    fontFamily: Inter
+    fontSize: 24px
+    fontWeight: '600'
+    lineHeight: 32px
+    letterSpacing: -0.01em
+  headline-md:
+    fontFamily: Inter
+    fontSize: 20px
+    fontWeight: '600'
+    lineHeight: 28px
+    letterSpacing: -0.01em
+  headline-sm:
+    fontFamily: Inter
+    fontSize: 16px
+    fontWeight: '600'
+    lineHeight: 24px
+    letterSpacing: 0em
+  body-lg:
+    fontFamily: Inter
+    fontSize: 16px
+    fontWeight: '400'
+    lineHeight: 24px
+    letterSpacing: 0em
+  body-md:
+    fontFamily: Inter
+    fontSize: 14px
+    fontWeight: '400'
+    lineHeight: 20px
+    letterSpacing: 0em
+  body-sm:
+    fontFamily: Inter
+    fontSize: 13px
+    fontWeight: '400'
+    lineHeight: 18px
+    letterSpacing: 0em
+  label-lg:
+    fontFamily: Inter
+    fontSize: 14px
+    fontWeight: '500'
+    lineHeight: 20px
+    letterSpacing: 0.01em
+  label-md:
+    fontFamily: Inter
+    fontSize: 12px
+    fontWeight: '500'
+    lineHeight: 16px
+    letterSpacing: 0.02em
+  caption:
+    fontFamily: Inter
+    fontSize: 12px
+    fontWeight: '400'
+    lineHeight: 16px
+    letterSpacing: 0.01em
+rounded:
+  sm: 0.25rem
+  DEFAULT: 0.5rem
+  md: 0.75rem
+  lg: 1rem
+  xl: 1.5rem
+  full: 9999px
+spacing:
+  gutter: 1.5rem
+  gutter-sm: 1rem
+  margin: 2rem
+  margin-sm: 1rem
+  space-xs: 0.5rem
+  space-sm: 0.75rem
+  space-md: 1rem
+  space-lg: 1.5rem
+  space-xl: 2rem
+---
+
+## Brand & Style
+
+This design system establishes a clinical, supportive, and privacy-conscious interface engineered specifically for demanding academic environments. Balancing institutional rigor with psychological calm, the visual environment avoids patronizing gamification, infantilizing illustrations, and disruptive visual noise. 
+
+The aesthetic is grounded in modern executive software: disciplined typography, generous negative space, crisp structural lines, and deep navy anchors. The emotional objective is cognitive decompression—providing students in high-stress technical disciplines with a focused, confidential sanctuary to log metrics, analyze behavioral patterns, and access institutional health resources without sensory fatigue.
+
+## Colors
+
+The palette leverages high-order contrast anchored by deep naval hues, cool atmospheric surfaces, and precise diagnostic accents. 
+
+### Core Palette
+- **Canvas Base**: `#F5F8FD` provides a calming, anti-glare canvas that recedes behind active content.
+- **Card Surfaces**: `#FFFFFF` provides clean foreground isolation for modules and data visualizers.
+- **Structural Chrome / Sidebar**: `#12254A` delivers grounding authority and clear visual hierarchy for primary navigation zones. Active state highlights utilize `#1E3A6E` or `#3B6FD8` with controlled opacity.
+- **Primary Interactive**: `#3B6FD8` serves as the primary action driver (buttons, focused strokes, active indicators), transitioning to `#2D5BB8` on hover.
+
+### Typography & Content
+- **Text Headings / Emphasized**: `#12254A` ensuring crisp contrast ratios well above accessibility standards.
+- **Body & Secondary Text**: `#64748B` (Slate) maintains effortless legibility without high-contrast visual vibration.
+- **Muted & Metadata**: `#94A3B8` for supportive captions, timestamps, and placeholder cues.
+- **Dividers & Surface Outlines**: `#E6ECF5` creates quiet structural boundaries.
+
+### Diagnostic Accents
+Reserved exclusively for data visualization, trend line graphs, and status chips:
+- **Sleep Health**: `#8B7FD8` / Deep: `#7C68DC`
+- **Hydration**: `#38BDF8` / Deep: `#0284C7`
+- **Academic Focus / Study**: `#10B981` / Deep: `#059669`
+- **State of Mind / Mood**: `#F59E0B` / Deep: `#F97316`
+
+## Typography
+
+The typographic hierarchy prioritizes rapid scannability and high structural legibility. Monospaced or characterful display fonts are avoided in favor of a clean, systematic sans-serif (`Inter`). 
+
+- Headings utilize balanced negative letter-spacing to reinforce structure without feeling heavy.
+- Body weights are locked to Regular (400) and Medium (500) to maintain crisp character rendering on high-density monitors.
+- Uppercase text transformations are strictly reserved for low-level metadata labels and small badges; they are never applied to buttons or section headings.
+
+## Layout & Spacing
+
+The layout is constructed on an exact 8px base rhythm, optimizing horizontal flow through a fluid dashboard grid.
+
+- **Desktop (1200px+)**: Multi-column responsive layout anchored by a fixed 260px vertical sidebar. Content runs on a 12-column grid with `1.5rem` (24px) gutters and `2rem` (32px) margins.
+- **Tablet (768px - 1199px)**: Sidebar shifts to an off-canvas drawer or condensed navigation rail (72px). Grid condenses to 8 columns with `1rem` (16px) gutters.
+- **Mobile (<768px)**: Single-column linear flow with `1rem` (16px) outer canvas margins. Card padding condenses from `2rem` to `1rem`.
+
+Card interior padding is standardized at `1.5rem` (24px) for metric widgets and `2rem` (32px) for detailed analytical modules and clinical check-in flows.
+
+## Elevation & Depth
+
+Visual hierarchy is communicated through structural layering rather than dramatic elevation steps. The platform employs restrained, dual-layer ambient shadows tinted with the primary navy tone to maintain cohesive atmospheric warmth.
+
+- **Level 0 (Canvas Base)**: `#F5F8FD` with no depth or shadow.
+- **Level 1 (Cards, Modules, Panels)**: `#FFFFFF` surface bounded by a continuous `1px` border of `#E6ECF5` and a twin-pass ambient shadow: `0 1px 3px rgba(18, 37, 74, 0.05), 0 6px 16px rgba(18, 37, 74, 0.03)`.
+- **Level 2 (Popovers, Select Menus, Flyouts)**: Elevated white surface with a `1px` border of `#E6ECF5` and deep ambient isolation: `0 4px 6px -1px rgba(18, 37, 74, 0.06), 0 12px 24px -4px rgba(18, 37, 74, 0.08)`.
+- **Level 3 (Modal Dialogs & Crisis Resources)**: Centered display over an overlay scrim of `rgba(18, 37, 74, 0.45)` with a backdrop blur of `4px` to eliminate background distractions.
+
+## Shapes
+
+The shape hierarchy combines professional composure with approachable, ergonomic contours. Standard modules and surfaces embrace gentle corner radii, avoiding razor-sharp corporate edges while rejecting informal bubble forms.
+
+- **Panels & Cards**: 16px corner radius (`rounded-lg` override for high-order containers).
+- **Primary & Secondary Buttons**: 12px radius, offering a modern, tactile touchpoint.
+- **Form Controls & Search**: 10px radius for balanced, comfortable inputs.
+- **Badges, Metric Chips & Avatars**: Continuous full pill radius (`9999px`) to distinguish interactive inline chips from structural containers.
+
+## Components
+
+### Buttons
+- **Primary**: Solid `#3B6FD8` fill, `#FFFFFF` text (`label-lg`), 12px border radius, 44px height. Hover: `#2D5BB8`. Active: scale transform down to `0.985`. Focus ring: 3px `#3B6FD8` at 25% opacity with 2px white offset.
+- **Secondary / Outline**: `#FFFFFF` fill, 1px border `#E6ECF5`, `#12254A` text. Hover: `#F5F8FD` background with border `#CBD5E1`.
+- **Ghost**: Transparent fill, `#64748B` text. Hover: `#F5F8FD` background, `#12254A` text.
+
+### Metric Chips & Badges
+- 28px height, rounded-full geometry, 8px horizontal padding.
+- Consists of a tinted 10% opacity background matched with its solid diagnostic accent color for text and indicator icons (e.g., Sleep: `#8B7FD8` text on `rgba(139, 127, 216, 0.10)`).
+
+### Input Fields & Selectors
+- Height: 44px. Background: `#FFFFFF`. Border: 1px solid `#E6ECF5`. Border radius: 10px.
+- Text: `#12254A` (`body-md`), Placeholder: `#94A3B8`.
+- Focus state: Border changes to `#3B6FD8` with a 3px outer ring in `rgba(59, 111, 216, 0.15)`.
+
+### Cards & Modules
+- Solid `#FFFFFF` fill, 16px corner radius, 1px `#E6ECF5` perimeter border.
+- Internal padding spans 24px to 32px. Card headers feature 16px semibold titles in `#12254A` paired with subtle secondary actions or contextual badges.
+
+### Lists & Activity Logs
+- Clean row layout with 1px border-bottom divider (`#E6ECF5`), zero background noise.
+- Hover states transition to subtle `#F5F8FD` backgrounds across interactive list rows.
+
+### Checkboxes & Radio Controls
+- 20px box dimensions with 6px radius for checkboxes, full circle for radios.
+- Unchecked: 1.5px border `#CBD5E1` on `#FFFFFF` ground.
+- Checked: Solid `#3B6FD8` fill with crisp white geometric check/dot indicators.
+
+### Iconography & Graphics
+- Iconography is strictly functional, utilizing single-weight line icons (2px stroke, outline style, 20px / 24px bounding box). 
+- Avoid all expressive emojis, hand-drawn flourishes, and illustrative corporate cartoons.

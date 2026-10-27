@@ -1,0 +1,6 @@
+{
+  "name": "CampusWell",
+  "description": "Student health, daily check-ins, sleep, hydration, study habits, academic wellness tracking, and support resources.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

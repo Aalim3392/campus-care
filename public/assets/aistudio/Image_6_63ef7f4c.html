@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-container-high": "#dce9ff",
+          "inverse-on-surface": "#eaf1ff",
+          "on-background": "#0b1c30",
+          "error-container": "#ffdad6",
+          "on-tertiary-fixed": "#002113",
+          "on-primary-container": "#fcfaff",
+          "on-tertiary-fixed-variant": "#005236",
+          "on-error-container": "#93000a",
+          "tertiary-fixed-dim": "#4edea3",
+          "secondary": "#4d5e86",
+          "secondary-container": "#c0d1ff",
+          "primary-container": "#3b6fd8",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary-fixed": "#051a3f",
+          "outline": "#737784",
+          "on-primary-fixed": "#001945",
+          "primary": "#1755be",
+          "secondary-fixed-dim": "#b5c6f4",
+          "surface-bright": "#f8f9ff",
+          "tertiary-fixed": "#6ffbbe",
+          "on-secondary": "#ffffff",
+          "primary-fixed": "#d9e2ff",
+          "surface-variant": "#d3e4fe",
+          "inverse-primary": "#b0c6ff",
+          "on-surface": "#0b1c30",
+          "on-tertiary-container": "#eefff2",
+          "surface-dim": "#cbdbf5",
+          "on-tertiary": "#ffffff",
+          "surface-container-low": "#eff4ff",
+          "surface-container": "#e5eeff",
+          "surface-tint": "#1d59c1",
+          "surface-container-highest": "#d3e4fe",
+          "outline-variant": "#c3c6d5",
+          "on-surface-variant": "#434653",
+          "tertiary-container": "#00845a",
+          "on-primary-fixed-variant": "#00419d",
+          "on-secondary-container": "#485981",
+          "primary-fixed-dim": "#b0c6ff",
+          "background": "#f8f9ff",
+          "inverse-surface": "#213145",
+          "on-error": "#ffffff",
+          "tertiary": "#006847",
+          "surface": "#f8f9ff",
+          "error": "#ba1a1a",
+          "secondary-fixed": "#d9e2ff",
+          "on-primary": "#ffffff",
+          "on-secondary-fixed-variant": "#35466d"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-sm": "0.75rem",
+          "gutter": "1.5rem",
+          "space-lg": "1.5rem",
+          "space-xs": "0.5rem",
+          "margin": "2rem",
+          "margin-sm": "1rem",
+          "space-md": "1rem",
+          "space-xl": "2rem",
+          "gutter-sm": "1rem"
+        },
+        "fontFamily": {
+          "headline-lg-mobile": ["Inter"],
+          "headline-xl": ["Inter"],
+          "body-sm": ["Inter"],
+          "label-md": ["Inter"],
+          "body-md": ["Inter"],
+          "headline-sm": ["Inter"],
+          "label-lg": ["Inter"],
+          "body-lg": ["Inter"],
+          "caption": ["Inter"],
+          "headline-md": ["Inter"],
+          "headline-lg": ["Inter"]
+        },
+        "fontSize": {
+          "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+          "body-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400"}],
+          "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+          "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+          "headline-sm": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600"}],
+          "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+          "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+          "caption": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+          "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600"}]
+        }
+      }
+    }
+  }</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="hidden lg:flex fixed left-0 top-0 h-full w-[260px] bg-[#12254A] z-50 flex-col justify-between py-space-lg px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.08)]"><div><div class="px-space-xs mb-space-xl"><div class="flex items-center gap-space-xs"><img alt="CampusWell Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMmjdjsHD6zmhbQOImm_cB3hX5TXul91fLodlp37CtW7QUE8vJ627fk2nb6kannhlKyghl25EVrXiw4m8n_wnLKgo41XGRs2484_39XpsO2cbcG8a1JamALAETjJhPORLwtpkR2y941ePCT9WYcIYx0D2YKiaupGA-v5Oa8tLouyeGF6a4RO3FzozTQmsHmqOtIHrpt3bfGDjvR8P6hMZDuxKyXb14Uztk1RyctFq_bwKgWEkq9nD1wQ"/><span class="font-headline-sm text-headline-sm text-[#FFFFFF] tracking-tight">CampusWell</span></div><p class="mt-1 text-[11px] leading-tight text-[#94A3B8] font-medium tracking-wide uppercase">Computer Engineering Dept</p></div><nav class="flex flex-col gap-1.5" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-[10px] shadow-sm"><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-[10px] text-[#CBD5E1] hover:bg-[#182E5A] hover:text-[#FFFFFF] transition-all font-body-md text-body-md" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-[10px] text-[#CBD5E1] hover:bg-[#182E5A] hover:text-[#FFFFFF] transition-all font-body-md text-body-md" data-path="daily-check-in" href="#"><span class="material-symbols-outlined text-[20px]">check_circle</span><span>Daily Check-in</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-[10px] text-[#CBD5E1] hover:bg-[#182E5A] hover:text-[#FFFFFF] transition-all font-body-md text-body-md" data-path="my-progress" href="#"><span class="material-symbols-outlined text-[20px]">trending_up</span><span>My Progress</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2.5 transition-all bg-primary-container text-on-primary-container font-medium rounded-[10px] shadow-sm" data-path="support" href="#"><span class="material-symbols-outlined text-[20px]">support</span><span>Support</span></a></nav></div><div class="flex flex-col gap-space-md pt-space-md border-t border-white/10"><div class="flex items-center gap-space-xs px-space-xs py-1.5 rounded-[10px] bg-[#182E5A]/50"><img alt="Profile" class="w-[38px] h-[38px] rounded-full object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN0SDHAieROBSDC4TDqKdwzR98ryxpHiVnrzRFMNWaQyFPiQFAMPj7YGLlnsM75Yq40NBktCirWKrbRd1rDuoSpaAoCusIR7T2_3CzxHhQ58Lo8WmbY1zvOr6Z5vRixem0zfOVMXp02j0PC9PFEiwFg4Aa7Eiwc8K4Z-xMy59etT7ge5ZvPty_iZLBYxjHTZ_3wl00v8HFc6YE5emzK20wMxzc_TBC8T4Mep6mYZTQgOoJdmwdSQzyYw"/><div class="min-w-0 flex-1"><p class="font-label-lg text-label-lg text-[#FFFFFF] truncate">Student Name</p><p class="text-[11px] leading-tight text-[#94A3B8] truncate">Comp Eng · Div A / Year 3</p></div></div><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#182E5A]/80 text-[#94A3B8] self-start"><span class="material-symbols-outlined text-[14px]">lock</span><span class="text-[11px] font-medium leading-none">Your entries are private</span></div></div></aside><div class="lg:pl-[260px] min-h-screen flex flex-col"><header class="fixed top-0 left-0 lg:left-[260px] right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(18,37,74,0.04)]"><div class="h-16 w-full px-space-md lg:px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="lg:hidden flex items-center gap-space-xs"><img alt="CampusWell Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMmjdjsHD6zmhbQOImm_cB3hX5TXul91fLodlp37CtW7QUE8vJ627fk2nb6kannhlKyghl25EVrXiw4m8n_wnLKgo41XGRs2484_39XpsO2cbcG8a1JamALAETjJhPORLwtpkR2y941ePCT9WYcIYx0D2YKiaupGA-v5Oa8tLouyeGF6a4RO3FzozTQmsHmqOtIHrpt3bfGDjvR8P6hMZDuxKyXb14Uztk1RyctFq_bwKgWEkq9nD1wQ"/><span class="font-headline-sm text-headline-sm text-on-surface">CampusWell</span></div><span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-caption text-caption"><span class="material-symbols-outlined text-[14px] text-tertiary">verified_user</span>CoE Confidential Sanctuary</span></div><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant"><span class="material-symbols-outlined text-[16px]">calendar_today</span><span>Today, Oct 24</span></div><button aria-label="Notifications" class="w-9 h-9 rounded-[10px] bg-surface-container-lowest shadow-[0_1px_3px_rgba(18,37,74,0.05)] flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover lg:hidden" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN0SDHAieROBSDC4TDqKdwzR98ryxpHiVnrzRFMNWaQyFPiQFAMPj7YGLlnsM75Yq40NBktCirWKrbRd1rDuoSpaAoCusIR7T2_3CzxHhQ58Lo8WmbY1zvOr6Z5vRixem0zfOVMXp02j0PC9PFEiwFg4Aa7Eiwc8K4Z-xMy59etT7ge5ZvPty_iZLBYxjHTZ_3wl00v8HFc6YE5emzK20wMxzc_TBC8T4Mep6mYZTQgOoJdmwdSQzyYw"/></div></div></header><main class="relative pt-16 pb-20 lg:pb-space-xl w-full px-space-md lg:px-space-xl bg-surface flex-1"><div class="flex flex-col w-full">
+<div class="relative w-full pb-space-xl">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-lg">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs mb-1">
+<span class="font-label-md text-label-md uppercase tracking-wider text-primary">Department of Computer Engineering</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Confidential Care Desk</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Support</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Find help and resources when you need them</p>
+</div>
+<div class="inline-flex items-center gap-2 self-start md:self-auto px-3.5 py-1.5 rounded-full bg-surface-container-low shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-tertiary">verified_user</span>
+<span class="font-label-md text-label-md text-on-surface font-medium">Confidential Student Resources</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg mb-space-xl">
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-11 h-11 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">psychology</span>
+</div>
+<span class="font-caption text-caption text-primary bg-primary-fixed/50 px-2.5 py-0.5 rounded-full font-medium">Academic Guidance</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1.5">Counselling Services</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+            Confidential one-on-one sessions and academic wellness guidance for students.
+          </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between">
+<span class="font-caption text-caption text-outline">Available Mon-Fri · 09:00-17:00</span>
+<button class="inline-flex items-center justify-center bg-surface-container-lowest text-primary font-label-lg text-label-lg rounded-xl py-2 px-4 shadow-sm hover:bg-surface-container-low transition-all active:scale-[0.985]" type="button">
+            View Details
+          </button>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-11 h-11 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[22px]">spa</span>
+</div>
+<span class="font-caption text-caption text-tertiary bg-tertiary-fixed/30 px-2.5 py-0.5 rounded-full font-medium">Self-Paced</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1.5">Wellness Resources</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+            Self-guided stress management workshops, mindfulness toolkits, and sleep guides.
+          </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between">
+<span class="font-caption text-caption text-outline">12 Modular Toolkits</span>
+<button class="inline-flex items-center justify-center bg-surface-container-lowest text-primary font-label-lg text-label-lg rounded-xl py-2 px-4 shadow-sm hover:bg-surface-container-low transition-all active:scale-[0.985]" type="button">
+            View Details
+          </button>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-11 h-11 rounded-lg bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[22px]">groups</span>
+</div>
+<span class="font-caption text-caption text-secondary font-medium bg-secondary-fixed/50 px-2.5 py-0.5 rounded-full">Campus Network</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1.5">Campus Services</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+            Student affairs, study habit support centres, and peer mentoring networks.
+          </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between">
+<span class="font-caption text-caption text-outline">Main Campus & Virtual Hub</span>
+<button class="inline-flex items-center justify-center bg-surface-container-lowest text-primary font-label-lg text-label-lg rounded-xl py-2 px-4 shadow-sm hover:bg-surface-container-low transition-all active:scale-[0.985]" type="button">
+            View Details
+          </button>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<div class="w-11 h-11 rounded-lg bg-surface-variant flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">emergency</span>
+</div>
+<span class="font-caption text-caption text-error bg-error-container/60 px-2.5 py-0.5 rounded-full font-medium">Urgent 24/7 Access</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1.5">Emergency Contacts</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+            24/7 campus safety dispatch and certified student mental health crisis helpline.
+          </p>
+</div>
+<div class="pt-space-sm flex items-center justify-between">
+<span class="font-caption text-caption text-outline">Direct Dispatch Lines</span>
+<button class="inline-flex items-center justify-center bg-surface-container-lowest text-primary font-label-lg text-label-lg rounded-xl py-2 px-4 shadow-sm hover:bg-surface-container-low transition-all active:scale-[0.985]" type="button">
+            View Details
+          </button>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm relative overflow-hidden">
+<div class="max-w-2xl">
+<div class="mb-space-md">
+<div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md mb-1">
+<span class="material-symbols-outlined text-[16px]">support_agent</span>
+<span>Wellness Coordinator Desk</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Request Support</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            Need guidance? Reach out to the student wellness coordinator. You are in control.
+          </p>
+</div>
+<form class="space-y-space-md mt-space-md" id="support-request-form" onsubmit="event.preventDefault(); handleSupportSubmit();">
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="support-topic">
+              Topic of Concern
+            </label>
+<div class="relative">
+<select class="w-full h-11 px-3.5 pr-10 rounded-[10px] bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all appearance-none cursor-pointer" id="support-topic">
+<option value="Stress & Anxiety">Stress & Anxiety</option>
+<option value="Sleep Difficulties">Sleep Difficulties</option>
+<option selected="" value="Study Pressure & Deadlines">Study Pressure & Deadlines</option>
+<option value="Other">Other</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">
+                expand_more
+              </span>
+</div>
+</div>
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="support-message">
+              Optional Message
+            </label>
+<textarea class="w-full p-3.5 rounded-[10px] bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:bg-surface-container-lowest focus:outline-none transition-all resize-none" id="support-message" placeholder="Briefly share how we can assist you (optional)..." rows="3"></textarea>
+</div>
+<div class="pt-space-xs flex flex-col gap-space-sm">
+<div>
+<button class="inline-flex items-center justify-center bg-primary text-on-primary font-label-lg text-label-lg rounded-xl h-11 px-6 shadow-sm hover:bg-primary-container transition-all active:scale-[0.985]" id="submit-btn" type="submit">
+<span class="material-symbols-outlined text-[18px] mr-2">send</span>
+<span>Request Support</span>
+</button>
+</div>
+<div class="flex items-start gap-2 pt-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5 shrink-0">lock</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Your request is only shared if you choose to submit it. Faculty and course tutors cannot view support tickets.
+              </p>
+</div>
+</div>
+</form>
+<div class="hidden mt-space-md p-space-md rounded-xl bg-surface-container-high flex items-start gap-space-sm" id="confirmation-banner">
+<span class="material-symbols-outlined text-tertiary text-[22px] shrink-0">check_circle</span>
+<div class="flex-1">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Request submitted privately</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              A designated wellness coordinator will review your request. Communication will arrive solely via your secure student portal within 1 business day.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function handleSupportSubmit() {
+    const btn = document.getElementById('submit-btn');
+    const form = document.getElementById('support-request-form');
+    const banner = document.getElementById('confirmation-banner');
+    
+    if (btn) {
+      btn.disabled = true;
+      btn.classList.add('opacity-70');
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px] mr-2 animate-spin">refresh</span><span>Submitting...</span>';
+    }
+
+    setTimeout(() => {
+      if (btn) {
+        btn.classList.add('hidden');
+      }
+      if (form) {
+        form.classList.add('opacity-60', 'pointer-events-none');
+      }
+      if (banner) {
+        banner.classList.remove('hidden');
+      }
+    }, 600);
+  }
+</script></main><nav class="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(18,37,74,0.06)] z-50 flex items-center justify-around px-space-xs" data-active-classes="text-primary font-bold"><a class="flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface font-caption text-caption" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Dashboard</span></a><a class="flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface font-caption text-caption" data-path="daily-check-in" href="#"><span class="material-symbols-outlined text-[20px]">check_circle</span><span>Check-in</span></a><a class="flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface font-caption text-caption" data-path="my-progress" href="#"><span class="material-symbols-outlined text-[20px]">trending_up</span><span>Progress</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 text-primary font-bold" data-path="support" href="#"><span class="material-symbols-outlined text-[20px]">support</span><span>Support</span></a></nav></div></body></html>

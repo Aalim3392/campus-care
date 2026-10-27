@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-surface" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><title>CampusWell</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface": "#f8f9ff", "outline": "#737784", "surface-dim": "#cbdbf5", "on-tertiary-fixed": "#002113", "on-surface": "#0b1c30", "on-primary-container": "#fcfaff", "surface-container-lowest": "#ffffff", "on-secondary-fixed-variant": "#35466d", "on-secondary-container": "#485981", "secondary-fixed": "#d9e2ff", "on-error-container": "#93000a", "surface-container-highest": "#d3e4fe", "error-container": "#ffdad6", "inverse-on-surface": "#eaf1ff", "inverse-surface": "#213145", "surface-container-high": "#dce9ff", "tertiary-fixed": "#6ffbbe", "surface-bright": "#f8f9ff", "secondary-fixed-dim": "#b5c6f4", "inverse-primary": "#b0c6ff", "primary-fixed-dim": "#b0c6ff", "secondary-container": "#c0d1ff", "on-primary": "#ffffff", "surface-container": "#e5eeff", "outline-variant": "#c3c6d5", "tertiary-container": "#00845a", "secondary": "#4d5e86", "on-primary-fixed-variant": "#00419d", "error": "#ba1a1a", "on-background": "#0b1c30", "surface-tint": "#1d59c1", "tertiary-fixed-dim": "#4edea3", "primary": "#1755be", "primary-fixed": "#d9e2ff", "on-tertiary": "#ffffff", "on-surface-variant": "#434653", "on-secondary-fixed": "#051a3f", "background": "#f8f9ff", "on-primary-fixed": "#001945", "on-error": "#ffffff", "primary-container": "#3b6fd8", "surface-container-low": "#eff4ff", "on-tertiary-fixed-variant": "#005236", "surface-variant": "#d3e4fe", "tertiary": "#006847", "on-tertiary-container": "#eefff2", "on-secondary": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1.5rem", "gutter": "1.5rem", "margin": "2rem", "gutter-sm": "1rem", "space-sm": "0.75rem", "space-xs": "0.5rem", "space-xl": "2rem", "space-md": "1rem", "margin-sm": "1rem" }, fontFamily: { "caption": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "headline-lg-mobile": ["Inter"], "label-lg": ["Inter"], "headline-md": ["Inter"], "headline-lg": ["Inter"], "body-sm": ["Inter"], "headline-sm": ["Inter"], "headline-xl": ["Inter"], "body-lg": ["Inter"] }, fontSize: { "caption": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }], "headline-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="min-h-full bg-surface text-on-surface font-body-md antialiased flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(11,28,48,0.04)] pt-safe"><div class="h-20 px-gutter-sm flex flex-col justify-center"><div class="flex items-center justify-between gap-space-xs"><div class="flex items-center gap-space-xs min-w-0"><div class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-container text-on-primary font-headline-sm text-headline-sm"><span class="material-symbols-outlined text-[18px]">spa</span></div><div class="flex flex-col min-w-0"><div class="flex items-center gap-1.5"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">CampusWell</span><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container-high text-on-secondary-fixed-variant tracking-wider uppercase">CoE</span></div><span class="font-caption text-caption text-on-surface-variant truncate">Daily Check In</span></div></div><div class="flex items-center gap-1"><div class="flex items-center gap-1 px-2 py-1 rounded-full bg-surface-container-low text-tertiary"><span class="material-symbols-outlined text-[14px]">lock</span><span class="text-[11px] font-label-md font-medium text-tertiary">Encrypted</span></div><a class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" data-path="notifications" href="#"><span class="material-symbols-outlined text-[20px]">notifications</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-20 pb-24 bg-surface px-gutter-sm"><div class="flex flex-col w-full pb-8 space-y-space-md">
+<!-- Header & Confidentiality Pill -->
+<div class="flex flex-col space-y-space-xs pt-1">
+<div class="flex items-center justify-between gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-secondary-fixed-variant font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+        CoE Confidential Sanctuary
+      </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[13px] text-primary">calendar_today</span>
+        Mon, 28 Apr 2025
+      </span>
+</div>
+<div class="pt-1">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">Daily Check-in</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+        Takes less than a minute. Only you can see your entries.
+      </p>
+</div>
+</div>
+<!-- Card 1: Emotional Baseline Metric -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">How are you feeling today?</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-primary font-label-md text-label-md">
+        Baseline Metric
+      </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant -mt-1">
+      Select the option that best reflects your present restorative state.
+    </p>
+<!-- 5 Mood Buttons Row -->
+<div class="grid grid-cols-5 gap-1.5 pt-1" id="mood-selector">
+<!-- Great -->
+<button class="mood-btn flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-all active:scale-95 min-h-[68px]" data-mood="great" type="button">
+<span class="material-symbols-outlined text-[26px] text-tertiary">sentiment_very_satisfied</span>
+<span class="font-caption text-caption mt-1">Great</span>
+</button>
+<!-- Good (Pre-selected) -->
+<button class="mood-btn relative flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-fixed text-primary font-semibold shadow-sm transition-all active:scale-95 min-h-[68px]" data-mood="good" type="button">
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary-container text-on-primary text-[10px]">
+<span class="material-symbols-outlined text-[10px]">check</span>
+</span>
+<span class="material-symbols-outlined text-[26px] text-primary" style="font-variation-settings: 'FILL' 1;">sentiment_satisfied</span>
+<span class="font-caption text-caption mt-1">Good</span>
+</button>
+<!-- Okay -->
+<button class="mood-btn flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-all active:scale-95 min-h-[68px]" data-mood="okay" type="button">
+<span class="material-symbols-outlined text-[26px] text-on-surface-variant">sentiment_neutral</span>
+<span class="font-caption text-caption mt-1">Okay</span>
+</button>
+<!-- Low -->
+<button class="mood-btn flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-all active:scale-95 min-h-[68px]" data-mood="low" type="button">
+<span class="material-symbols-outlined text-[26px] text-secondary">sentiment_dissatisfied</span>
+<span class="font-caption text-caption mt-1">Low</span>
+</button>
+<!-- Stressed -->
+<button class="mood-btn flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-all active:scale-95 min-h-[68px]" data-mood="stressed" type="button">
+<span class="material-symbols-outlined text-[26px] text-error">sentiment_very_dissatisfied</span>
+<span class="font-caption text-caption mt-1">Stressed</span>
+</button>
+</div>
+</section>
+<!-- Card 2: Physiological & Academic Parameters -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Physiological &amp; Academic Parameters</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+        Quantify habits across key restorative and cognitive dimensions.
+      </p>
+</div>
+<div class="space-y-space-md pt-1">
+<!-- 1. Sleep Duration -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[17px]">bedtime</span>
+</span>
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface" for="sleep-select">Sleep</label>
+<p class="font-caption text-caption text-on-surface-variant">Hours slept last night</p>
+</div>
+</div>
+<span class="font-label-md text-label-md text-primary px-2 py-0.5 rounded bg-surface-container-low">Target: 7-9h</span>
+</div>
+<div class="relative w-full">
+<select class="w-full h-11 px-3.5 pr-10 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:bg-surface-container transition-colors cursor-pointer" id="sleep-select">
+<option value="4.5">4.5 hours or fewer</option>
+<option value="5.5">5.5 hours</option>
+<option value="6.5">6.5 hours</option>
+<option selected="" value="7">7 hours (Optimal baseline)</option>
+<option value="7.5">7.5 hours</option>
+<option value="8">8 hours</option>
+<option value="9">9+ hours</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-3 top-3 text-[20px] text-on-surface-variant">
+            expand_more
+          </span>
+</div>
+</div>
+<!-- 2. Water Intake Stepper -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[17px]">water_drop</span>
+</span>
+<div>
+<span class="block font-label-lg text-label-lg text-on-surface">Water Intake</span>
+<p class="font-caption text-caption text-on-surface-variant">Standard glasses of 250 ml</p>
+</div>
+</div>
+<span class="font-label-md text-label-md text-tertiary px-2 py-0.5 rounded bg-on-tertiary-container" id="hydration-metric">1.5 L total</span>
+</div>
+<div class="flex items-center justify-between h-11 px-2 rounded-lg bg-surface-container-low">
+<button aria-label="Decrease water intake" class="w-9 h-9 rounded-md bg-surface-container-lowest flex items-center justify-center text-on-surface active:bg-surface-container transition-colors shadow-sm" id="water-decrement" type="button">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface" id="water-count">6</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">glasses</span>
+</div>
+<button aria-label="Increase water intake" class="w-9 h-9 rounded-md bg-surface-container-lowest flex items-center justify-center text-on-surface active:bg-surface-container transition-colors shadow-sm" id="water-increment" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</div>
+<!-- 3. Study Time -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[17px]">menu_book</span>
+</span>
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface" for="study-select">Study Time</label>
+<p class="font-caption text-caption text-on-surface-variant">Focused outside lectures</p>
+</div>
+</div>
+<span class="font-label-md text-label-md text-on-secondary-container px-2 py-0.5 rounded bg-secondary-fixed">Deep work</span>
+</div>
+<div class="relative w-full">
+<select class="w-full h-11 px-3.5 pr-10 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:bg-surface-container transition-colors cursor-pointer" id="study-select">
+<option value="1">1 hour</option>
+<option value="2">2 hours</option>
+<option value="3">3 hours</option>
+<option selected="" value="4">4 hours (Recommended split)</option>
+<option value="5">5 hours</option>
+<option value="6">6+ hours (Heavy cognitive load)</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-3 top-3 text-[20px] text-on-surface-variant">
+            expand_more
+          </span>
+</div>
+</div>
+<!-- 4. Stress Level Discrete Slider -->
+<div class="space-y-2 pt-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[17px]">psychology</span>
+</span>
+<div>
+<span class="block font-label-lg text-label-lg text-on-surface">Stress Level</span>
+<p class="font-caption text-caption text-on-surface-variant">Perceived pressure &amp; tension</p>
+</div>
+</div>
+<span class="font-label-md text-label-md text-tertiary px-2.5 py-0.5 rounded-full bg-surface-container-low" id="stress-badge">
+            Level 2: Mild / Balanced
+          </span>
+</div>
+<div class="px-1 pt-2 pb-1">
+<input class="w-full accent-primary h-2 bg-surface-container rounded-lg cursor-pointer" id="stress-range" max="5" min="1" step="1" type="range" value="2"/>
+<div class="flex justify-between items-center text-caption font-caption text-on-surface-variant px-0.5 pt-1.5">
+<span>Low (1)</span>
+<span>Mild (2)</span>
+<span>Moderate (3)</span>
+<span>Elevated (4)</span>
+<span>High (5)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Weekly Consistency Checkpoint Card -->
+<aside class="relative overflow-hidden rounded-xl bg-surface-container-high p-space-md text-on-surface shadow-sm">
+<div class="flex items-start gap-3">
+<div class="flex items-center justify-center w-9 h-9 rounded-lg bg-surface-container-lowest text-primary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">insights</span>
+</div>
+<div class="min-w-0 flex-1 space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Weekly Consistency</span>
+<span class="font-label-md text-label-md px-2 py-0.5 rounded-full bg-surface-container-lowest text-primary font-medium">4/7 days</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Logging daily reveals cognitive and workload friction before high-stakes examination periods. You are on track for a stable baseline.
+        </p>
+</div>
+</div>
+<!-- Mini weekly progress streak -->
+<div class="flex items-center justify-between gap-1.5 pt-3 mt-2 border-t-0 border-transparent">
+<div class="flex-1 flex flex-col items-center gap-1">
+<span class="font-caption text-[11px] text-on-surface-variant">M</span>
+<div class="w-full h-1.5 rounded-full bg-primary-container"></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1">
+<span class="font-caption text-[11px] text-on-surface-variant">T</span>
+<div class="w-full h-1.5 rounded-full bg-primary-container"></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1">
+<span class="font-caption text-[11px] text-on-surface-variant">W</span>
+<div class="w-full h-1.5 rounded-full bg-primary-container"></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1">
+<span class="font-caption text-[11px] text-on-surface-variant">T</span>
+<div class="w-full h-1.5 rounded-full bg-primary-container"></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1">
+<span class="font-caption text-[11px] text-on-surface-variant font-semibold text-primary">F</span>
+<div class="w-full h-1.5 rounded-full bg-secondary-fixed"></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1">
+<span class="font-caption text-[11px] text-on-surface-variant">S</span>
+<div class="w-full h-1.5 rounded-full bg-secondary-fixed"></div>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1">
+<span class="font-caption text-[11px] text-on-surface-variant">S</span>
+<div class="w-full h-1.5 rounded-full bg-secondary-fixed"></div>
+</div>
+</div>
+</aside>
+<!-- Interactive Submission Action -->
+<div class="space-y-space-xs pt-1">
+<button class="w-full h-12 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 shadow-sm active:scale-[0.985] transition-transform" id="save-checkin-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Save Check-in</span>
+</button>
+<div class="flex items-center justify-center gap-1.5 px-3 py-1.5 text-center">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant shrink-0">lock</span>
+<p class="font-caption text-caption text-on-surface-variant">
+        Responses are strictly confidential to your device and never shared with faculty.
+      </p>
+</div>
+</div>
+</div>
+<script>
+  // Stepper logic for Water Intake
+  const waterCountEl = document.getElementById('water-count');
+  const hydrationMetricEl = document.getElementById('hydration-metric');
+  const waterDecBtn = document.getElementById('water-decrement');
+  const waterIncBtn = document.getElementById('water-increment');
+  let currentWater = 6;
+
+  function updateWaterDisplay() {
+    waterCountEl.textContent = currentWater;
+    const liters = (currentWater * 0.25).toFixed(currentWater % 4 === 0 ? 0 : 1);
+    hydrationMetricEl.textContent = `${liters} L total`;
+  }
+
+  waterDecBtn.addEventListener('click', () => {
+    if (currentWater > 0) {
+      currentWater -= 1;
+      updateWaterDisplay();
+    }
+  });
+
+  waterIncBtn.addEventListener('click', () => {
+    if (currentWater < 20) {
+      currentWater += 1;
+      updateWaterDisplay();
+    }
+  });
+
+  // Mood selection toggle
+  const moodButtons = document.querySelectorAll('.mood-btn');
+  moodButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      moodButtons.forEach(b => {
+        b.className = 'mood-btn flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-all active:scale-95 min-h-[68px]';
+        const badge = b.querySelector('.absolute');
+        if (badge) badge.remove();
+        const icon = b.querySelector('.material-symbols-outlined');
+        if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+      });
+
+      btn.className = 'mood-btn relative flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-fixed text-primary font-semibold shadow-sm transition-all active:scale-95 min-h-[68px]';
+      const checkBadge = document.createElement('span');
+      checkBadge.className = 'absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary-container text-on-primary text-[10px]';
+      checkBadge.innerHTML = '<span class="material-symbols-outlined text-[10px]">check</span>';
+      btn.appendChild(checkBadge);
+      
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+    });
+  });
+
+  // Stress slider interactive feedback
+  const stressSlider = document.getElementById('stress-range');
+  const stressBadge = document.getElementById('stress-badge');
+  const stressLabels = {
+    '1': { label: 'Level 1: Minimal / Relaxed', colorClass: 'text-tertiary bg-on-tertiary-container' },
+    '2': { label: 'Level 2: Mild / Balanced', colorClass: 'text-tertiary bg-surface-container-low' },
+    '3': { label: 'Level 3: Moderate Tension', colorClass: 'text-primary bg-secondary-fixed' },
+    '4': { label: 'Level 4: Elevated Pressure', colorClass: 'text-error bg-surface-container' },
+    '5': { label: 'Level 5: High / Acute', colorClass: 'text-error bg-error-container' }
+  };
+
+  stressSlider.addEventListener('input', (e) => {
+    const val = e.target.value;
+    const config = stressLabels[val] || stressLabels['2'];
+    stressBadge.textContent = config.label;
+    stressBadge.className = `font-label-md text-label-md px-2.5 py-0.5 rounded-full ${config.colorClass}`;
+  });
+
+  // Save Check-in toast feedback
+  const saveBtn = document.getElementById('save-checkin-btn');
+  saveBtn.addEventListener('click', () => {
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-pulse">task_alt</span><span>Saved Securely</span>';
+    saveBtn.classList.replace('bg-primary-container', 'bg-tertiary-container');
+    
+    setTimeout(() => {
+      saveBtn.innerHTML = originalText;
+      saveBtn.classList.replace('bg-tertiary-container', 'bg-primary-container');
+    }, 2000);
+  });
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(11,28,48,0.05)]" data-active-classes="text-primary-container font-semibold"><div class="flex items-center justify-around h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-0.5 min-w-[64px] min-h-[44px] text-on-surface-variant transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[22px]">space_dashboard</span><span class="font-caption text-caption">Dashboard</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-w-[64px] min-h-[44px] transition-colors text-primary-container font-semibold" data-path="daily-check-in" href="#"><span class="material-symbols-outlined text-[22px]">fact_check</span><span class="font-caption text-caption">Check-in</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[64px] min-h-[44px] text-on-surface-variant transition-colors" data-path="my-progress" href="#"><span class="material-symbols-outlined text-[22px]">insights</span><span class="font-caption text-caption">Progress</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[64px] min-h-[44px] text-on-surface-variant transition-colors" data-path="support" href="#"><span class="material-symbols-outlined text-[22px]">support_agent</span><span class="font-caption text-caption">Support</span></a></div></nav></body></html>
