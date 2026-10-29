@@ -1,5 +1,5 @@
 // Campus Care Service Worker for Mobile PWA
-const CACHE_NAME = 'campuscare-v15';
+const CACHE_NAME = 'campuscare-v16';
 const ASSETS_TO_CACHE = [
   '/manifest.json',
   '/assets/icon-192.png',

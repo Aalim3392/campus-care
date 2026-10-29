@@ -1695,16 +1695,12 @@
           return;
         }
 
-        // Faculty Security Passcode Check (Students have no code, direct registration)
-        // Note: The passcode is strictly checked without revealing the secret code on screen
-        if (selectedAuthRole === 'FACULTY') {
-          const VALID_FACULTY_CODES = ['KKWAGH_FACULTY_2026', 'KKW2026', 'FACULTY2026'];
-          if (!VALID_FACULTY_CODES.includes(enteredFacultyCode.toUpperCase())) {
-            emailErrTxt.innerHTML = `<strong>Access Denied:</strong> Invalid Faculty Passcode! Please enter the authorized departmental faculty key.`;
-            emailError.classList.remove('hidden');
-            if (facultyCodeInput) facultyCodeInput.focus();
-            return;
-          }
+        // Faculty Security Passcode Check (Validated securely on server so code is never exposed in client JS)
+        if (selectedAuthRole === 'FACULTY' && !enteredFacultyCode) {
+          emailErrTxt.textContent = 'Please enter the authorized departmental faculty passcode.';
+          emailError.classList.remove('hidden');
+          if (facultyCodeInput) facultyCodeInput.focus();
+          return;
         }
       }
 
