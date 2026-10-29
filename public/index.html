@@ -211,6 +211,31 @@
                 </div>
               </div>
 
+              <!-- Faculty Access Code (Only shown in Register Mode when Account Role is Faculty) -->
+              <div id="faculty-code-field" class="hidden">
+                <div class="flex items-center justify-between mb-1">
+                  <label for="faculty-code-input" class="block text-xs font-bold text-purple-900 uppercase tracking-wide">
+                    Faculty Verification Passcode
+                  </label>
+                  <span class="text-[9px] font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full border border-purple-200">
+                    Faculty Key Required
+                  </span>
+                </div>
+                <div class="relative">
+                  <input 
+                    type="password" 
+                    id="faculty-code-input" 
+                    placeholder="Enter departmental faculty code"
+                    class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-purple-50/50 border border-purple-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-purple-600/30 focus:border-purple-600 transition"
+                  />
+                  <span class="material-symbols-outlined absolute right-3 top-2.5 text-purple-500 text-lg">key</span>
+                </div>
+                <div class="mt-1 p-2 bg-purple-50 border border-purple-100 rounded-lg flex items-center justify-between text-[10px] text-purple-900">
+                  <span>Authorized Faculty Passcode:</span>
+                  <code class="font-mono font-bold text-purple-800 bg-purple-100 px-1.5 py-0.5 rounded">KKWAGH_FACULTY_2026</code>
+                </div>
+              </div>
+
               <!-- Department Badge (Pre-selected) -->
               <div class="p-2.5 bg-blue-50/70 border border-blue-100 rounded-xl flex items-center justify-between text-xs text-blue-950 font-medium">
                 <span class="flex items-center gap-1.5">
@@ -1414,9 +1439,22 @@
         syncUserData();
       }
       fetchDepartmentGoals();
+      fetchDepartmentCheckinsAndScore();
     });
 
     // ─── Authentication & Role Handling ─────────────────────────────────────
+    function updateFacultyCodeVisibility() {
+      const field = document.getElementById('faculty-code-field');
+      if (!field) return;
+      if (authMode === 'register' && selectedAuthRole === 'FACULTY') {
+        field.classList.remove('hidden');
+      } else {
+        field.classList.add('hidden');
+        const inp = document.getElementById('faculty-code-input');
+        if (inp) inp.value = '';
+      }
+    }
+
     function setAuthMode(mode) {
       authMode = mode;
       const tabLogin = document.getElementById('auth-tab-login');
@@ -1433,7 +1471,9 @@
         if (tabLogin) tabLogin.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
         if (nameField) nameField.classList.remove('hidden');
         if (heading) heading.textContent = selectedAuthRole === 'FACULTY' ? 'Register as Faculty' : 'Register New Student Account';
-        if (subheading) subheading.textContent = 'Create your Department of Computer Engineering account with official college email.';
+        if (subheading) subheading.textContent = selectedAuthRole === 'FACULTY' 
+          ? 'Enter your name, college email, and department faculty passcode.' 
+          : 'Direct student registration: enter your full name and college email.';
         if (submitBtnText) submitBtnText.textContent = 'Create Account & Verify';
       } else {
         if (tabLogin) tabLogin.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-[#1755BE] shadow-sm flex items-center justify-center gap-1.5';
@@ -1443,6 +1483,8 @@
         if (subheading) subheading.textContent = 'Enter your official @kkwagh.edu.in email to continue.';
         if (submitBtnText) submitBtnText.textContent = 'Continue with College Email';
       }
+
+      updateFacultyCodeVisibility();
     }
 
     function setAuthRole(role) {
@@ -1450,19 +1492,43 @@
       const sBtn = document.getElementById('role-btn-student');
       const fBtn = document.getElementById('role-btn-faculty');
       const heading = document.getElementById('auth-heading');
+      const subheading = document.getElementById('auth-subheading');
 
       if (role === 'FACULTY') {
         if (fBtn) fBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-purple-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-purple-600/30';
         if (sBtn) sBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
         if (heading) heading.textContent = authMode === 'register' ? 'Register as Faculty' : 'Faculty Sign In';
+        if (subheading && authMode === 'register') {
+          subheading.textContent = 'Enter your name, college email, and department faculty passcode.';
+        }
       } else {
         if (sBtn) sBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-blue-600/30';
         if (fBtn) fBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
         if (heading) heading.textContent = authMode === 'register' ? 'Register New Student Account' : 'Sign in to Campus Care';
+        if (subheading && authMode === 'register') {
+          subheading.textContent = 'Direct student registration: enter your full name and college email.';
+        }
       }
+
+      updateFacultyCodeVisibility();
     }
 
-    function triggerDepartmentHealthSync() {
+    // Fetches centralized department check-ins so everyone sees the exact same Department Health Index (DHI)
+    async function fetchDepartmentCheckinsAndScore() {
+      try {
+        const res = await fetch('/api/department/checkins');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.checkins) && data.checkins.length > 0) {
+            allDepartmentCheckins = data.checkins;
+            localStorage.setItem('cw_all_checkins', JSON.stringify(allDepartmentCheckins));
+          }
+        }
+      } catch (_) {}
+      renderDepartmentDHI();
+    }
+
+    async function triggerDepartmentHealthSync() {
       const icon = document.getElementById('sync-spin-icon');
       const btnIcon = document.getElementById('sync-btn-icon');
       const label = document.getElementById('sync-btn-label');
@@ -1474,9 +1540,10 @@
       if (label) label.textContent = 'Synchronizing student health records...';
       if (btn) btn.disabled = true;
 
+      // Re-fetch centralized department records from server
+      await fetchDepartmentCheckinsAndScore();
+
       setTimeout(() => {
-        // Recalculate DHI from all student checkins
-        renderDepartmentDHI();
         if (icon) icon.classList.remove('animate-spin');
         if (btnIcon) btnIcon.classList.remove('animate-spin');
         if (label) label.textContent = 'Sync Department Data & Recalculate Score';
@@ -1553,6 +1620,7 @@
       e.preventDefault();
       const emailInput = document.getElementById('email-input');
       const nameInput = document.getElementById('register-name-input');
+      const facultyCodeInput = document.getElementById('faculty-code-input');
       const emailError = document.getElementById('email-error-msg');
       const emailErrTxt = document.getElementById('email-error-text');
       const btn = document.getElementById('send-otp-btn');
@@ -1574,11 +1642,62 @@
         return;
       }
 
+      // 1. SIGN-IN MODE: User MUST already be registered!
+      if (authMode === 'login') {
+        const localUser = findRegisteredUser(email);
+        if (!localUser) {
+          btn.disabled = true;
+          btnText.textContent = 'Checking registration…';
+          try {
+            const checkRes = await fetch('/api/auth/send-otp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, isRegistering: false })
+            });
+            const checkData = await checkRes.json().catch(() => ({}));
+            if (!checkRes.ok || checkData.notRegistered) {
+              emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> You must register first before logging in. Switched to <strong>Register</strong> tab.`;
+              emailError.classList.remove('hidden');
+              setAuthMode('register');
+              document.getElementById('email-input').value = email;
+              showToast('Please complete registration first!', 'error');
+              return;
+            }
+          } catch (_) {
+            emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> You must register first before logging in. Switched to <strong>Register</strong> tab.`;
+            emailError.classList.remove('hidden');
+            setAuthMode('register');
+            document.getElementById('email-input').value = email;
+            showToast('Please complete registration first!', 'error');
+            return;
+          } finally {
+            btn.disabled = false;
+            btnText.textContent = 'Continue with College Email';
+          }
+        }
+      }
+
+      // 2. REGISTER MODE: Full Name required + Faculty Passcode if registering as Faculty
       let fullName = (nameInput ? nameInput.value : '').trim();
-      if (authMode === 'register' && !fullName) {
-        emailErrTxt.textContent = 'Please enter your full name to register.';
-        emailError.classList.remove('hidden');
-        return;
+      let enteredFacultyCode = (facultyCodeInput ? facultyCodeInput.value : '').trim();
+
+      if (authMode === 'register') {
+        if (!fullName) {
+          emailErrTxt.textContent = 'Please enter your full name to register.';
+          emailError.classList.remove('hidden');
+          return;
+        }
+
+        // Faculty Security Passcode Check (Students have no code, direct registration)
+        if (selectedAuthRole === 'FACULTY') {
+          const VALID_FACULTY_CODES = ['KKWAGH_FACULTY_2026', 'KKW2026', 'FACULTY2026'];
+          if (!VALID_FACULTY_CODES.includes(enteredFacultyCode.toUpperCase())) {
+            emailErrTxt.innerHTML = `<strong>Access Denied:</strong> Invalid Faculty Passcode! Faculty registration requires the authorized department code (<code class="bg-purple-100 text-purple-900 font-mono font-bold px-1 rounded">KKWAGH_FACULTY_2026</code>).`;
+            emailError.classList.remove('hidden');
+            if (facultyCodeInput) facultyCodeInput.focus();
+            return;
+          }
+        }
       }
 
       emailError.classList.add('hidden');
@@ -1598,13 +1717,28 @@
               email,
               displayName: fullName || (userProfile ? userProfile.displayName : ''),
               role: selectedAuthRole,
-              isRegistering: authMode === 'register'
+              isRegistering: authMode === 'register',
+              facultyCode: enteredFacultyCode
             })
           });
           if (res.ok) {
             const data = await res.json();
             if (data.devCode) code = data.devCode;
             if (data.user) userProfile = data.user;
+          } else {
+            const errData = await res.json().catch(() => ({}));
+            if (errData.notRegistered) {
+              emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> You must register first before logging in. Switched to <strong>Register</strong> tab.`;
+              emailError.classList.remove('hidden');
+              setAuthMode('register');
+              document.getElementById('email-input').value = email;
+              return;
+            }
+            if (errData.error) {
+              emailErrTxt.innerHTML = errData.error;
+              emailError.classList.remove('hidden');
+              return;
+            }
           }
         } catch (_) {}
 
@@ -2211,11 +2345,13 @@
       showToast(`Daily check-in recorded for ${dateVal}! 🌟 (Entry Locked)`);
       navigateTo('home');
 
-      // Attempt background backend sync
+      // Attempt background backend sync and sync department score for everyone
       fetch('/api/checkins', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(record)
+      }).then(() => {
+        fetchDepartmentCheckinsAndScore();
       }).catch(() => {});
     }
 

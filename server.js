@@ -204,7 +204,7 @@ const requestHandler = async (req, res) => {
   // 2. Server-side Domain Validation & OTP Dispatch (Supports Login & Registration)
   if (pathname === '/api/auth/send-otp' && req.method === 'POST') {
     try {
-      const { email, displayName, role, isRegistering } = await parseJsonBody(req);
+      const { email, displayName, role, isRegistering, facultyCode } = await parseJsonBody(req);
       if (!email || typeof email !== 'string') {
         return sendJson(res, 400, { success: false, error: 'Email address is required.' });
       }
@@ -220,6 +220,28 @@ const requestHandler = async (req, res) => {
       }
 
       let profile = findUserProfile(normalizedEmail);
+
+      // 1. In Sign-In Mode: User MUST be registered first!
+      if (!isRegistering && !profile) {
+        return sendJson(res, 404, {
+          success: false,
+          notRegistered: true,
+          error: `Account not found for ${normalizedEmail}. Please register first using the Register tab.`
+        });
+      }
+
+      // 2. In Register Mode: Faculty requires verified departmental passcode
+      if (isRegistering && role === 'FACULTY') {
+        const VALID_FACULTY_CODES = ['KKWAGH_FACULTY_2026', 'KKW2026', 'FACULTY2026'];
+        const fCode = (facultyCode || '').trim().toUpperCase();
+        if (!VALID_FACULTY_CODES.includes(fCode)) {
+          return sendJson(res, 403, {
+            success: false,
+            error: 'Invalid Faculty Verification Code. Faculty registration requires the authorized department code (KKWAGH_FACULTY_2026).'
+          });
+        }
+      }
+
       if (isRegistering && !profile && displayName) {
         // Register new member into store
         profile = {
@@ -284,7 +306,7 @@ const requestHandler = async (req, res) => {
   // 3. Server-side Registration Endpoint (POST /api/auth/register)
   if (pathname === '/api/auth/register' && req.method === 'POST') {
     try {
-      const { email, displayName, role, department } = await parseJsonBody(req);
+      const { email, displayName, role, department, facultyCode } = await parseJsonBody(req);
       if (!email || !displayName) {
         return sendJson(res, 400, { success: false, error: 'Full name and college email are required.' });
       }
@@ -295,6 +317,17 @@ const requestHandler = async (req, res) => {
           success: false,
           error: 'Registration restricted: Only official @kkwagh.edu.in college email addresses are permitted.'
         });
+      }
+
+      if (role === 'FACULTY') {
+        const VALID_FACULTY_CODES = ['KKWAGH_FACULTY_2026', 'KKW2026', 'FACULTY2026'];
+        const fCode = (facultyCode || '').trim().toUpperCase();
+        if (!VALID_FACULTY_CODES.includes(fCode)) {
+          return sendJson(res, 403, {
+            success: false,
+            error: 'Invalid Faculty Verification Code. Faculty registration requires the authorized department code (KKWAGH_FACULTY_2026).'
+          });
+        }
       }
 
       const existing = findUserProfile(normalizedEmail);
@@ -528,6 +561,22 @@ const requestHandler = async (req, res) => {
       }
 
       return sendJson(res, 200, { success: true, savedAt: new Date().toISOString(), record });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 4c. Get All Department Check-in Records (Syncs shared Department DHI score for all users)
+  if (pathname === '/api/department/checkins' && req.method === 'GET') {
+    try {
+      const dept = parsedUrl.searchParams.get('dept') || 'comp_eng';
+      const records = inMemoryCheckins.filter(r => (r.department || 'comp_eng') === dept);
+      return sendJson(res, 200, {
+        success: true,
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        checkins: records
+      });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
     }
