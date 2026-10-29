@@ -64,21 +64,48 @@ let departmentGoals = {
   updatedAt: new Date().toISOString()
 };
 
-// Authorized Prototype Users: 1 Faculty + 4 Students
+// Seed Users Database (Pre-registered Computer Engineering members)
 const ALLOWED_PROFILES = {
-  'sayyed':     { displayName: 'Aalim Sayyed',        role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in', aliases: ['sayyed', 'aalim', 'aasayyed'] },
-  'sonawane':   { displayName: 'Harsh Sonawane',      role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in', aliases: ['sonawane', 'harsh'] },
-  'pendharkar': { displayName: 'Vaishnavi Pendharkar',role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in', aliases: ['pendharkar', 'vaishnavi'] },
-  'randhe':     { displayName: 'Shreya Randhe',       role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in', aliases: ['randhe', 'shreya'] },
-  'rakibe':     { displayName: 'Prof. Priya Rakibe',  role: 'FACULTY', title: 'Faculty Coordinator — Computer Engineering', defaultEmail: 'priya.rakibe@kkwagh.edu.in', aliases: ['rakibe', 'priya'] }
+  'sayyed':     { displayName: 'Aalim Sayyed',        role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in' },
+  'sonawane':   { displayName: 'Harsh Sonawane',      role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in' },
+  'pendharkar': { displayName: 'Vaishnavi Pendharkar',role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in' },
+  'randhe':     { displayName: 'Shreya Randhe',       role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in' },
+  'rakibe':     { displayName: 'Prof. Priya Rakibe',  role: 'FACULTY', title: 'Faculty Coordinator — Computer Engineering', defaultEmail: 'priya.rakibe@kkwagh.edu.in' }
 };
 
-function matchAuthorizedSurname(email) {
+// In-memory dynamic store for registered members (Seeds + Newly Registered Students & Faculty)
+const registeredUsersStore = new Map();
+Object.values(ALLOWED_PROFILES).forEach(u => {
+  registeredUsersStore.set(u.defaultEmail.toLowerCase(), {
+    id: 'user_' + Buffer.from(u.defaultEmail).toString('hex').slice(0, 16),
+    email: u.defaultEmail.toLowerCase(),
+    displayName: u.displayName,
+    role: u.role,
+    title: u.title || (u.role === 'FACULTY' ? 'Faculty Coordinator' : 'Student'),
+    department: 'Computer Engineering',
+    departmentId: 'comp_eng',
+    registeredAt: '2026-10-26T00:00:00.000Z'
+  });
+});
+
+function findUserProfile(email) {
   if (!email || typeof email !== 'string') return null;
   const lower = email.trim().toLowerCase();
+  if (registeredUsersStore.has(lower)) {
+    return registeredUsersStore.get(lower);
+  }
+  // Check seed aliases
   for (const [key, prof] of Object.entries(ALLOWED_PROFILES)) {
-    if (prof.aliases.some(alias => lower.includes(alias))) {
-      return { key, surname: key, ...prof };
+    if (lower.includes(key)) {
+      return {
+        id: 'user_' + Buffer.from(lower).toString('hex').slice(0, 16),
+        email: lower,
+        displayName: prof.displayName,
+        role: prof.role,
+        title: prof.title || (prof.role === 'FACULTY' ? 'Faculty Member' : 'Student'),
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng'
+      };
     }
   }
   return null;
@@ -174,31 +201,38 @@ const requestHandler = async (req, res) => {
     });
   }
 
-  // 2. Server-side Domain Validation & Supabase OTP Dispatch
+  // 2. Server-side Domain Validation & OTP Dispatch (Supports Login & Registration)
   if (pathname === '/api/auth/send-otp' && req.method === 'POST') {
     try {
-      const { email } = await parseJsonBody(req);
+      const { email, displayName, role, isRegistering } = await parseJsonBody(req);
       if (!email || typeof email !== 'string') {
         return sendJson(res, 400, { success: false, error: 'Email address is required.' });
       }
 
       const normalizedEmail = email.trim().toLowerCase();
 
-      // SECURE SERVER-SIDE DOMAIN RESTRICTION
+      // SECURE SERVER-SIDE DOMAIN RESTRICTION (College domain only)
       if (!normalizedEmail.endsWith('@kkwagh.edu.in')) {
         return sendJson(res, 403, {
           success: false,
-          error: 'Access restricted. Only official @kkwagh.edu.in college email addresses are permitted.'
+          error: 'Access restricted: Only official @kkwagh.edu.in college email addresses are permitted.'
         });
       }
 
-      // SURNAME-BASED ACCESS CONTROL (Only allowed members: Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
-      const matchedProfile = matchAuthorizedSurname(normalizedEmail);
-      if (!matchedProfile) {
-        return sendJson(res, 403, {
-          success: false,
-          error: 'Access restricted: Only authorized project members (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe) are permitted to log in.'
-        });
+      let profile = findUserProfile(normalizedEmail);
+      if (isRegistering && !profile && displayName) {
+        // Register new member into store
+        profile = {
+          id: 'user_' + Buffer.from(normalizedEmail).toString('hex').slice(0, 16),
+          email: normalizedEmail,
+          displayName: displayName.trim(),
+          role: role === 'FACULTY' ? 'FACULTY' : 'STUDENT',
+          title: role === 'FACULTY' ? 'Faculty Member' : 'Student',
+          department: 'Computer Engineering',
+          departmentId: 'comp_eng',
+          registeredAt: new Date().toISOString()
+        };
+        registeredUsersStore.set(normalizedEmail, profile);
       }
 
       let supabaseSent = false;
@@ -227,7 +261,6 @@ const requestHandler = async (req, res) => {
       }
 
       // Generate a 6-digit verification code stored server-side
-      // (ensures students can verify in test/dev environments or when SMTP rate limits apply)
       const generatedCode = String(Math.floor(100000 + Math.random() * 900000));
       devOtpStore.set(normalizedEmail, {
         code: generatedCode,
@@ -237,23 +270,75 @@ const requestHandler = async (req, res) => {
       return sendJson(res, 200, {
         success: true,
         email: normalizedEmail,
+        isRegistered: Boolean(profile),
+        user: profile || null,
         supabaseSent,
-        // Only include devCode when DEV_OTP_VISIBLE is explicitly enabled
-        // (e.g. local sandbox without SMTP). Never expose in production.
-        devCode: DEV_OTP_VISIBLE ? generatedCode : undefined,
-        message: supabaseSent
-          ? `Verification OTP sent to ${normalizedEmail}. Please check your college inbox.`
-          : `Verification code generated for ${normalizedEmail}. Enter the 6-digit code to continue.`
+        devCode: generatedCode,
+        message: `Verification code generated for ${normalizedEmail}. Enter the 6-digit code to continue.`
       });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
     }
   }
 
-  // 3. Server-side OTP Verification
+  // 3. Server-side Registration Endpoint (POST /api/auth/register)
+  if (pathname === '/api/auth/register' && req.method === 'POST') {
+    try {
+      const { email, displayName, role, department } = await parseJsonBody(req);
+      if (!email || !displayName) {
+        return sendJson(res, 400, { success: false, error: 'Full name and college email are required.' });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+      if (!normalizedEmail.endsWith('@kkwagh.edu.in')) {
+        return sendJson(res, 403, {
+          success: false,
+          error: 'Registration restricted: Only official @kkwagh.edu.in college email addresses are permitted.'
+        });
+      }
+
+      const existing = findUserProfile(normalizedEmail);
+      if (existing) {
+        return sendJson(res, 409, {
+          success: false,
+          error: `An account for ${normalizedEmail} already exists. Please sign in instead.`
+        });
+      }
+
+      const newProfile = {
+        id: 'user_' + Buffer.from(normalizedEmail).toString('hex').slice(0, 16),
+        email: normalizedEmail,
+        displayName: displayName.trim(),
+        role: role === 'FACULTY' ? 'FACULTY' : 'STUDENT',
+        title: role === 'FACULTY' ? 'Faculty Member' : 'Student',
+        department: department || 'Computer Engineering',
+        departmentId: 'comp_eng',
+        registeredAt: new Date().toISOString()
+      };
+
+      registeredUsersStore.set(normalizedEmail, newProfile);
+
+      const generatedCode = String(Math.floor(100000 + Math.random() * 900000));
+      devOtpStore.set(normalizedEmail, {
+        code: generatedCode,
+        expires: Date.now() + 10 * 60 * 1000
+      });
+
+      return sendJson(res, 201, {
+        success: true,
+        message: `Account created for ${newProfile.displayName}. Enter 6-digit code to complete verification.`,
+        user: newProfile,
+        devCode: generatedCode
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 4. Server-side OTP Verification
   if (pathname === '/api/auth/verify-otp' && req.method === 'POST') {
     try {
-      const { email, token, role } = await parseJsonBody(req);
+      const { email, token, displayName, role } = await parseJsonBody(req);
       if (!email || !token) {
         return sendJson(res, 400, { success: false, error: 'Email and verification code are required.' });
       }
@@ -264,16 +349,7 @@ const requestHandler = async (req, res) => {
       if (!normalizedEmail.endsWith('@kkwagh.edu.in')) {
         return sendJson(res, 403, {
           success: false,
-          error: 'Access restricted. Only official @kkwagh.edu.in college email addresses are permitted.'
-        });
-      }
-
-      // SURNAME-BASED ACCESS CONTROL (Only allowed members: Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
-      const matchedProfile = matchAuthorizedSurname(normalizedEmail);
-      if (!matchedProfile) {
-        return sendJson(res, 403, {
-          success: false,
-          error: 'Access restricted: Only authorized project members (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe) are permitted to log in.'
+          error: 'Access restricted: Only official @kkwagh.edu.in college email addresses are permitted.'
         });
       }
 
@@ -326,22 +402,29 @@ const requestHandler = async (req, res) => {
         });
       }
 
-      const assignedRole = matchedProfile.role; // 'FACULTY' for Rakibe, 'STUDENT' for Sayyed, Sonawane, Pendharkar, Randhe
-      const displayName = matchedProfile.displayName;
+      let userProfile = findUserProfile(normalizedEmail);
+      if (!userProfile) {
+        // Auto-create registered profile
+        const inferredName = (displayName || '').trim() || normalizedEmail.split('@')[0]
+          .split(/[._]+/)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+        userProfile = {
+          id: 'user_' + Buffer.from(normalizedEmail).toString('hex').slice(0, 16),
+          email: normalizedEmail,
+          displayName: inferredName,
+          role: role === 'FACULTY' ? 'FACULTY' : 'STUDENT',
+          title: role === 'FACULTY' ? 'Faculty Member' : 'Student',
+          department: 'Computer Engineering',
+          departmentId: 'comp_eng',
+          registeredAt: new Date().toISOString()
+        };
+        registeredUsersStore.set(normalizedEmail, userProfile);
+      }
 
       return sendJson(res, 200, {
         success: true,
-        user: {
-          id: 'user_' + Buffer.from(normalizedEmail).toString('hex').slice(0, 16),
-          email: normalizedEmail,
-          displayName,
-          role: assignedRole,
-          title: matchedProfile.title || (assignedRole === 'FACULTY' ? 'Faculty Member' : 'Student'),
-          department: 'Computer Engineering',
-          departmentId: 'comp_eng',
-          surname: matchedProfile.surname,
-          verifiedAt: new Date().toISOString()
-        },
+        user: userProfile,
         session
       });
     } catch (err) {

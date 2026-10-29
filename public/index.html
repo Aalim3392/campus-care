@@ -158,61 +158,69 @@
           </p>
         </div>
 
-        <!-- Login Card -->
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-5">
+        <!-- Auth Card: Login & Registration -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
 
-          <!-- Role Selection -->
+          <!-- Auth Mode Toggle: Sign In vs Register -->
+          <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl" id="auth-mode-selector">
+            <button type="button" onclick="setAuthMode('login')" id="auth-tab-login" class="py-2 text-xs font-bold rounded-lg transition bg-white text-[#1755BE] shadow-sm flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">login</span>
+              <span>Sign In</span>
+            </button>
+            <button type="button" onclick="setAuthMode('register')" id="auth-tab-register" class="py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">person_add</span>
+              <span>Register</span>
+            </button>
+          </div>
+
+          <!-- Role Selector: Student vs Faculty -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Select Role</label>
-            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl" id="role-selector">
-              <button type="button" onclick="setLoginRole('STUDENT')" id="role-btn-student" class="py-2.5 text-xs font-bold rounded-xl transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-blue-600/30">
+            <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide mb-1.5">Account Role</label>
+            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-50 border border-slate-200/80 rounded-xl" id="role-selector">
+              <button type="button" onclick="setAuthRole('STUDENT')" id="role-btn-student" class="py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-blue-600/30">
                 <span class="material-symbols-outlined text-sm">school</span>
                 <span>Student</span>
               </button>
-              <button type="button" onclick="setLoginRole('FACULTY')" id="role-btn-faculty" class="py-2.5 text-xs font-medium rounded-xl transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
+              <button type="button" onclick="setAuthRole('FACULTY')" id="role-btn-faculty" class="py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">supervisor_account</span>
                 <span>Faculty</span>
               </button>
             </div>
           </div>
 
-          <!-- Step 1: Email Form -->
-          <div id="login-step-email" class="space-y-4">
+          <!-- Step 1 Form: Email & Details -->
+          <div id="login-step-email" class="space-y-3.5">
             <div>
-              <h2 class="text-base font-bold text-slate-900" id="login-role-heading">Student Sign In</h2>
-              <p class="text-xs text-slate-500 mt-0.5" id="login-role-subheading">Choose your account or enter your official K.K. Wagh email.</p>
+              <h2 class="text-base font-bold text-slate-900" id="auth-heading">Sign in to Campus Care</h2>
+              <p class="text-xs text-slate-500 mt-0.5" id="auth-subheading">Enter your official @kkwagh.edu.in email to continue.</p>
             </div>
 
-            <!-- Student Account Picker -->
-            <div id="student-picker-container" class="space-y-1.5">
-              <label for="student-account-select" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">Select Student Account</label>
-              <select 
-                id="student-account-select" 
-                onchange="onStudentSelectChange(this.value)" 
-                class="w-full h-11 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
-              >
-                <option value="aalim.sayyed@kkwagh.edu.in">👨‍🎓 Aalim Sayyed (aalim.sayyed@kkwagh.edu.in)</option>
-                <option value="harsh.sonawane@kkwagh.edu.in">👨‍🎓 Harsh Sonawane (harsh.sonawane@kkwagh.edu.in)</option>
-                <option value="vaishnavi.pendharkar@kkwagh.edu.in">👩‍🎓 Vaishnavi Pendharkar (vaishnavi.pendharkar@kkwagh.edu.in)</option>
-                <option value="shreya.randhe@kkwagh.edu.in">👩‍🎓 Shreya Randhe (shreya.randhe@kkwagh.edu.in)</option>
-                <option value="custom">✏️ Enter other @kkwagh.edu.in email...</option>
-              </select>
-            </div>
-
-            <!-- Faculty Account Info (shown when Faculty role is active) -->
-            <div id="faculty-picker-container" class="hidden p-3.5 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-2xl space-y-1">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-extrabold text-purple-900 flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-base text-purple-700">supervisor_account</span>
-                  Prof. Priya Rakibe
-                </span>
-                <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-purple-200 text-purple-900">Faculty Coordinator</span>
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+              <!-- Full Name (Only shown in Register Mode) -->
+              <div id="register-name-field" class="hidden">
+                <label for="register-name-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Full Name</label>
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    id="register-name-input" 
+                    autocomplete="name"
+                    placeholder="e.g. Rahul Sharma"
+                    class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
+                  />
+                  <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 text-lg">badge</span>
+                </div>
               </div>
-              <p class="text-[10px] text-purple-800">Computer Engineering Department · K. K. Wagh College</p>
-              <p class="text-[11px] font-mono font-semibold text-purple-950 pt-0.5">priya.rakibe@kkwagh.edu.in</p>
-            </div>
 
-            <form onsubmit="handleRequestOtp(event)" class="space-y-3">
+              <!-- Department Badge (Pre-selected) -->
+              <div class="p-2.5 bg-blue-50/70 border border-blue-100 rounded-xl flex items-center justify-between text-xs text-blue-950 font-medium">
+                <span class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-blue-600 text-sm">domain</span>
+                  <span>Department:</span>
+                </span>
+                <span class="font-bold text-blue-800">Computer Engineering</span>
+              </div>
+
+              <!-- College Email Address -->
               <div>
                 <label for="email-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">College Email Address</label>
                 <div class="relative">
@@ -221,7 +229,6 @@
                     id="email-input" 
                     required 
                     autocomplete="email"
-                    value="aalim.sayyed@kkwagh.edu.in"
                     placeholder="yourname@kkwagh.edu.in"
                     class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
                   />
@@ -1276,25 +1283,31 @@
 
   <!-- ==================== JAVASCRIPT ==================== -->
   <script>
-    // ─── Authorized Users Profile (Strict Surname-Based Access) ──────────────
-    // 1 Faculty + 4 Students
-    const AUTHORIZED_PROFILES = {
-      'sayyed':     { key: 'sayyed',     displayName: 'Aalim Sayyed',         role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in',         aliases: ['sayyed', 'aalim', 'aasayyed'] },
-      'sonawane':   { key: 'sonawane',   displayName: 'Harsh Sonawane',       role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in',       aliases: ['sonawane', 'harsh'] },
-      'pendharkar': { key: 'pendharkar', displayName: 'Vaishnavi Pendharkar', role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in', aliases: ['pendharkar', 'vaishnavi'] },
-      'randhe':     { key: 'randhe',     displayName: 'Shreya Randhe',        role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in',        aliases: ['randhe', 'shreya'] },
-      'rakibe':     { key: 'rakibe',     displayName: 'Prof. Priya Rakibe',   role: 'FACULTY', title: 'Faculty Coordinator',                 defaultEmail: 'priya.rakibe@kkwagh.edu.in', aliases: ['rakibe', 'priya'] }
-    };
+    // ─── University Member Profiles & Registration Store ────────────────────
+    const SEED_PROFILES = [
+      { id: 'user_sayyed', email: 'aalim.sayyed@kkwagh.edu.in', displayName: 'Aalim Sayyed', role: 'STUDENT', title: 'Student', department: 'Computer Engineering' },
+      { id: 'user_sonawane', email: 'harsh.sonawane@kkwagh.edu.in', displayName: 'Harsh Sonawane', role: 'STUDENT', title: 'Student', department: 'Computer Engineering' },
+      { id: 'user_pendharkar', email: 'vaishnavi.pendharkar@kkwagh.edu.in', displayName: 'Vaishnavi Pendharkar', role: 'STUDENT', title: 'Student', department: 'Computer Engineering' },
+      { id: 'user_randhe', email: 'shreya.randhe@kkwagh.edu.in', displayName: 'Shreya Randhe', role: 'STUDENT', title: 'Student', department: 'Computer Engineering' },
+      { id: 'user_rakibe', email: 'priya.rakibe@kkwagh.edu.in', displayName: 'Prof. Priya Rakibe', role: 'FACULTY', title: 'Faculty Coordinator', department: 'Computer Engineering' }
+    ];
 
-    function matchAuthorizedSurname(email) {
+    let registeredUsers = [];
+    try {
+      const savedReg = localStorage.getItem('cw_registered_users');
+      if (savedReg) {
+        registeredUsers = JSON.parse(savedReg);
+      }
+    } catch (_) {}
+    if (!registeredUsers || registeredUsers.length === 0) {
+      registeredUsers = [...SEED_PROFILES];
+      localStorage.setItem('cw_registered_users', JSON.stringify(registeredUsers));
+    }
+
+    function findRegisteredUser(email) {
       if (!email || typeof email !== 'string') return null;
       const lower = email.trim().toLowerCase();
-      for (const [key, prof] of Object.entries(AUTHORIZED_PROFILES)) {
-        if (prof.aliases.some(alias => lower.includes(alias))) {
-          return { surname: key, key, ...prof };
-        }
-      }
-      return null;
+      return registeredUsers.find(u => u.email && u.email.toLowerCase() === lower) || null;
     }
 
     // Pre-seeded records for Computer Engineering prototype (4 students)
@@ -1331,8 +1344,10 @@
 
     // ─── Application State ───────────────────────────────────────────────────
     let currentUser = null;
-    let selectedLoginRole = 'STUDENT';
+    let authMode = 'login'; // 'login' or 'register'
+    let selectedAuthRole = 'STUDENT'; // 'STUDENT' or 'FACULTY'
     let currentPendingEmail = '';
+    let currentPendingName = '';
 
     // Master checkins list for the department
     let allDepartmentCheckins = [...DEFAULT_SEED_RECORDS];
@@ -1372,19 +1387,10 @@
         if (savedUser) {
           const parsed = JSON.parse(savedUser);
           if (parsed && parsed.email && parsed.email.endsWith('@kkwagh.edu.in')) {
-            const matched = matchAuthorizedSurname(parsed.email);
-            if (matched) {
-              currentUser = {
-                ...parsed,
-                surname: matched.surname,
-                displayName: matched.displayName,
-                role: matched.role,
-                title: matched.title || (matched.role === 'FACULTY' ? 'Faculty Coordinator' : 'Student')
-              };
-            } else {
-              localStorage.removeItem('cw_user_session');
-              currentUser = null;
-            }
+            currentUser = parsed;
+          } else {
+            localStorage.removeItem('cw_user_session');
+            currentUser = null;
           }
         }
       } catch (_) {}
@@ -1411,47 +1417,48 @@
     });
 
     // ─── Authentication & Role Handling ─────────────────────────────────────
-    function setLoginRole(role) {
-      selectedLoginRole = role;
-      const sBtn = document.getElementById('role-btn-student');
-      const fBtn = document.getElementById('role-btn-faculty');
-      const heading = document.getElementById('login-role-heading');
-      const subheading = document.getElementById('login-role-subheading');
-      const studentPicker = document.getElementById('student-picker-container');
-      const facultyPicker = document.getElementById('faculty-picker-container');
-      const emailInput = document.getElementById('email-input');
+    function setAuthMode(mode) {
+      authMode = mode;
+      const tabLogin = document.getElementById('auth-tab-login');
+      const tabReg = document.getElementById('auth-tab-register');
+      const nameField = document.getElementById('register-name-field');
+      const heading = document.getElementById('auth-heading');
+      const subheading = document.getElementById('auth-subheading');
+      const submitBtnText = document.getElementById('send-otp-btn-text');
+      const emailErr = document.getElementById('email-error-msg');
+      if (emailErr) emailErr.classList.add('hidden');
 
-      if (role === 'FACULTY') {
-        if (fBtn) fBtn.className = 'py-2.5 text-xs font-bold rounded-xl transition bg-white text-purple-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-purple-600/30';
-        if (sBtn) sBtn.className = 'py-2.5 text-xs font-medium rounded-xl transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
-        if (heading) heading.textContent = 'Faculty Sign In';
-        if (subheading) subheading.textContent = 'Sign in as Faculty Coordinator to review DHI & configure weekly goals.';
-        if (studentPicker) studentPicker.classList.add('hidden');
-        if (facultyPicker) facultyPicker.classList.remove('hidden');
-        if (emailInput) emailInput.value = 'priya.rakibe@kkwagh.edu.in';
+      if (mode === 'register') {
+        if (tabReg) tabReg.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-[#1755BE] shadow-sm flex items-center justify-center gap-1.5';
+        if (tabLogin) tabLogin.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (nameField) nameField.classList.remove('hidden');
+        if (heading) heading.textContent = selectedAuthRole === 'FACULTY' ? 'Register as Faculty' : 'Register New Student Account';
+        if (subheading) subheading.textContent = 'Create your Department of Computer Engineering account with official college email.';
+        if (submitBtnText) submitBtnText.textContent = 'Create Account & Verify';
       } else {
-        if (sBtn) sBtn.className = 'py-2.5 text-xs font-bold rounded-xl transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-blue-600/30';
-        if (fBtn) fBtn.className = 'py-2.5 text-xs font-medium rounded-xl transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
-        if (heading) heading.textContent = 'Student Sign In';
-        if (subheading) subheading.textContent = 'Choose your account or enter your official K.K. Wagh email.';
-        if (studentPicker) studentPicker.classList.remove('hidden');
-        if (facultyPicker) facultyPicker.classList.add('hidden');
-        const stSelect = document.getElementById('student-account-select');
-        if (emailInput && stSelect) {
-          emailInput.value = stSelect.value !== 'custom' ? stSelect.value : 'aalim.sayyed@kkwagh.edu.in';
-        }
+        if (tabLogin) tabLogin.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-[#1755BE] shadow-sm flex items-center justify-center gap-1.5';
+        if (tabReg) tabReg.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (nameField) nameField.classList.add('hidden');
+        if (heading) heading.textContent = selectedAuthRole === 'FACULTY' ? 'Faculty Sign In' : 'Sign in to Campus Care';
+        if (subheading) subheading.textContent = 'Enter your official @kkwagh.edu.in email to continue.';
+        if (submitBtnText) submitBtnText.textContent = 'Continue with College Email';
       }
     }
 
-    function onStudentSelectChange(val) {
-      const emailInput = document.getElementById('email-input');
-      if (!emailInput) return;
-      if (val === 'custom') {
-        emailInput.value = '';
-        emailInput.placeholder = 'yourname@kkwagh.edu.in';
-        emailInput.focus();
+    function setAuthRole(role) {
+      selectedAuthRole = role;
+      const sBtn = document.getElementById('role-btn-student');
+      const fBtn = document.getElementById('role-btn-faculty');
+      const heading = document.getElementById('auth-heading');
+
+      if (role === 'FACULTY') {
+        if (fBtn) fBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-purple-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-purple-600/30';
+        if (sBtn) sBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (heading) heading.textContent = authMode === 'register' ? 'Register as Faculty' : 'Faculty Sign In';
       } else {
-        emailInput.value = val;
+        if (sBtn) sBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-blue-600/30';
+        if (fBtn) fBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (heading) heading.textContent = authMode === 'register' ? 'Register New Student Account' : 'Sign in to Campus Care';
       }
     }
 
@@ -1482,30 +1489,12 @@
       }, 700);
     }
 
-    function loginWithAuthorizedProfile(email, profile) {
-      currentUser = {
-        id: 'user_' + Math.abs(email.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0)),
-        email,
-        surname: profile.surname,
-        displayName: profile.displayName,
-        role: profile.role,
-        title: profile.title || (profile.role === 'FACULTY' ? 'Faculty Coordinator' : 'Student'),
-        department: 'Computer Engineering',
-        departmentId: 'comp_eng',
-        verifiedAt: new Date().toISOString()
-      };
-      localStorage.setItem('cw_user_session', JSON.stringify(currentUser));
-      document.getElementById('login-view').classList.add('hidden');
-      applyUserToUI(currentUser);
-      syncUserData();
-      showToast(`Welcome back, ${currentUser.displayName}! (${currentUser.role}) 🎉`);
-    }
-
     function checkAuthRouteGuard() {
       const loginView = document.getElementById('login-view');
       if (!currentUser || !currentUser.email) {
         loginView.classList.remove('hidden');
-        setLoginRole(selectedLoginRole || 'STUDENT');
+        setAuthMode('login');
+        setAuthRole(selectedAuthRole || 'STUDENT');
       } else {
         loginView.classList.add('hidden');
         applyUserToUI(currentUser);
@@ -1513,7 +1502,7 @@
     }
 
     function applyUserToUI(user) {
-      const name = user.displayName || 'Student';
+      const name = user.displayName || 'Member';
       const parts = name.split(' ');
       const initials = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
 
@@ -1560,15 +1549,16 @@
       }
     }
 
-    async function handleRequestOtp(e) {
+    async function handleAuthSubmit(e) {
       e.preventDefault();
       const emailInput = document.getElementById('email-input');
+      const nameInput = document.getElementById('register-name-input');
       const emailError = document.getElementById('email-error-msg');
       const emailErrTxt = document.getElementById('email-error-text');
       const btn = document.getElementById('send-otp-btn');
       const btnText = document.getElementById('send-otp-btn-text');
 
-      let email = emailInput.value.trim().toLowerCase();
+      let email = (emailInput.value || '').trim().toLowerCase();
       if (!email.includes('@')) {
         email += '@kkwagh.edu.in';
         emailInput.value = email;
@@ -1584,10 +1574,9 @@
         return;
       }
 
-      // Check surname/alias whitelist (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
-      const matched = matchAuthorizedSurname(email);
-      if (!matched) {
-        emailErrTxt.textContent = 'Access restricted: Only authorized members (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe) can log in.';
+      let fullName = (nameInput ? nameInput.value : '').trim();
+      if (authMode === 'register' && !fullName) {
+        emailErrTxt.textContent = 'Please enter your full name to register.';
         emailError.classList.remove('hidden');
         return;
       }
@@ -1597,28 +1586,52 @@
       btnText.textContent = 'Generating 6-digit code…';
 
       try {
-        const code = String(Math.floor(100000 + Math.random() * 900000));
+        let code = String(Math.floor(100000 + Math.random() * 900000));
+        let userProfile = findRegisteredUser(email);
+
+        // Call server endpoint for domain verification & OTP dispatch
+        try {
+          const res = await fetch('/api/auth/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              displayName: fullName || (userProfile ? userProfile.displayName : ''),
+              role: selectedAuthRole,
+              isRegistering: authMode === 'register'
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.devCode) code = data.devCode;
+            if (data.user) userProfile = data.user;
+          }
+        } catch (_) {}
+
         sessionStorage.setItem('cw_auth_otp', code);
         sessionStorage.setItem('cw_auth_email', email);
-
         currentPendingEmail = email;
-        document.getElementById('otp-sent-to-label').textContent = `Code generated for ${email} (${matched.displayName})`;
+        currentPendingName = fullName || (userProfile ? userProfile.displayName : '');
+
+        const displayLabel = currentPendingName || email;
+        document.getElementById('otp-sent-to-label').textContent = `Code sent to ${email} (${displayLabel})`;
         document.getElementById('dev-code-val').textContent = code;
         document.getElementById('otp-input').value = code; // pre-fill for ease of demonstration
 
         document.getElementById('login-step-email').classList.add('hidden');
         document.getElementById('login-step-otp').classList.remove('hidden');
-        showToast(`Verification code ready for ${matched.displayName}!`);
+        showToast(`Verification code ready! (${code})`);
       } finally {
         btn.disabled = false;
-        btnText.textContent = 'Continue with College Email';
+        btnText.textContent = authMode === 'register' ? 'Create Account & Verify' : 'Continue with College Email';
       }
     }
 
     function goToEmailStep() {
       document.getElementById('login-step-otp').classList.add('hidden');
       document.getElementById('login-step-email').classList.remove('hidden');
-      document.getElementById('otp-error-msg').classList.add('hidden');
+      const errBox = document.getElementById('otp-error-msg');
+      if (errBox) errBox.classList.add('hidden');
     }
 
     function handleResendOtp() {
@@ -1628,7 +1641,7 @@
       showToast('Press Continue to regenerate code.');
     }
 
-    function handleVerifyOtp(e) {
+    async function handleVerifyOtp(e) {
       e.preventDefault();
       const tokenInput = document.getElementById('otp-input');
       const errBox = document.getElementById('otp-error-msg');
@@ -1651,17 +1664,58 @@
         return;
       }
 
-      const matched = matchAuthorizedSurname(currentPendingEmail);
-      if (!matched) {
-        if (errBox) {
-          errBox.textContent = 'Unauthorized member. Access denied.';
-          errBox.classList.remove('hidden');
+      if (errBox) errBox.classList.add('hidden');
+
+      // Attempt server verify
+      let serverUser = null;
+      try {
+        const res = await fetch('/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: currentPendingEmail,
+            token,
+            displayName: currentPendingName,
+            role: selectedAuthRole
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) serverUser = data.user;
         }
-        return;
+      } catch (_) {}
+
+      let user = serverUser || findRegisteredUser(currentPendingEmail);
+      if (!user) {
+        // Create new user profile dynamically
+        const inferredName = currentPendingName || currentPendingEmail.split('@')[0]
+          .split(/[._]+/)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+        user = {
+          id: 'user_' + Math.abs(currentPendingEmail.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0)),
+          email: currentPendingEmail,
+          displayName: inferredName,
+          role: selectedAuthRole,
+          title: selectedAuthRole === 'FACULTY' ? 'Faculty Coordinator' : 'Student',
+          department: 'Computer Engineering',
+          departmentId: 'comp_eng',
+          registeredAt: new Date().toISOString()
+        };
+        registeredUsers.push(user);
+        localStorage.setItem('cw_registered_users', JSON.stringify(registeredUsers));
       }
 
-      if (errBox) errBox.classList.add('hidden');
-      loginWithAuthorizedProfile(currentPendingEmail, matched);
+      currentUser = {
+        ...user,
+        verifiedAt: new Date().toISOString()
+      };
+      localStorage.setItem('cw_user_session', JSON.stringify(currentUser));
+
+      document.getElementById('login-view').classList.add('hidden');
+      applyUserToUI(currentUser);
+      syncUserData();
+      showToast(`Welcome, ${currentUser.displayName}! (${currentUser.role}) 🎉`);
     }
 
     function handleSignOut() {
@@ -1671,6 +1725,7 @@
       document.getElementById('login-step-otp').classList.add('hidden');
       document.getElementById('login-step-email').classList.remove('hidden');
       document.getElementById('login-view').classList.remove('hidden');
+      setAuthMode('login');
       showToast('Signed out successfully.');
     }
 
