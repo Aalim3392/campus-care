@@ -50,7 +50,7 @@ const devOtpStore = new Map();
 // In-memory sync tokens store (6-digit tokens with single-use flag and expiry)
 const syncTokensStore = new Map();
 
-// Department goals store (Computer Engineering default goals)
+// Department goals store (Computer Engineering default goals set by Prof. Priya Rakibe)
 let departmentGoals = {
   department: 'comp_eng',
   departmentName: 'Computer Engineering',
@@ -60,24 +60,48 @@ let departmentGoals = {
   targetWater: 2.5,
   startDate: '2026-10-26',
   weekNumber: 44,
-  setBy: 'Dr. V. K. Wagh (HOD)',
+  setBy: 'Prof. Priya Rakibe (Faculty Coordinator)',
   updatedAt: new Date().toISOString()
 };
 
-// Demo seed checkins for the Computer Engineering prototype
+// Authorized Prototype Users: 1 Faculty + 4 Students
+const ALLOWED_PROFILES = {
+  'sayyed':     { displayName: 'Aalim Sayyed',        role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in' },
+  'sonawane':   { displayName: 'Harsh Sonawane',      role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in' },
+  'pendharkar': { displayName: 'Vaishnavi Pendharkar',role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in' },
+  'randhe':     { displayName: 'Shreya Randhe',       role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in' },
+  'rakibe':     { displayName: 'Prof. Priya Rakibe',  role: 'FACULTY', title: 'Faculty Coordinator — Computer Engineering', defaultEmail: 'priya.rakibe@kkwagh.edu.in' }
+};
+
+function matchAuthorizedSurname(email) {
+  if (!email || typeof email !== 'string') return null;
+  const lower = email.trim().toLowerCase();
+  for (const surname of Object.keys(ALLOWED_PROFILES)) {
+    if (lower.includes(surname)) {
+      return { surname, ...ALLOWED_PROFILES[surname] };
+    }
+  }
+  return null;
+}
+
+// Initial seed checkins for the authorized Computer Engineering students
 const initialSeedCheckins = [
-  // 1. Aarav Sharma (Student 1)
-  { id: 'seed_101', email: 'aarav.sharma@kkwagh.edu.in', name: 'Aarav Sharma', role: 'STUDENT', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 7.5, water: 10, waterLiters: 2.5, steps: 8500, study: 4.5, stress: 2 },
-  { id: 'seed_102', email: 'aarav.sharma@kkwagh.edu.in', name: 'Aarav Sharma', role: 'STUDENT', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 8.0, water: 11, waterLiters: 2.75, steps: 9100, study: 5.0, stress: 1 },
-  { id: 'seed_103', email: 'aarav.sharma@kkwagh.edu.in', name: 'Aarav Sharma', role: 'STUDENT', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 7.0, water: 10, waterLiters: 2.5, steps: 8400, study: 4.0, stress: 2 },
-  // 2. Aalim Sayyed (Student 2)
-  { id: 'seed_201', email: 'aasayyed370125@kkwagh.edu.in', name: 'Aalim Sayyed', role: 'STUDENT', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 6.5, water: 10, waterLiters: 2.5, steps: 7800, study: 5.0, stress: 2 },
-  { id: 'seed_202', email: 'aasayyed370125@kkwagh.edu.in', name: 'Aalim Sayyed', role: 'STUDENT', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 7.0, water: 12, waterLiters: 3.0, steps: 10200, study: 4.5, stress: 1 },
-  { id: 'seed_203', email: 'aasayyed370125@kkwagh.edu.in', name: 'Aalim Sayyed', role: 'STUDENT', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 6.5, water: 11, waterLiters: 2.75, steps: 8900, study: 5.5, stress: 2 },
-  // 3. Neha Patil (Student 3)
-  { id: 'seed_301', email: 'neha.patil@kkwagh.edu.in', name: 'Neha Patil', role: 'STUDENT', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Okay', sleep: 5.5, water: 7, waterLiters: 1.75, steps: 6200, study: 6.0, stress: 3 },
-  { id: 'seed_302', email: 'neha.patil@kkwagh.edu.in', name: 'Neha Patil', role: 'STUDENT', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Low', sleep: 4.5, water: 6, waterLiters: 1.5, steps: 5400, study: 6.5, stress: 4 },
-  { id: 'seed_303', email: 'neha.patil@kkwagh.edu.in', name: 'Neha Patil', role: 'STUDENT', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Okay', sleep: 5.0, water: 8, waterLiters: 2.0, steps: 6600, study: 5.0, stress: 3 }
+  // 1. Aalim Sayyed (Student 1)
+  { id: 'seed_sayyed_1', email: 'aalim.sayyed@kkwagh.edu.in', surname: 'sayyed', name: 'Aalim Sayyed', role: 'STUDENT', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 7.5, water: 10, waterLiters: 2.5, steps: 8600, study: 4.5, stress: 2 },
+  { id: 'seed_sayyed_2', email: 'aalim.sayyed@kkwagh.edu.in', surname: 'sayyed', name: 'Aalim Sayyed', role: 'STUDENT', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 8.0, water: 11, waterLiters: 2.75, steps: 9200, study: 5.0, stress: 1 },
+  { id: 'seed_sayyed_3', email: 'aalim.sayyed@kkwagh.edu.in', surname: 'sayyed', name: 'Aalim Sayyed', role: 'STUDENT', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 7.0, water: 10, waterLiters: 2.5, steps: 8400, study: 4.0, stress: 2 },
+  // 2. Harsh Sonawane (Student 2)
+  { id: 'seed_sonawane_1', email: 'harsh.sonawane@kkwagh.edu.in', surname: 'sonawane', name: 'Harsh Sonawane', role: 'STUDENT', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 7.0, water: 9, waterLiters: 2.25, steps: 8200, study: 4.5, stress: 2 },
+  { id: 'seed_sonawane_2', email: 'harsh.sonawane@kkwagh.edu.in', surname: 'sonawane', name: 'Harsh Sonawane', role: 'STUDENT', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 7.5, water: 10, waterLiters: 2.5, steps: 8800, study: 5.0, stress: 1 },
+  { id: 'seed_sonawane_3', email: 'harsh.sonawane@kkwagh.edu.in', surname: 'sonawane', name: 'Harsh Sonawane', role: 'STUDENT', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 7.0, water: 10, waterLiters: 2.5, steps: 8100, study: 4.0, stress: 2 },
+  // 3. Vaishnavi Pendharkar (Student 3)
+  { id: 'seed_pendharkar_1', email: 'vaishnavi.pendharkar@kkwagh.edu.in', surname: 'pendharkar', name: 'Vaishnavi Pendharkar', role: 'STUDENT', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Okay', sleep: 6.5, water: 8, waterLiters: 2.0, steps: 7500, study: 5.0, stress: 3 },
+  { id: 'seed_pendharkar_2', email: 'vaishnavi.pendharkar@kkwagh.edu.in', surname: 'pendharkar', name: 'Vaishnavi Pendharkar', role: 'STUDENT', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Good', sleep: 7.0, water: 9, waterLiters: 2.25, steps: 8000, study: 4.5, stress: 2 },
+  { id: 'seed_pendharkar_3', email: 'vaishnavi.pendharkar@kkwagh.edu.in', surname: 'pendharkar', name: 'Vaishnavi Pendharkar', role: 'STUDENT', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Okay', sleep: 6.5, water: 8, waterLiters: 2.0, steps: 7600, study: 5.0, stress: 2 },
+  // 4. Shreya Randhe (Student 4)
+  { id: 'seed_randhe_1', email: 'shreya.randhe@kkwagh.edu.in', surname: 'randhe', name: 'Shreya Randhe', role: 'STUDENT', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Okay', sleep: 6.0, water: 7, waterLiters: 1.75, steps: 6800, study: 5.5, stress: 3 },
+  { id: 'seed_randhe_2', email: 'shreya.randhe@kkwagh.edu.in', surname: 'randhe', name: 'Shreya Randhe', role: 'STUDENT', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Low', sleep: 5.5, water: 7, waterLiters: 1.75, steps: 6400, study: 6.0, stress: 3 },
+  { id: 'seed_randhe_3', email: 'shreya.randhe@kkwagh.edu.in', surname: 'randhe', name: 'Shreya Randhe', role: 'STUDENT', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 6.5, water: 8, waterLiters: 2.0, steps: 7200, study: 5.0, stress: 2 }
 ];
 
 let inMemoryCheckins = [...initialSeedCheckins];
@@ -158,6 +182,15 @@ const server = http.createServer(async (req, res) => {
         });
       }
 
+      // SURNAME-BASED ACCESS CONTROL (Only allowed members: Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
+      const matchedProfile = matchAuthorizedSurname(normalizedEmail);
+      if (!matchedProfile) {
+        return sendJson(res, 403, {
+          success: false,
+          error: 'Access restricted: Only authorized project members (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe) are permitted to log in.'
+        });
+      }
+
       let supabaseSent = false;
       let supabaseMessage = '';
 
@@ -225,6 +258,15 @@ const server = http.createServer(async (req, res) => {
         });
       }
 
+      // SURNAME-BASED ACCESS CONTROL (Only allowed members: Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
+      const matchedProfile = matchAuthorizedSurname(normalizedEmail);
+      if (!matchedProfile) {
+        return sendJson(res, 403, {
+          success: false,
+          error: 'Access restricted: Only authorized project members (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe) are permitted to log in.'
+        });
+      }
+
       let verified = false;
       let session = null;
 
@@ -274,22 +316,8 @@ const server = http.createServer(async (req, res) => {
         });
       }
 
-      // Define standard user profiles for sample demo personas
-      const DEMO_PROFILES = {
-        'aarav.sharma@kkwagh.edu.in': { displayName: 'Aarav Sharma', role: 'STUDENT', department: 'Computer Engineering' },
-        'aasayyed370125@kkwagh.edu.in': { displayName: 'Aalim Sayyed', role: 'STUDENT', department: 'Computer Engineering' },
-        'neha.patil@kkwagh.edu.in': { displayName: 'Neha Patil', role: 'STUDENT', department: 'Computer Engineering' },
-        'hod.comp@kkwagh.edu.in': { displayName: 'Dr. V. K. Wagh', role: 'FACULTY', department: 'Computer Engineering', title: 'HOD — Computer Engineering' },
-        'mentor.comp@kkwagh.edu.in': { displayName: 'Prof. P. R. Rao', role: 'FACULTY', department: 'Computer Engineering', title: 'Faculty Wellness Coordinator' }
-      };
-
-      const matchedProfile = DEMO_PROFILES[normalizedEmail];
-      const assignedRole = matchedProfile ? matchedProfile.role : (role === 'FACULTY' ? 'FACULTY' : 'STUDENT');
-      const displayName = matchedProfile ? matchedProfile.displayName : normalizedEmail.split('@')[0]
-        .split(/[._0-9]+/)
-        .filter(Boolean)
-        .map(p => p.charAt(0).toUpperCase() + p.slice(1))
-        .join(' ') || (assignedRole === 'FACULTY' ? 'Faculty Member' : 'K.K. Wagh Student');
+      const assignedRole = matchedProfile.role; // 'FACULTY' for Rakibe, 'STUDENT' for Sayyed, Sonawane, Pendharkar, Randhe
+      const displayName = matchedProfile.displayName;
 
       return sendJson(res, 200, {
         success: true,
@@ -298,8 +326,10 @@ const server = http.createServer(async (req, res) => {
           email: normalizedEmail,
           displayName,
           role: assignedRole,
+          title: matchedProfile.title || (assignedRole === 'FACULTY' ? 'Faculty Member' : 'Student'),
           department: 'Computer Engineering',
           departmentId: 'comp_eng',
+          surname: matchedProfile.surname,
           verifiedAt: new Date().toISOString()
         },
         session
@@ -339,7 +369,8 @@ const server = http.createServer(async (req, res) => {
 
       // Fallback to in-memory checkins
       if (!records) {
-        records = inMemoryCheckins.filter(r => r.email === email.trim().toLowerCase());
+        const matched = matchAuthorizedSurname(email);
+        records = inMemoryCheckins.filter(r => r.email === email.trim().toLowerCase() || (matched && r.surname === matched.surname));
       }
 
       return sendJson(res, 200, { success: true, records: records || [] });

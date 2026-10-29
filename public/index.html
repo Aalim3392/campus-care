@@ -314,7 +314,7 @@
         <!-- Dropdown Menu -->
         <div id="profile-dropdown" class="hidden absolute right-0 top-9 w-60 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2 z-50 space-y-1">
           <div class="px-3 py-2 border-b border-slate-100">
-            <p class="text-xs font-bold text-slate-800 truncate" id="dropdown-name">Aarav Sharma</p>
+            <p class="text-xs font-bold text-slate-800 truncate" id="dropdown-name">User Account</p>
             <p class="text-[10px] text-slate-400 truncate" id="dropdown-email">—</p>
             <div class="flex items-center justify-between text-[10px] mt-1 pt-1 border-t border-slate-50 text-slate-500 font-medium">
               <span>Department:</span>
@@ -326,15 +326,6 @@
             </div>
           </div>
 
-              <!-- Switch to demo user shortcut -->
-              <div class="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase">Prototype Accounts (1 Faculty + 3 Students)</div>
-              <div class="grid grid-cols-2 gap-1 px-1">
-                <button onclick="switchActiveDemoUser('hod.comp@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-purple-50 text-purple-800 font-medium truncate col-span-2">👨‍🏫 Dr. V.K. Wagh (Faculty / HOD)</button>
-                <button onclick="switchActiveDemoUser('aarav.sharma@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-slate-50 text-slate-700 truncate">👨‍🎓 Student 1 (Aarav)</button>
-                <button onclick="switchActiveDemoUser('aasayyed370125@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-slate-50 text-slate-700 truncate">👨‍🎓 Student 2 (Aalim)</button>
-                <button onclick="switchActiveDemoUser('neha.patil@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-slate-50 text-slate-700 truncate col-span-2">👩‍🎓 Student 3 (Neha)</button>
-              </div>
-
           <div class="pt-1 border-t border-slate-100">
             <button onclick="handleSignOut()" class="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-xl font-medium flex items-center gap-2 transition">
               <span class="material-symbols-outlined text-sm">logout</span>
@@ -344,21 +335,6 @@
         </div>
       </div>
     </header>
-
-
-    <!-- ==================== DEMO QUICK-SWITCHER RIBBON ==================== -->
-    <div class="bg-slate-100 border-b border-slate-200/80 px-3 py-1.5 flex items-center justify-between text-[10px] shrink-0">
-      <div class="flex items-center gap-1 text-slate-600 font-semibold truncate">
-        <span class="material-symbols-outlined text-xs text-blue-600">tune</span>
-        <span>Active: <span id="ribbon-active-user" class="font-bold text-slate-900">Aarav Sharma (Student)</span></span>
-      </div>
-      <div class="flex items-center gap-1">
-        <button onclick="toggleRedAlertSimulation()" id="simulate-alert-btn" class="px-2 py-0.5 rounded bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold border border-rose-200 active:scale-95 transition" title="Toggle sleep < 5h to test Red Alert banner">
-          ⚡ Test Alert
-        </button>
-      </div>
-    </div>
-
 
     <!-- ==================== RED ALERT BANNER (CRITICAL SLEEP DEFICIT) ==================== -->
     <div id="red-alert-banner" class="hidden mx-4 mt-3 p-3.5 bg-gradient-to-r from-rose-600 to-red-700 text-white rounded-2xl shadow-md border border-rose-300 space-y-1.5">
@@ -905,7 +881,7 @@
               </div>
             </div>
             <div class="text-[10px] text-slate-500 flex items-center justify-between">
-              <span>Set by: <strong id="disp-goal-setby">Dr. V. K. Wagh (HOD)</strong></span>
+              <span>Set by: <strong id="disp-goal-setby">Prof. Priya Rakibe (Faculty Coordinator)</strong></span>
               <span id="disp-goal-week">Week 44</span>
             </div>
             <p class="text-[10px] text-slate-400 italic">
@@ -1099,12 +1075,12 @@
             <div class="flex-1 min-w-0 space-y-0.5">
               <div class="flex items-center justify-between gap-2">
                 <h4 class="text-xs font-bold text-slate-900">Faculty Wellness Coordinator</h4>
-                <span class="shrink-0 text-[9px] font-semibold text-indigo-700 bg-indigo-50 px-1.5 py-0.2 rounded-full">Prof. P.R. Rao</span>
+                <span class="shrink-0 text-[9px] font-semibold text-indigo-700 bg-indigo-50 px-1.5 py-0.2 rounded-full">Prof. Priya Rakibe</span>
               </div>
               <p class="text-[10px] text-slate-500 leading-snug">Confidential academic wellness guidance for Computer Engineering students.</p>
               <div class="pt-0.5 text-[10px] text-slate-700 font-semibold flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs text-indigo-600">mail</span>
-                <span>mentor.comp@kkwagh.edu.in</span>
+                <span>priya.rakibe@kkwagh.edu.in</span>
               </div>
             </div>
           </div>
@@ -1262,69 +1238,48 @@
 
   <!-- ==================== JAVASCRIPT ==================== -->
   <script>
-    // ─── 5 Sample Users Database (Prototype Seed Scope) ──────────────────────
-    const DEMO_USERS = {
-      'aarav.sharma@kkwagh.edu.in': {
-        id: 'user_aarav_sharma',
-        displayName: 'Aarav Sharma',
-        role: 'STUDENT',
-        department: 'Computer Engineering',
-        departmentId: 'comp_eng',
-        email: 'aarav.sharma@kkwagh.edu.in'
-      },
-      'aasayyed370125@kkwagh.edu.in': {
-        id: 'user_aalim_sayyed',
-        displayName: 'Aalim Sayyed',
-        role: 'STUDENT',
-        department: 'Computer Engineering',
-        departmentId: 'comp_eng',
-        email: 'aasayyed370125@kkwagh.edu.in'
-      },
-      'neha.patil@kkwagh.edu.in': {
-        id: 'user_neha_patil',
-        displayName: 'Neha Patil',
-        role: 'STUDENT',
-        department: 'Computer Engineering',
-        departmentId: 'comp_eng',
-        email: 'neha.patil@kkwagh.edu.in'
-      },
-      'hod.comp@kkwagh.edu.in': {
-        id: 'user_dr_vk_wagh',
-        displayName: 'Dr. V. K. Wagh',
-        role: 'FACULTY',
-        title: 'Head of Department',
-        department: 'Computer Engineering',
-        departmentId: 'comp_eng',
-        email: 'hod.comp@kkwagh.edu.in'
-      },
-      'mentor.comp@kkwagh.edu.in': {
-        id: 'user_prof_pr_rao',
-        displayName: 'Prof. P. R. Rao',
-        role: 'FACULTY',
-        title: 'Faculty Wellness Coordinator',
-        department: 'Computer Engineering',
-        departmentId: 'comp_eng',
-        email: 'mentor.comp@kkwagh.edu.in'
-      }
+    // ─── Authorized Users Profile (Strict Surname-Based Access) ──────────────
+    // 1 Faculty + 4 Students
+    const AUTHORIZED_PROFILES = {
+      'sayyed':     { displayName: 'Aalim Sayyed',         role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in' },
+      'sonawane':   { displayName: 'Harsh Sonawane',       role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in' },
+      'pendharkar': { displayName: 'Vaishnavi Pendharkar', role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in' },
+      'randhe':     { displayName: 'Shreya Randhe',        role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in' },
+      'rakibe':     { displayName: 'Prof. Priya Rakibe',   role: 'FACULTY', title: 'Faculty Coordinator', defaultEmail: 'priya.rakibe@kkwagh.edu.in' }
     };
 
-    // Pre-seeded records for Computer Engineering prototype
+    function matchAuthorizedSurname(email) {
+      if (!email || typeof email !== 'string') return null;
+      const lower = email.trim().toLowerCase();
+      for (const [surname, prof] of Object.entries(AUTHORIZED_PROFILES)) {
+        if (lower.includes(surname)) {
+          return { surname, ...prof };
+        }
+      }
+      return null;
+    }
+
+    // Pre-seeded records for Computer Engineering prototype (4 students)
     const DEFAULT_SEED_RECORDS = [
-      // Aarav Sharma (Student 1)
-      { id: 'rec_aarav_1', email: 'aarav.sharma@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 7.5, water: 10, waterLiters: 2.5, steps: 8500, study: 4.5, stress: 2 },
-      { id: 'rec_aarav_2', email: 'aarav.sharma@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 8.0, water: 11, waterLiters: 2.75, steps: 9100, study: 5.0, stress: 1 },
-      { id: 'rec_aarav_3', email: 'aarav.sharma@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 7.0, water: 10, waterLiters: 2.5, steps: 8400, study: 4.0, stress: 2 },
-      // Aalim Sayyed (Student 2)
-      { id: 'rec_aalim_1', email: 'aasayyed370125@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 6.5, water: 10, waterLiters: 2.5, steps: 7800, study: 5.0, stress: 2 },
-      { id: 'rec_aalim_2', email: 'aasayyed370125@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 7.0, water: 12, waterLiters: 3.0, steps: 10200, study: 4.5, stress: 1 },
-      { id: 'rec_aalim_3', email: 'aasayyed370125@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 6.5, water: 11, waterLiters: 2.75, steps: 8900, study: 5.5, stress: 2 },
-      // Neha Patil (Student 3 - slightly elevated stress / low sleep)
-      { id: 'rec_neha_1', email: 'neha.patil@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Okay', sleep: 5.5, water: 7, waterLiters: 1.75, steps: 6200, study: 6.0, stress: 3 },
-      { id: 'rec_neha_2', email: 'neha.patil@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Low', sleep: 4.5, water: 6, waterLiters: 1.5, steps: 5400, study: 6.5, stress: 4 },
-      { id: 'rec_neha_3', email: 'neha.patil@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Okay', sleep: 5.0, water: 8, waterLiters: 2.0, steps: 6600, study: 5.0, stress: 3 }
+      // 1. Aalim Sayyed (Student 1)
+      { id: 'rec_sayyed_1', email: 'aalim.sayyed@kkwagh.edu.in', surname: 'sayyed', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 7.5, water: 10, waterLiters: 2.5, steps: 8600, study: 4.5, stress: 2 },
+      { id: 'rec_sayyed_2', email: 'aalim.sayyed@kkwagh.edu.in', surname: 'sayyed', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 8.0, water: 11, waterLiters: 2.75, steps: 9200, study: 5.0, stress: 1 },
+      { id: 'rec_sayyed_3', email: 'aalim.sayyed@kkwagh.edu.in', surname: 'sayyed', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 7.0, water: 10, waterLiters: 2.5, steps: 8400, study: 4.0, stress: 2 },
+      // 2. Harsh Sonawane (Student 2)
+      { id: 'rec_sonawane_1', email: 'harsh.sonawane@kkwagh.edu.in', surname: 'sonawane', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 7.0, water: 9, waterLiters: 2.25, steps: 8200, study: 4.5, stress: 2 },
+      { id: 'rec_sonawane_2', email: 'harsh.sonawane@kkwagh.edu.in', surname: 'sonawane', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 7.5, water: 10, waterLiters: 2.5, steps: 8800, study: 5.0, stress: 1 },
+      { id: 'rec_sonawane_3', email: 'harsh.sonawane@kkwagh.edu.in', surname: 'sonawane', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 7.0, water: 10, waterLiters: 2.5, steps: 8100, study: 4.0, stress: 2 },
+      // 3. Vaishnavi Pendharkar (Student 3)
+      { id: 'rec_pendharkar_1', email: 'vaishnavi.pendharkar@kkwagh.edu.in', surname: 'pendharkar', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Okay', sleep: 6.5, water: 8, waterLiters: 2.0, steps: 7500, study: 5.0, stress: 3 },
+      { id: 'rec_pendharkar_2', email: 'vaishnavi.pendharkar@kkwagh.edu.in', surname: 'pendharkar', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Good', sleep: 7.0, water: 9, waterLiters: 2.25, steps: 8000, study: 4.5, stress: 2 },
+      { id: 'rec_pendharkar_3', email: 'vaishnavi.pendharkar@kkwagh.edu.in', surname: 'pendharkar', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Okay', sleep: 6.5, water: 8, waterLiters: 2.0, steps: 7600, study: 5.0, stress: 2 },
+      // 4. Shreya Randhe (Student 4)
+      { id: 'rec_randhe_1', email: 'shreya.randhe@kkwagh.edu.in', surname: 'randhe', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Okay', sleep: 6.0, water: 7, waterLiters: 1.75, steps: 6800, study: 5.5, stress: 3 },
+      { id: 'rec_randhe_2', email: 'shreya.randhe@kkwagh.edu.in', surname: 'randhe', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Low', sleep: 5.5, water: 7, waterLiters: 1.75, steps: 6400, study: 6.0, stress: 3 },
+      { id: 'rec_randhe_3', email: 'shreya.randhe@kkwagh.edu.in', surname: 'randhe', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 6.5, water: 8, waterLiters: 2.0, steps: 7200, study: 5.0, stress: 2 }
     ];
 
-    // Department Goals (Computer Engineering default)
+    // Department Goals (Computer Engineering default - set by Faculty Prof. Priya Rakibe)
     let departmentGoals = {
       department: 'comp_eng',
       departmentName: 'Computer Engineering',
@@ -1333,7 +1288,7 @@
       targetWater: 2.5,
       weekNumber: 44,
       startDate: '2026-10-26',
-      setBy: 'Dr. V. K. Wagh (HOD)'
+      setBy: 'Prof. Priya Rakibe (Faculty Coordinator)'
     };
 
     // ─── Application State ───────────────────────────────────────────────────
@@ -1379,7 +1334,19 @@
         if (savedUser) {
           const parsed = JSON.parse(savedUser);
           if (parsed && parsed.email && parsed.email.endsWith('@kkwagh.edu.in')) {
-            currentUser = parsed;
+            const matched = matchAuthorizedSurname(parsed.email);
+            if (matched) {
+              currentUser = {
+                ...parsed,
+                surname: matched.surname,
+                displayName: matched.displayName,
+                role: matched.role,
+                title: matched.title || (matched.role === 'FACULTY' ? 'Faculty Coordinator' : 'Student')
+              };
+            } else {
+              localStorage.removeItem('cw_user_session');
+              currentUser = null;
+            }
           }
         }
       } catch (_) {}
@@ -1419,39 +1386,23 @@
       }
     }
 
-    function quickLogin(email, role) {
-      setLoginRole(role);
-      document.getElementById('email-input').value = email;
-      loginWithDemoUser(email);
-    }
-
-    function loginWithDemoUser(email) {
-      const demoUser = DEMO_USERS[email];
-      if (demoUser) {
-        currentUser = demoUser;
-      } else {
-        const usernamePart = email.split('@')[0];
-        const displayName = usernamePart.split(/[._0-9]+/).filter(Boolean).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ') || 'College Member';
-        currentUser = {
-          id: 'user_' + Math.abs(email.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0)),
-          email,
-          displayName,
-          role: selectedLoginRole,
-          department: 'Computer Engineering',
-          departmentId: 'comp_eng',
-          verifiedAt: new Date().toISOString()
-        };
-      }
+    function loginWithAuthorizedProfile(email, profile) {
+      currentUser = {
+        id: 'user_' + Math.abs(email.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0)),
+        email,
+        surname: profile.surname,
+        displayName: profile.displayName,
+        role: profile.role,
+        title: profile.title || (profile.role === 'FACULTY' ? 'Faculty Coordinator' : 'Student'),
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        verifiedAt: new Date().toISOString()
+      };
       localStorage.setItem('cw_user_session', JSON.stringify(currentUser));
       document.getElementById('login-view').classList.add('hidden');
       applyUserToUI(currentUser);
       syncUserData();
-      showToast(`Signed in as ${currentUser.displayName} (${currentUser.role}) 🎉`);
-    }
-
-    function switchActiveDemoUser(email) {
-      document.getElementById('profile-dropdown').classList.add('hidden');
-      loginWithDemoUser(email);
+      showToast(`Welcome back, ${currentUser.displayName}! (${currentUser.role}) 🎉`);
     }
 
     function checkAuthRouteGuard() {
@@ -1476,7 +1427,6 @@
       const ddRole     = document.getElementById('dropdown-role');
       const greeting   = document.getElementById('home-user-greeting');
       const roleBadge  = document.getElementById('header-role-badge');
-      const ribbonUser = document.getElementById('ribbon-active-user');
 
       if (avatar)     avatar.textContent = initials;
       if (username)   username.textContent = parts[0];
@@ -1484,7 +1434,6 @@
       if (ddEmail)    ddEmail.textContent = user.email;
       if (ddRole)     ddRole.textContent = user.role;
       if (greeting)   greeting.textContent = parts[0];
-      if (ribbonUser) ribbonUser.textContent = `${name} (${user.role === 'FACULTY' ? (user.title || 'Faculty') : 'Student'})`;
 
       if (roleBadge) {
         if (user.role === 'FACULTY') {
@@ -1529,12 +1478,20 @@
       }
 
       if (!email.endsWith('@kkwagh.edu.in')) {
-        emailErrTxt.textContent = 'Access restricted. Only @kkwagh.edu.in addresses permitted.';
+        emailErrTxt.textContent = 'Access restricted: Only official @kkwagh.edu.in addresses permitted.';
         emailError.classList.remove('hidden');
         return;
       }
-      emailError.classList.add('hidden');
 
+      // Check surname whitelist (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
+      const matched = matchAuthorizedSurname(email);
+      if (!matched) {
+        emailErrTxt.textContent = 'Access restricted: Only authorized members (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe) can log in.';
+        emailError.classList.remove('hidden');
+        return;
+      }
+
+      emailError.classList.add('hidden');
       btn.disabled = true;
       btnText.textContent = 'Generating 6-digit code…';
 
@@ -1544,13 +1501,13 @@
         sessionStorage.setItem('cw_auth_email', email);
 
         currentPendingEmail = email;
-        document.getElementById('otp-sent-to-label').textContent = `Code generated for ${email}`;
+        document.getElementById('otp-sent-to-label').textContent = `Code generated for ${email} (${matched.displayName})`;
         document.getElementById('dev-code-val').textContent = code;
-        document.getElementById('otp-input').value = code; // pre-fill for ease of testing
+        document.getElementById('otp-input').value = code; // pre-fill for ease of demonstration
 
         document.getElementById('login-step-email').classList.add('hidden');
         document.getElementById('login-step-otp').classList.remove('hidden');
-        showToast('6-digit code ready! Press Verify to enter.');
+        showToast(`Verification code ready for ${matched.displayName}!`);
       } finally {
         btn.disabled = false;
         btnText.textContent = 'Continue with College Email';
@@ -1573,12 +1530,37 @@
     function handleVerifyOtp(e) {
       e.preventDefault();
       const tokenInput = document.getElementById('otp-input');
+      const errBox = document.getElementById('otp-error-msg');
       const token = tokenInput.value.trim();
+      const expectedToken = sessionStorage.getItem('cw_auth_otp');
+
       if (!/^\d{6}$/.test(token)) {
-        document.getElementById('otp-error-msg').classList.remove('hidden');
+        if (errBox) {
+          errBox.textContent = 'Please enter a valid 6-digit verification code.';
+          errBox.classList.remove('hidden');
+        }
         return;
       }
-      loginWithDemoUser(currentPendingEmail);
+
+      if (expectedToken && token !== expectedToken) {
+        if (errBox) {
+          errBox.textContent = 'Invalid verification code. Please check and try again.';
+          errBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      const matched = matchAuthorizedSurname(currentPendingEmail);
+      if (!matched) {
+        if (errBox) {
+          errBox.textContent = 'Unauthorized member. Access denied.';
+          errBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (errBox) errBox.classList.add('hidden');
+      loginWithAuthorizedProfile(currentPendingEmail, matched);
     }
 
     function handleSignOut() {
@@ -1607,7 +1589,18 @@
     // ─── Data Sync & DHI Calculation ─────────────────────────────────────────
     function syncUserData() {
       if (!currentUser) return;
-      userCheckinRecords = allDepartmentCheckins.filter(r => r.email === currentUser.email);
+      userCheckinRecords = allDepartmentCheckins.filter(r => {
+        if (r.email && r.email.toLowerCase() === currentUser.email.toLowerCase()) return true;
+        if (currentUser.surname && r.surname === currentUser.surname) return true;
+        return false;
+      });
+      userCheckinRecords.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+      renderDashboardMetrics();
+      renderHomeBarChart();
+      renderProgressLogs();
+      renderDepartmentDHI();
+    }
       userCheckinRecords.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
       renderDashboardMetrics();
@@ -2027,7 +2020,7 @@
       if (gSleep) gSleep.textContent = `${departmentGoals.targetSleep}h / day`;
       if (gSteps) gSteps.textContent = `${(departmentGoals.targetSteps || 8000).toLocaleString()} / day`;
       if (gWater) gWater.textContent = `${departmentGoals.targetWater}L / day`;
-      if (gSetBy) gSetBy.textContent = departmentGoals.setBy || 'Dr. V. K. Wagh (HOD)';
+      if (gSetBy) gSetBy.textContent = departmentGoals.setBy || 'Prof. Priya Rakibe (Faculty Coordinator)';
       if (gWeek)  gWeek.textContent  = `Week ${departmentGoals.weekNumber || 44}`;
 
       // Populate input defaults in form
