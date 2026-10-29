@@ -1702,13 +1702,6 @@
       renderProgressLogs();
       renderDepartmentDHI();
     }
-      userCheckinRecords.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-
-      renderDashboardMetrics();
-      renderHomeBarChart();
-      renderProgressLogs();
-      renderDepartmentDHI();
-    }
 
     function renderDashboardMetrics() {
       const latest = userCheckinRecords.length > 0 ? userCheckinRecords[userCheckinRecords.length - 1] : null;
