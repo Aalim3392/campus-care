@@ -118,6 +118,16 @@ function sendJson(res, statusCode, data) {
 
 function parseJsonBody(req) {
   return new Promise((resolve, reject) => {
+    if (req.body && typeof req.body === 'object') {
+      return resolve(req.body);
+    }
+    if (req.body && typeof req.body === 'string') {
+      try {
+        return resolve(JSON.parse(req.body));
+      } catch (err) {
+        return reject(err);
+      }
+    }
     let body = '';
     req.on('data', chunk => {
       body += chunk;
@@ -138,7 +148,7 @@ function parseJsonBody(req) {
   });
 }
 
-const server = http.createServer(async (req, res) => {
+const requestHandler = async (req, res) => {
   // Handle CORS Preflight
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
@@ -757,8 +767,14 @@ const server = http.createServer(async (req, res) => {
       }
     });
   });
-});
+};
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Campus Care Web server running on port ${PORT}`);
-});
+const server = http.createServer(requestHandler);
+
+if (require.main === module) {
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Campus Care Web server running on port ${PORT}`);
+  });
+}
+
+module.exports = requestHandler;
