@@ -230,14 +230,23 @@ const requestHandler = async (req, res) => {
         });
       }
 
-      // 2. In Register Mode: Faculty requires verified departmental passcode
+      // 2. In Register Mode: Check if account already exists!
+      if (isRegistering && profile) {
+        return sendJson(res, 409, {
+          success: false,
+          alreadyRegistered: true,
+          error: `An account for ${normalizedEmail} already exists. Please sign in instead.`
+        });
+      }
+
+      // 3. In Register Mode: Faculty requires verified departmental passcode
       if (isRegistering && role === 'FACULTY') {
         const VALID_FACULTY_CODES = ['KKWAGH_FACULTY_2026', 'KKW2026', 'FACULTY2026'];
         const fCode = (facultyCode || '').trim().toUpperCase();
         if (!VALID_FACULTY_CODES.includes(fCode)) {
           return sendJson(res, 403, {
             success: false,
-            error: 'Invalid Faculty Verification Code. Faculty registration requires the authorized department code (KKWAGH_FACULTY_2026).'
+            error: 'Invalid Faculty Verification Code. Faculty registration requires the authorized department code.'
           });
         }
       }
@@ -465,7 +474,7 @@ const requestHandler = async (req, res) => {
     }
   }
 
-  // 4a. Get Check-in Records
+  // 4a. Get Check-in Records (Directly from Supabase with in-memory fallback)
   if (pathname === '/api/checkins' && req.method === 'GET') {
     try {
       const email = parsedUrl.searchParams.get('email');
@@ -473,39 +482,59 @@ const requestHandler = async (req, res) => {
         return sendJson(res, 403, { success: false, error: 'Unauthorized. Valid college email required.' });
       }
 
-      let records = null;
+      const normalizedEmail = email.trim().toLowerCase();
+      let records = [];
+
+      // 1. Fetch live user check-ins from Supabase
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
         try {
-          const authHeader = req.headers['authorization'] || `Bearer ${SUPABASE_ANON_KEY}`;
-          const sRes = await fetch(`${SUPABASE_URL}/rest/v1/checkins?email=eq.${encodeURIComponent(email)}&order=date.asc`, {
-            method: 'GET',
+          const sRes = await fetch(`${SUPABASE_URL}/rest/v1/checkins?email=eq.${encodeURIComponent(normalizedEmail)}&order=date.asc`, {
             headers: {
               'apikey': SUPABASE_ANON_KEY,
-              'Authorization': authHeader
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             }
           });
           if (sRes.ok) {
             const fetched = await sRes.json();
             if (Array.isArray(fetched) && fetched.length > 0) {
-              records = fetched;
+              records = fetched.map(r => {
+                const stepsMatch = (r.id || '').match(/steps(\d+)/i);
+                const steps = stepsMatch ? parseInt(stepsMatch[1], 10) : 8000;
+                return {
+                  id: r.id,
+                  email: r.email,
+                  date: r.date,
+                  day: r.day,
+                  mood: r.mood,
+                  sleep: r.sleep,
+                  water: r.water,
+                  waterLiters: parseFloat(((r.water || 8) * 0.25).toFixed(2)),
+                  steps,
+                  study: r.study,
+                  stress: r.stress,
+                  department: 'comp_eng',
+                  created_at: r.created_at
+                };
+              });
             }
           }
         } catch (_) {}
       }
 
-      // Fallback to in-memory checkins
-      if (!records) {
-        const userProfile = findUserProfile(email);
-        records = inMemoryCheckins.filter(r => r.email === email.trim().toLowerCase() || (userProfile && r.email === userProfile.email));
-      }
+      // Merge with in-memory records (or seed records) so no data is ever missed
+      const memoryMatches = inMemoryCheckins.filter(r => r.email === normalizedEmail);
+      const combinedMap = new Map();
+      memoryMatches.forEach(r => combinedMap.set(r.date, r));
+      records.forEach(r => combinedMap.set(r.date, { ...combinedMap.get(r.date), ...r }));
+      const finalRecords = Array.from(combinedMap.values()).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
-      return sendJson(res, 200, { success: true, records: records || [] });
+      return sendJson(res, 200, { success: true, records: finalRecords });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
     }
   }
 
-  // 4b. Save Check-in Record
+  // 4b. Save Check-in Record (Persists directly to Supabase and in-memory store)
   if (pathname === '/api/checkins' && req.method === 'POST') {
     try {
       const data = await parseJsonBody(req);
@@ -514,68 +543,154 @@ const requestHandler = async (req, res) => {
       }
 
       const normalizedEmail = data.email.trim().toLowerCase();
-      const record = {
-        id: String(data.id || Date.now()),
+      const stepsCount = parseInt(data.steps, 10) || 8000;
+      const cleanId = `rec_${normalizedEmail}_${data.date}_steps${stepsCount}`;
+
+      const fullRecord = {
+        id: cleanId,
         email: normalizedEmail,
         department: data.department || 'comp_eng',
         date: data.date,
-        day: data.day,
-        mood: data.mood,
+        day: data.day || 'Day',
+        mood: data.mood || 'Good',
         sleep: parseFloat(data.sleep) || 0,
-        water: parseInt(data.water, 10) || 0,
-        waterLiters: parseFloat(data.waterLiters) || ((parseInt(data.water, 10) || 0) * 0.25),
-        steps: parseInt(data.steps, 10) || 0,
-        study: parseFloat(data.study) || 0,
+        water: parseInt(data.water, 10) || Math.round((parseFloat(data.waterLiters) || 2.0) / 0.25),
+        waterLiters: parseFloat(data.waterLiters) || ((parseInt(data.water, 10) || 8) * 0.25),
+        steps: stepsCount,
+        study: parseFloat(data.study) || 4.0,
         stress: parseInt(data.stress, 10) || 2,
         updatedAt: new Date().toISOString()
       };
 
-      // Single-submission check: non-editable per date
-      const existing = inMemoryCheckins.find(r => 
-        r.email === normalizedEmail && r.date === record.date
-      );
-      if (existing) {
+      // Exact columns matching Supabase checkins table schema
+      const supabasePayload = {
+        id: cleanId,
+        email: normalizedEmail,
+        date: data.date,
+        day: fullRecord.day,
+        mood: fullRecord.mood,
+        sleep: fullRecord.sleep,
+        water: fullRecord.water,
+        study: fullRecord.study,
+        stress: fullRecord.stress
+      };
+
+      // 1. Single-submission check: in-memory store
+      const existingMemory = inMemoryCheckins.find(r => r.email === normalizedEmail && r.date === data.date);
+      if (existingMemory) {
         return sendJson(res, 409, {
           success: false,
-          error: `Daily check-in for ${record.date} has already been submitted and cannot be edited.`
+          error: `Daily check-in for ${data.date} has already been submitted and cannot be edited.`
         });
       }
 
-      inMemoryCheckins.push(record);
-
-      // If Supabase is configured, attempt to save to Supabase checkins table
+      // 2. Single-submission check: Supabase database
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
         try {
-          const authHeader = req.headers['authorization'] || `Bearer ${SUPABASE_ANON_KEY}`;
-          await fetch(`${SUPABASE_URL}/rest/v1/checkins`, {
+          const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/checkins?email=eq.${encodeURIComponent(normalizedEmail)}&date=eq.${encodeURIComponent(data.date)}&select=id`, {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (checkRes.ok) {
+            const existingRows = await checkRes.json();
+            if (Array.isArray(existingRows) && existingRows.length > 0) {
+              return sendJson(res, 409, {
+                success: false,
+                error: `Daily check-in for ${data.date} has already been submitted and cannot be edited.`
+              });
+            }
+          }
+        } catch (_) {}
+      }
+
+      inMemoryCheckins.push(fullRecord);
+
+      // 3. Save directly to Supabase checkins table
+      let supabaseSaved = false;
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        try {
+          const sRes = await fetch(`${SUPABASE_URL}/rest/v1/checkins`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'apikey': SUPABASE_ANON_KEY,
-              'Authorization': authHeader,
-              'Prefer': 'resolution=merge-duplicates'
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Prefer': 'return=representation'
             },
-            body: JSON.stringify(record)
+            body: JSON.stringify(supabasePayload)
           });
+          if (sRes.ok) {
+            supabaseSaved = true;
+          }
         } catch (_) {}
       }
 
-      return sendJson(res, 200, { success: true, savedAt: new Date().toISOString(), record });
+      return sendJson(res, 200, {
+        success: true,
+        savedAt: new Date().toISOString(),
+        supabaseSaved,
+        record: fullRecord
+      });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
     }
   }
 
-  // 4c. Get All Department Check-in Records (Syncs shared Department DHI score for all users)
+  // 4c. Get All Department Check-in Records (Live sync from Supabase ensures shared DHI score for all users)
   if (pathname === '/api/department/checkins' && req.method === 'GET') {
     try {
       const dept = parsedUrl.searchParams.get('dept') || 'comp_eng';
-      const records = inMemoryCheckins.filter(r => (r.department || 'comp_eng') === dept);
+      let records = [];
+
+      // Fetch live department records from Supabase
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        try {
+          const sRes = await fetch(`${SUPABASE_URL}/rest/v1/checkins?order=date.asc`, {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (sRes.ok) {
+            const fetched = await sRes.json();
+            if (Array.isArray(fetched) && fetched.length > 0) {
+              records = fetched.map(r => {
+                const stepsMatch = (r.id || '').match(/steps(\d+)/i);
+                const steps = stepsMatch ? parseInt(stepsMatch[1], 10) : 8000;
+                return {
+                  id: r.id,
+                  email: r.email,
+                  date: r.date,
+                  day: r.day,
+                  mood: r.mood,
+                  sleep: r.sleep,
+                  water: r.water,
+                  waterLiters: parseFloat(((r.water || 8) * 0.25).toFixed(2)),
+                  steps,
+                  study: r.study,
+                  stress: r.stress,
+                  department: 'comp_eng',
+                  created_at: r.created_at
+                };
+              });
+            }
+          }
+        } catch (_) {}
+      }
+
+      // Merge with in-memory seed records
+      const combinedMap = new Map();
+      inMemoryCheckins.forEach(r => combinedMap.set(`${r.email}_${r.date}`, r));
+      records.forEach(r => combinedMap.set(`${r.email}_${r.date}`, { ...combinedMap.get(`${r.email}_${r.date}`), ...r }));
+      const allMerged = Array.from(combinedMap.values()).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
       return sendJson(res, 200, {
         success: true,
         department: 'Computer Engineering',
         departmentId: 'comp_eng',
-        checkins: records
+        checkins: allMerged
       });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });

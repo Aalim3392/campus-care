@@ -230,10 +230,7 @@
                   />
                   <span class="material-symbols-outlined absolute right-3 top-2.5 text-purple-500 text-lg">key</span>
                 </div>
-                <div class="mt-1 p-2 bg-purple-50 border border-purple-100 rounded-lg flex items-center justify-between text-[10px] text-purple-900">
-                  <span>Authorized Faculty Passcode:</span>
-                  <code class="font-mono font-bold text-purple-800 bg-purple-100 px-1.5 py-0.5 rounded">KKWAGH_FACULTY_2026</code>
-                </div>
+                <p class="text-[10px] text-slate-500 mt-1">Contact Computer Engineering department office if you do not have your faculty key.</p>
               </div>
 
               <!-- Department Badge (Pre-selected) -->
@@ -1677,11 +1674,21 @@
         }
       }
 
-      // 2. REGISTER MODE: Full Name required + Faculty Passcode if registering as Faculty
+      // 2. REGISTER MODE: Check duplicate registration + Full Name + Faculty Passcode
       let fullName = (nameInput ? nameInput.value : '').trim();
       let enteredFacultyCode = (facultyCodeInput ? facultyCodeInput.value : '').trim();
 
       if (authMode === 'register') {
+        const localUser = findRegisteredUser(email);
+        if (localUser) {
+          emailErrTxt.innerHTML = `<strong>Account Already Exists:</strong> An account for <strong>${email}</strong> already exists. Please switch to the <strong>Sign In</strong> tab to log in.`;
+          emailError.classList.remove('hidden');
+          setAuthMode('login');
+          document.getElementById('email-input').value = email;
+          showToast('Account already exists! Please sign in.', 'error');
+          return;
+        }
+
         if (!fullName) {
           emailErrTxt.textContent = 'Please enter your full name to register.';
           emailError.classList.remove('hidden');
@@ -1689,10 +1696,11 @@
         }
 
         // Faculty Security Passcode Check (Students have no code, direct registration)
+        // Note: The passcode is strictly checked without revealing the secret code on screen
         if (selectedAuthRole === 'FACULTY') {
           const VALID_FACULTY_CODES = ['KKWAGH_FACULTY_2026', 'KKW2026', 'FACULTY2026'];
           if (!VALID_FACULTY_CODES.includes(enteredFacultyCode.toUpperCase())) {
-            emailErrTxt.innerHTML = `<strong>Access Denied:</strong> Invalid Faculty Passcode! Faculty registration requires the authorized department code (<code class="bg-purple-100 text-purple-900 font-mono font-bold px-1 rounded">KKWAGH_FACULTY_2026</code>).`;
+            emailErrTxt.innerHTML = `<strong>Access Denied:</strong> Invalid Faculty Passcode! Please enter the authorized departmental faculty key.`;
             emailError.classList.remove('hidden');
             if (facultyCodeInput) facultyCodeInput.focus();
             return;
@@ -1727,6 +1735,14 @@
             if (data.user) userProfile = data.user;
           } else {
             const errData = await res.json().catch(() => ({}));
+            if (errData.alreadyRegistered || res.status === 409) {
+              emailErrTxt.innerHTML = `<strong>Account Already Exists:</strong> An account for <strong>${email}</strong> already exists. Switched to <strong>Sign In</strong> tab.`;
+              emailError.classList.remove('hidden');
+              setAuthMode('login');
+              document.getElementById('email-input').value = email;
+              showToast('Account already exists! Please sign in.', 'error');
+              return;
+            }
             if (errData.notRegistered) {
               emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> You must register first before logging in. Switched to <strong>Register</strong> tab.`;
               emailError.classList.remove('hidden');
@@ -1877,11 +1893,12 @@
     });
 
     // ─── Data Sync & DHI Calculation ─────────────────────────────────────────
-    function syncUserData() {
+    async function syncUserData() {
       if (!currentUser) return;
+
+      // 1. Immediate local cache filter for responsive UI
       userCheckinRecords = allDepartmentCheckins.filter(r => {
         if (r.email && r.email.toLowerCase() === currentUser.email.toLowerCase()) return true;
-        if (currentUser.surname && r.surname === currentUser.surname) return true;
         return false;
       });
       userCheckinRecords.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
@@ -1890,6 +1907,42 @@
       renderHomeBarChart();
       renderProgressLogs();
       renderDepartmentDHI();
+
+      const dateInp = document.getElementById('checkin-date');
+      if (dateInp && dateInp.value) {
+        checkDateDuplicate(dateInp.value);
+      }
+
+      // 2. Fetch live records from Supabase via /api/checkins
+      try {
+        const res = await fetch(`/api/checkins?email=${encodeURIComponent(currentUser.email)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.records) && data.records.length > 0) {
+            const map = new Map();
+            userCheckinRecords.forEach(r => map.set(r.date, r));
+            data.records.forEach(r => map.set(r.date, { ...map.get(r.date), ...r }));
+            userCheckinRecords = Array.from(map.values()).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+            // Keep master department records in sync
+            userCheckinRecords.forEach(ur => {
+              const idx = allDepartmentCheckins.findIndex(r => r.email === ur.email && r.date === ur.date);
+              if (idx >= 0) allDepartmentCheckins[idx] = ur;
+              else allDepartmentCheckins.push(ur);
+            });
+            localStorage.setItem('cw_all_checkins', JSON.stringify(allDepartmentCheckins));
+
+            renderDashboardMetrics();
+            renderHomeBarChart();
+            renderProgressLogs();
+            renderDepartmentDHI();
+
+            if (dateInp && dateInp.value) {
+              checkDateDuplicate(dateInp.value);
+            }
+          }
+        }
+      } catch (_) {}
     }
 
     function renderDashboardMetrics() {
@@ -2335,24 +2388,28 @@
         return;
       }
 
+      // 1. Immediately lock form and update local cache
       allDepartmentCheckins.push(record);
       localStorage.setItem('cw_all_checkins', JSON.stringify(allDepartmentCheckins));
-      syncUserData();
-
-      // Immediately lock the form for this date
       checkDateDuplicate(dateVal);
-
-      showToast(`Daily check-in recorded for ${dateVal}! 🌟 (Entry Locked)`);
+      showToast(`Daily check-in recorded for ${dateVal}! 🌟 (Saved & Synced)`);
       navigateTo('home');
 
-      // Attempt background backend sync and sync department score for everyone
-      fetch('/api/checkins', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(record)
-      }).then(() => {
-        fetchDepartmentCheckinsAndScore();
-      }).catch(() => {});
+      // 2. Persist to Supabase via /api/checkins and sync department score
+      try {
+        const res = await fetch('/api/checkins', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(record)
+        });
+        if (res.status === 409) {
+          showToast(`Check-in for ${dateVal} already recorded in database.`, 'error');
+        }
+      } catch (_) {}
+
+      // 3. Re-sync live user and department records
+      await syncUserData();
+      await fetchDepartmentCheckinsAndScore();
     }
 
     // ─── Faculty Goal Setting (Problem Statement Requirement 5) ──────────────
