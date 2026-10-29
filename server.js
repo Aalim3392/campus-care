@@ -462,8 +462,8 @@ const requestHandler = async (req, res) => {
 
       // Fallback to in-memory checkins
       if (!records) {
-        const matched = matchAuthorizedSurname(email);
-        records = inMemoryCheckins.filter(r => r.email === email.trim().toLowerCase() || (matched && r.surname === matched.surname));
+        const userProfile = findUserProfile(email);
+        records = inMemoryCheckins.filter(r => r.email === email.trim().toLowerCase() || (userProfile && r.email === userProfile.email));
       }
 
       return sendJson(res, 200, { success: true, records: records || [] });
@@ -498,10 +498,8 @@ const requestHandler = async (req, res) => {
       };
 
       // Single-submission check: non-editable per date
-      const matched = matchAuthorizedSurname(normalizedEmail);
       const existing = inMemoryCheckins.find(r => 
-        (r.email === normalizedEmail || (matched && r.surname === matched.surname)) && 
-        r.date === record.date
+        r.email === normalizedEmail && r.date === record.date
       );
       if (existing) {
         return sendJson(res, 409, {
