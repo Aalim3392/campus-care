@@ -1175,10 +1175,18 @@
         <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3" data-keywords="request confidential support form submit coordinator contact academic stress sleep wellbeing">
           <div>
             <h3 class="text-xs font-bold text-slate-900 uppercase">Request Confidential Support</h3>
-            <p class="text-[10px] text-slate-500 mt-0.5">Delivered directly to the Computer Engineering wellness coordinator.</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">Delivered directly to your selected Computer Engineering faculty mentor.</p>
           </div>
 
           <form onsubmit="handleSupportSubmit(event)" class="space-y-3">
+            <div>
+              <label for="support-faculty" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">Select Faculty Member</label>
+              <select id="support-faculty" class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
+                <option value="priya.rakibe@kkwagh.edu.in" data-name="Prof. Priya Rakibe">Prof. Priya Rakibe (Faculty Coordinator)</option>
+              </select>
+              <p class="text-[9px] text-slate-400 mt-1">Showing registered faculty members of Computer Engineering.</p>
+            </div>
+
             <div>
               <label for="support-topic" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">Topic of Concern</label>
               <select id="support-topic" class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
@@ -1199,7 +1207,7 @@
               class="w-full h-10 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
             >
               <span class="material-symbols-outlined text-sm">send</span>
-              <span>Submit Request</span>
+              <span>Submit Confidential Request</span>
             </button>
           </form>
         </div>
@@ -1437,6 +1445,7 @@
       }
       fetchDepartmentGoals();
       fetchDepartmentCheckinsAndScore();
+      fetchRegisteredFacultyList();
     });
 
     // ─── Authentication & Role Handling ─────────────────────────────────────
@@ -1639,56 +1648,11 @@
         return;
       }
 
-      // 1. SIGN-IN MODE: User MUST already be registered!
-      if (authMode === 'login') {
-        const localUser = findRegisteredUser(email);
-        if (!localUser) {
-          btn.disabled = true;
-          btnText.textContent = 'Checking registration…';
-          try {
-            const checkRes = await fetch('/api/auth/send-otp', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, isRegistering: false })
-            });
-            const checkData = await checkRes.json().catch(() => ({}));
-            if (!checkRes.ok || checkData.notRegistered) {
-              emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> You must register first before logging in. Switched to <strong>Register</strong> tab.`;
-              emailError.classList.remove('hidden');
-              setAuthMode('register');
-              document.getElementById('email-input').value = email;
-              showToast('Please complete registration first!', 'error');
-              return;
-            }
-          } catch (_) {
-            emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> You must register first before logging in. Switched to <strong>Register</strong> tab.`;
-            emailError.classList.remove('hidden');
-            setAuthMode('register');
-            document.getElementById('email-input').value = email;
-            showToast('Please complete registration first!', 'error');
-            return;
-          } finally {
-            btn.disabled = false;
-            btnText.textContent = 'Continue with College Email';
-          }
-        }
-      }
-
-      // 2. REGISTER MODE: Check duplicate registration + Full Name + Faculty Passcode
+      // 1. REGISTER MODE: Validate Full Name & Faculty Passcode
       let fullName = (nameInput ? nameInput.value : '').trim();
       let enteredFacultyCode = (facultyCodeInput ? facultyCodeInput.value : '').trim();
 
       if (authMode === 'register') {
-        const localUser = findRegisteredUser(email);
-        if (localUser) {
-          emailErrTxt.innerHTML = `<strong>Account Already Exists:</strong> An account for <strong>${email}</strong> already exists. Please switch to the <strong>Sign In</strong> tab to log in.`;
-          emailError.classList.remove('hidden');
-          setAuthMode('login');
-          document.getElementById('email-input').value = email;
-          showToast('Account already exists! Please sign in.', 'error');
-          return;
-        }
-
         if (!fullName) {
           emailErrTxt.textContent = 'Please enter your full name to register.';
           emailError.classList.remove('hidden');
@@ -1706,13 +1670,13 @@
 
       emailError.classList.add('hidden');
       btn.disabled = true;
-      btnText.textContent = 'Generating 6-digit code…';
+      btnText.textContent = authMode === 'register' ? 'Registering account…' : 'Signing in…';
 
       try {
         let code = String(Math.floor(100000 + Math.random() * 900000));
         let userProfile = findRegisteredUser(email);
 
-        // Call server endpoint for domain verification & OTP dispatch
+        // Call server endpoint for persistent Supabase verification & OTP dispatch
         try {
           const res = await fetch('/api/auth/send-otp', {
             method: 'POST',
@@ -1725,10 +1689,18 @@
               facultyCode: enteredFacultyCode
             })
           });
+
           if (res.ok) {
             const data = await res.json();
             if (data.devCode) code = data.devCode;
-            if (data.user) userProfile = data.user;
+            if (data.user) {
+              userProfile = data.user;
+              // Cache in registeredUsers
+              if (!findRegisteredUser(userProfile.email)) {
+                registeredUsers.push(userProfile);
+                localStorage.setItem('cw_registered_users', JSON.stringify(registeredUsers));
+              }
+            }
           } else {
             const errData = await res.json().catch(() => ({}));
             if (errData.alreadyRegistered || res.status === 409) {
@@ -1739,11 +1711,12 @@
               showToast('Account already exists! Please sign in.', 'error');
               return;
             }
-            if (errData.notRegistered) {
-              emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> You must register first before logging in. Switched to <strong>Register</strong> tab.`;
+            if (errData.notRegistered || res.status === 404) {
+              emailErrTxt.innerHTML = `<strong>Account Not Found:</strong> No account found for <strong>${email}</strong>. Please register first. Switched to <strong>Register</strong> tab.`;
               emailError.classList.remove('hidden');
               setAuthMode('register');
               document.getElementById('email-input').value = email;
+              showToast('Please register first!', 'error');
               return;
             }
             if (errData.error) {
@@ -1843,13 +1816,18 @@
           email: currentPendingEmail,
           displayName: inferredName,
           role: selectedAuthRole,
-          title: selectedAuthRole === 'FACULTY' ? 'Faculty Coordinator' : 'Student',
+          title: selectedAuthRole === 'FACULTY' ? 'Faculty Member' : 'Student',
           department: 'Computer Engineering',
           departmentId: 'comp_eng',
           registeredAt: new Date().toISOString()
         };
         registeredUsers.push(user);
         localStorage.setItem('cw_registered_users', JSON.stringify(registeredUsers));
+      } else {
+        if (!findRegisteredUser(user.email)) {
+          registeredUsers.push(user);
+          localStorage.setItem('cw_registered_users', JSON.stringify(registeredUsers));
+        }
       }
 
       currentUser = {
@@ -1861,6 +1839,7 @@
       document.getElementById('login-view').classList.add('hidden');
       applyUserToUI(currentUser);
       syncUserData();
+      fetchRegisteredFacultyList();
       showToast(`Welcome, ${currentUser.displayName}! (${currentUser.role}) 🎉`);
     }
 
@@ -2674,6 +2653,9 @@
       });
 
       if (tabId !== 'support') clearSearch();
+      if (tabId === 'support') {
+        fetchRegisteredFacultyList();
+      }
       if (tabId === 'checkin') {
         const dInp = document.getElementById('checkin-date');
         if (dInp) checkDateDuplicate(dInp.value);
@@ -2869,6 +2851,42 @@
       if (el) el.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
+    // ─── Registered Faculty Directory (For Confidential Support selection) ──
+    async function fetchRegisteredFacultyList() {
+      const select = document.getElementById('support-faculty');
+      if (!select) return;
+
+      try {
+        const res = await fetch('/api/faculty/list');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.faculty) && data.faculty.length > 0) {
+            select.innerHTML = '';
+            data.faculty.forEach(f => {
+              const opt = document.createElement('option');
+              opt.value = f.email;
+              opt.setAttribute('data-name', f.displayName);
+              opt.textContent = `${f.displayName} (${f.title || 'Faculty Member'})`;
+              if (f.email.toLowerCase() === 'priya.rakibe@kkwagh.edu.in') {
+                opt.selected = true;
+              }
+              select.appendChild(opt);
+            });
+            return;
+          }
+        }
+      } catch (_) {}
+
+      if (select.children.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = 'priya.rakibe@kkwagh.edu.in';
+        opt.setAttribute('data-name', 'Prof. Priya Rakibe');
+        opt.textContent = 'Prof. Priya Rakibe (Faculty Coordinator)';
+        opt.selected = true;
+        select.appendChild(opt);
+      }
+    }
+
     // ─── Confidential Support Form ───────────────────────────────────────────
     async function handleSupportSubmit(e) {
       e.preventDefault();
@@ -2877,11 +2895,18 @@
         return;
       }
 
+      const facultySelect = document.getElementById('support-faculty');
+      const recipientEmail = facultySelect ? facultySelect.value : 'priya.rakibe@kkwagh.edu.in';
+      const selectedOption = facultySelect ? facultySelect.options[facultySelect.selectedIndex] : null;
+      const recipientName = selectedOption ? (selectedOption.getAttribute('data-name') || selectedOption.textContent.split('(')[0].trim()) : 'Prof. Priya Rakibe';
+
       const topic = document.getElementById('support-topic').value;
       const note  = document.getElementById('support-note').value.trim();
 
       const payload = {
         email: currentUser.email,
+        recipientEmail,
+        recipientName,
         topic,
         note,
         department: 'comp_eng',
@@ -2897,7 +2922,7 @@
       } catch (_) {}
 
       document.getElementById('support-note').value = '';
-      showToast('Request submitted to Prof. P. R. Rao confidentially. ✓');
+      showToast(`Request submitted confidentially to ${recipientName}. ✓`);
     }
 
     // ─── Toast Notification Utility ─────────────────────────────────────────

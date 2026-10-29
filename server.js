@@ -111,6 +111,90 @@ function findUserProfile(email) {
   return null;
 }
 
+// Durable User Profile Persistence in Supabase (Survives Vercel serverless cold restarts)
+async function getOrFetchUserProfile(email) {
+  if (!email || typeof email !== 'string') return null;
+  const lower = email.trim().toLowerCase();
+  if (registeredUsersStore.has(lower)) {
+    return registeredUsersStore.get(lower);
+  }
+  // Check seed aliases
+  for (const [key, prof] of Object.entries(ALLOWED_PROFILES)) {
+    if (lower.includes(key)) {
+      const p = {
+        id: 'user_' + Buffer.from(lower).toString('hex').slice(0, 16),
+        email: lower,
+        displayName: prof.displayName,
+        role: prof.role,
+        title: prof.title || (prof.role === 'FACULTY' ? 'Faculty Coordinator' : 'Student'),
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        registeredAt: '2026-10-26T00:00:00.000Z'
+      };
+      registeredUsersStore.set(lower, p);
+      return p;
+    }
+  }
+
+  // Check persistent Supabase checkins table for profile record (date: 2000-01-01)
+  if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+    try {
+      const sRes = await fetch(`${SUPABASE_URL}/rest/v1/checkins?id=eq.profile_${encodeURIComponent(lower)}&select=*`, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+      if (sRes.ok) {
+        const rows = await sRes.json();
+        if (Array.isArray(rows) && rows.length > 0) {
+          const row = rows[0];
+          const p = {
+            id: 'user_' + Buffer.from(lower).toString('hex').slice(0, 16),
+            email: lower,
+            displayName: row.day || lower.split('@')[0],
+            role: row.mood === 'FACULTY' ? 'FACULTY' : 'STUDENT',
+            title: row.mood === 'FACULTY' ? 'Faculty Member' : 'Student',
+            department: 'Computer Engineering',
+            departmentId: 'comp_eng',
+            registeredAt: row.created_at || new Date().toISOString()
+          };
+          registeredUsersStore.set(lower, p);
+          return p;
+        }
+      }
+    } catch (_) {}
+  }
+  return null;
+}
+
+async function saveUserProfileToSupabase(profile) {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !profile || !profile.email) return;
+  try {
+    const profileRecord = {
+      id: `profile_${profile.email.toLowerCase()}`,
+      email: profile.email.toLowerCase(),
+      date: '2000-01-01',
+      day: (profile.displayName || '').trim(),
+      mood: profile.role === 'FACULTY' ? 'FACULTY' : 'STUDENT',
+      sleep: 0,
+      water: 0,
+      study: 1,
+      stress: 1
+    };
+    await fetch(`${SUPABASE_URL}/rest/v1/checkins`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(profileRecord)
+    });
+  } catch (_) {}
+}
+
 // Initial seed checkins for the authorized Computer Engineering students
 const initialSeedCheckins = [
   // 1. Aalim Sayyed (Student 1)
@@ -219,7 +303,7 @@ const requestHandler = async (req, res) => {
         });
       }
 
-      let profile = findUserProfile(normalizedEmail);
+      let profile = await getOrFetchUserProfile(normalizedEmail);
 
       // 1. In Sign-In Mode: User MUST be registered first!
       if (!isRegistering && !profile) {
@@ -264,6 +348,7 @@ const requestHandler = async (req, res) => {
           registeredAt: new Date().toISOString()
         };
         registeredUsersStore.set(normalizedEmail, profile);
+        await saveUserProfileToSupabase(profile);
       }
 
       let supabaseSent = false;
@@ -339,7 +424,7 @@ const requestHandler = async (req, res) => {
         }
       }
 
-      const existing = findUserProfile(normalizedEmail);
+      const existing = await getOrFetchUserProfile(normalizedEmail);
       if (existing) {
         return sendJson(res, 409, {
           success: false,
@@ -359,6 +444,7 @@ const requestHandler = async (req, res) => {
       };
 
       registeredUsersStore.set(normalizedEmail, newProfile);
+      await saveUserProfileToSupabase(newProfile);
 
       const generatedCode = String(Math.floor(100000 + Math.random() * 900000));
       devOtpStore.set(normalizedEmail, {
@@ -444,7 +530,7 @@ const requestHandler = async (req, res) => {
         });
       }
 
-      let userProfile = findUserProfile(normalizedEmail);
+      let userProfile = await getOrFetchUserProfile(normalizedEmail);
       if (!userProfile) {
         // Auto-create registered profile
         const inferredName = (displayName || '').trim() || normalizedEmail.split('@')[0]
@@ -462,6 +548,7 @@ const requestHandler = async (req, res) => {
           registeredAt: new Date().toISOString()
         };
         registeredUsersStore.set(normalizedEmail, userProfile);
+        await saveUserProfileToSupabase(userProfile);
       }
 
       return sendJson(res, 200, {
@@ -497,7 +584,9 @@ const requestHandler = async (req, res) => {
           if (sRes.ok) {
             const fetched = await sRes.json();
             if (Array.isArray(fetched) && fetched.length > 0) {
-              records = fetched.map(r => {
+              records = fetched
+                .filter(r => r.date !== '2000-01-01' && !(r.id || '').startsWith('profile_'))
+                .map(r => {
                 const stepsMatch = (r.id || '').match(/steps(\d+)/i);
                 const steps = stepsMatch ? parseInt(stepsMatch[1], 10) : 8000;
                 return {
@@ -656,7 +745,9 @@ const requestHandler = async (req, res) => {
           if (sRes.ok) {
             const fetched = await sRes.json();
             if (Array.isArray(fetched) && fetched.length > 0) {
-              records = fetched.map(r => {
+              records = fetched
+                .filter(r => r.date !== '2000-01-01' && !(r.id || '').startsWith('profile_'))
+                .map(r => {
                 const stepsMatch = (r.id || '').match(/steps(\d+)/i);
                 const steps = stepsMatch ? parseInt(stepsMatch[1], 10) : 8000;
                 return {
@@ -691,6 +782,71 @@ const requestHandler = async (req, res) => {
         department: 'Computer Engineering',
         departmentId: 'comp_eng',
         checkins: allMerged
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 4d. Get List of Registered Faculty Members (GET /api/faculty/list)
+  // Dynamically returns ONLY registered faculty members who are in the system (defaulting to Prof. Priya Rakibe)
+  if (pathname === '/api/faculty/list' && req.method === 'GET') {
+    try {
+      const facultyMap = new Map();
+
+      // Seed faculty coordinator (Prof. Priya Rakibe)
+      facultyMap.set('priya.rakibe@kkwagh.edu.in', {
+        email: 'priya.rakibe@kkwagh.edu.in',
+        displayName: 'Prof. Priya Rakibe',
+        title: 'Faculty Coordinator (Comp Eng)',
+        department: 'Computer Engineering'
+      });
+
+      // Check in-memory registered users store
+      for (const [email, user] of registeredUsersStore.entries()) {
+        if (user && user.role === 'FACULTY') {
+          facultyMap.set(email, {
+            email: user.email,
+            displayName: user.displayName,
+            title: user.title || 'Faculty Member',
+            department: user.department || 'Computer Engineering'
+          });
+        }
+      }
+
+      // Query Supabase for registered faculty members
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        try {
+          const sRes = await fetch(`${SUPABASE_URL}/rest/v1/checkins?mood=eq.FACULTY&date=eq.2000-01-01&select=email,day,mood`, {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (sRes.ok) {
+            const rows = await sRes.json();
+            if (Array.isArray(rows)) {
+              rows.forEach(r => {
+                if (r.email) {
+                  const em = r.email.toLowerCase();
+                  if (!facultyMap.has(em)) {
+                    facultyMap.set(em, {
+                      email: em,
+                      displayName: r.day || em.split('@')[0],
+                      title: 'Faculty Member',
+                      department: 'Computer Engineering'
+                    });
+                  }
+                }
+              });
+            }
+          }
+        } catch (_) {}
+      }
+
+      return sendJson(res, 200, {
+        success: true,
+        faculty: Array.from(facultyMap.values())
       });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
@@ -933,13 +1089,19 @@ const requestHandler = async (req, res) => {
     }
   }
 
-  // 5. Submit Confidential Support Request
+  // 9. Submit Confidential Support Request
   if (pathname === '/api/support-requests' && req.method === 'POST') {
     try {
       const data = await parseJsonBody(req);
       if (!data || !data.email || !data.email.endsWith('@kkwagh.edu.in')) {
-        return sendJson(res, 403, { success: false, error: 'Unauthorized.' });
+        return sendJson(res, 403, { success: false, error: 'Unauthorized. College email required.' });
       }
+
+      const recipientEmail = (data.recipientEmail || 'priya.rakibe@kkwagh.edu.in').toLowerCase().trim();
+      const recipientName = (data.recipientName || 'Prof. Priya Rakibe').trim();
+      const topic = (data.topic || 'General Wellbeing').trim();
+      const rawNote = (data.note || '').trim();
+      const noteContent = `[Faculty Recipient: ${recipientName} (${recipientEmail})]\n${rawNote}`;
 
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
         try {
@@ -953,16 +1115,21 @@ const requestHandler = async (req, res) => {
               'Prefer': 'return=representation'
             },
             body: JSON.stringify({
-              email: data.email,
-              topic: data.topic,
-              note: data.note,
+              email: data.email.toLowerCase().trim(),
+              topic: topic,
+              note: noteContent,
               submitted_at: data.submittedAt || data.submitted_at || new Date().toISOString()
             })
           });
         } catch (_) {}
       }
 
-      return sendJson(res, 200, { success: true, submittedAt: new Date().toISOString() });
+      return sendJson(res, 200, {
+        success: true,
+        recipientEmail,
+        recipientName,
+        submittedAt: new Date().toISOString()
+      });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
     }
