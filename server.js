@@ -1089,7 +1089,7 @@ const requestHandler = async (req, res) => {
     }
   }
 
-  // 9. Submit Confidential Support Request
+  // 9a. Submit Confidential Support Request
   if (pathname === '/api/support-requests' && req.method === 'POST') {
     try {
       const data = await parseJsonBody(req);
@@ -1103,10 +1103,11 @@ const requestHandler = async (req, res) => {
       const rawNote = (data.note || '').trim();
       const noteContent = `[Faculty Recipient: ${recipientName} (${recipientEmail})]\n${rawNote}`;
 
+      let createdId = null;
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
         try {
           const authHeader = req.headers['authorization'] || `Bearer ${SUPABASE_ANON_KEY}`;
-          await fetch(`${SUPABASE_URL}/rest/v1/support_requests`, {
+          const sRes = await fetch(`${SUPABASE_URL}/rest/v1/support_requests`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -1121,14 +1122,191 @@ const requestHandler = async (req, res) => {
               submitted_at: data.submittedAt || data.submitted_at || new Date().toISOString()
             })
           });
+          if (sRes.ok) {
+            const ins = await sRes.json();
+            if (Array.isArray(ins) && ins.length > 0) createdId = ins[0].id;
+          }
         } catch (_) {}
       }
 
       return sendJson(res, 200, {
         success: true,
+        id: createdId,
         recipientEmail,
         recipientName,
         submittedAt: new Date().toISOString()
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 9b. Get Confidential Support Requests & Scheduled Appointments (GET /api/support-requests)
+  if (pathname === '/api/support-requests' && req.method === 'GET') {
+    try {
+      const email = parsedUrl.searchParams.get('email');
+      const role = parsedUrl.searchParams.get('role') || 'STUDENT';
+      if (!email || !email.endsWith('@kkwagh.edu.in')) {
+        return sendJson(res, 403, { success: false, error: 'Unauthorized. College email required.' });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+      let allRequests = [];
+
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        try {
+          const sRes = await fetch(`${SUPABASE_URL}/rest/v1/support_requests?order=id.asc`, {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (sRes.ok) {
+            const rows = await sRes.json();
+            const requestsMap = new Map();
+            const responses = [];
+
+            if (Array.isArray(rows)) {
+              for (const r of rows) {
+                if (r.topic && r.topic.startsWith('RESPONSE:')) {
+                  try {
+                    const parsed = JSON.parse(r.note);
+                    responses.push({ ...parsed, responderEmail: r.email, createdAt: r.created_at });
+                  } catch (_) {}
+                } else {
+                  let recipientEmail = 'priya.rakibe@kkwagh.edu.in';
+                  let recipientName = 'Prof. Priya Rakibe';
+                  let noteText = r.note || '';
+
+                  const match = noteText.match(/\[Faculty Recipient:\s*([^(\]]+)\s*\(([^)]+)\)\]/i);
+                  if (match) {
+                    recipientName = match[1].trim();
+                    recipientEmail = match[2].trim().toLowerCase();
+                    noteText = noteText.replace(match[0], '').trim();
+                  }
+
+                  requestsMap.set(r.id, {
+                    id: r.id,
+                    studentEmail: (r.email || '').toLowerCase().trim(),
+                    studentName: (r.email || '').split('@')[0].split(/[._]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                    topic: r.topic,
+                    note: noteText,
+                    recipientEmail,
+                    recipientName,
+                    submittedAt: r.submitted_at || r.created_at,
+                    status: 'PENDING',
+                    scheduledDate: null,
+                    scheduledTime: null,
+                    venue: null,
+                    facultyResponse: null,
+                    updatedAt: r.created_at
+                  });
+                }
+              }
+
+              // Merge responses onto the parent requests
+              for (const resp of responses) {
+                const parent = requestsMap.get(resp.requestId);
+                if (parent) {
+                  parent.status = resp.status; // 'ACCEPTED' or 'REJECTED'
+                  parent.scheduledDate = resp.scheduledDate || parent.scheduledDate;
+                  parent.scheduledTime = resp.scheduledTime || parent.scheduledTime;
+                  parent.venue = resp.venue || parent.venue;
+                  parent.facultyResponse = resp.facultyResponse || parent.facultyResponse;
+                  parent.updatedAt = resp.createdAt;
+                }
+              }
+
+              allRequests = Array.from(requestsMap.values()).reverse();
+            }
+          }
+        } catch (_) {}
+      }
+
+      let filtered = [];
+      if (role === 'FACULTY') {
+        filtered = allRequests.filter(r => 
+          r.recipientEmail === normalizedEmail ||
+          normalizedEmail.includes('rakibe') || 
+          r.recipientEmail.includes(normalizedEmail.split('@')[0])
+        );
+      } else {
+        filtered = allRequests.filter(r => r.studentEmail === normalizedEmail);
+      }
+
+      return sendJson(res, 200, {
+        success: true,
+        requests: filtered
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 9c. Faculty Respond to Support Request (Accept/Set Time or Decline) (POST /api/support-requests/respond)
+  if (pathname === '/api/support-requests/respond' && req.method === 'POST') {
+    try {
+      const data = await parseJsonBody(req);
+      if (!data || !data.teacherEmail || !data.teacherEmail.endsWith('@kkwagh.edu.in')) {
+        return sendJson(res, 403, { success: false, error: 'Unauthorized. College email required.' });
+      }
+      if (data.teacherRole !== 'FACULTY') {
+        return sendJson(res, 403, { success: false, error: 'Permission denied. Only faculty members can respond to appointment requests.' });
+      }
+
+      const requestId = parseInt(data.requestId, 10);
+      if (!requestId) {
+        return sendJson(res, 400, { success: false, error: 'Valid Request ID is required.' });
+      }
+
+      const status = (data.status || 'ACCEPTED').toUpperCase(); // 'ACCEPTED' or 'REJECTED'
+      const scheduledDate = (data.scheduledDate || '').trim();
+      const scheduledTime = (data.scheduledTime || '').trim();
+      const venue = (data.venue || 'Faculty Cabin — Computer Engineering Dept').trim();
+      const facultyResponse = (data.facultyResponse || '').trim();
+
+      if (status === 'ACCEPTED' && (!scheduledDate || !scheduledTime)) {
+        return sendJson(res, 400, { success: false, error: 'Please select both an available date and time to confirm the meeting.' });
+      }
+
+      const responsePayload = {
+        requestId,
+        status,
+        scheduledDate,
+        scheduledTime,
+        venue,
+        facultyResponse,
+        respondedBy: data.teacherEmail,
+        respondedAt: new Date().toISOString()
+      };
+
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        try {
+          const authHeader = req.headers['authorization'] || `Bearer ${SUPABASE_ANON_KEY}`;
+          await fetch(`${SUPABASE_URL}/rest/v1/support_requests`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': authHeader,
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({
+              email: data.teacherEmail.toLowerCase().trim(),
+              topic: `RESPONSE:${requestId}`,
+              note: JSON.stringify(responsePayload),
+              submitted_at: new Date().toISOString()
+            })
+          });
+        } catch (_) {}
+      }
+
+      return sendJson(res, 200, {
+        success: true,
+        message: status === 'ACCEPTED' 
+          ? `Appointment accepted. Scheduled for ${scheduledDate} at ${scheduledTime}.`
+          : 'Appointment request declined with guidance.',
+        response: responsePayload
       });
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });

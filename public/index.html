@@ -1171,6 +1171,54 @@
 
         </div>
 
+        <!-- FACULTY ONLY: Student Appointment Management Inbox -->
+        <div id="faculty-support-portal" class="hidden searchable-item bg-white rounded-2xl p-4 border border-purple-200/90 shadow-sm space-y-3" data-keywords="faculty appointment requests inbox student schedule confidential review accept decline">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined text-lg">event_available</span>
+              </span>
+              <div>
+                <h3 class="text-xs font-bold text-purple-950 uppercase tracking-wide">Student Appointment Requests</h3>
+                <p class="text-[10px] text-purple-600">Review student requests and set your meeting availability.</p>
+              </div>
+            </div>
+            <button onclick="fetchSupportRequestsList()" class="w-7 h-7 rounded-lg hover:bg-slate-100 active:scale-95 text-slate-500 flex items-center justify-center transition" title="Refresh inbox">
+              <span class="material-symbols-outlined text-sm">refresh</span>
+            </button>
+          </div>
+
+          <div id="faculty-requests-container" class="space-y-3">
+            <div class="p-3 rounded-xl bg-slate-50 text-center text-xs text-slate-500">
+              Loading student appointment requests…
+            </div>
+          </div>
+        </div>
+
+        <!-- STUDENT ONLY: My Appointments & Request Status -->
+        <div id="student-appointments-card" class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3" data-keywords="my appointments status confidential request student meeting accepted rejected time venue cabin">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined text-lg">calendar_month</span>
+              </span>
+              <div>
+                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wide">My Appointment Status</h3>
+                <p class="text-[10px] text-slate-500">Track if your meeting is accepted, time, date, and venue.</p>
+              </div>
+            </div>
+            <button onclick="fetchSupportRequestsList()" class="w-7 h-7 rounded-lg hover:bg-slate-100 active:scale-95 text-slate-500 flex items-center justify-center transition" title="Refresh status">
+              <span class="material-symbols-outlined text-sm">refresh</span>
+            </button>
+          </div>
+
+          <div id="student-requests-container" class="space-y-2.5">
+            <div class="p-3 rounded-xl bg-slate-50 text-center text-xs text-slate-500">
+              No confidential appointment requests sent yet.
+            </div>
+          </div>
+        </div>
+
         <!-- Confidential Support Request Form -->
         <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3" data-keywords="request confidential support form submit coordinator contact academic stress sleep wellbeing">
           <div>
@@ -1446,6 +1494,7 @@
       fetchDepartmentGoals();
       fetchDepartmentCheckinsAndScore();
       fetchRegisteredFacultyList();
+      fetchSupportRequestsList();
     });
 
     // ─── Authentication & Role Handling ─────────────────────────────────────
@@ -1620,6 +1669,7 @@
           editorBadge.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700';
         }
       }
+      fetchSupportRequestsList();
     }
 
     async function handleAuthSubmit(e) {
@@ -2655,6 +2705,7 @@
       if (tabId !== 'support') clearSearch();
       if (tabId === 'support') {
         fetchRegisteredFacultyList();
+        fetchSupportRequestsList();
       }
       if (tabId === 'checkin') {
         const dInp = document.getElementById('checkin-date');
@@ -2887,6 +2938,370 @@
       }
     }
 
+    // ─── Student & Faculty Appointment Management ───────────────────────────
+    let userSupportRequests = [];
+
+    async function fetchSupportRequestsList() {
+      if (!currentUser || !currentUser.email) return;
+
+      const fPortal = document.getElementById('faculty-support-portal');
+      const isFaculty = currentUser.role === 'FACULTY';
+      if (fPortal) {
+        if (isFaculty) fPortal.classList.remove('hidden');
+        else fPortal.classList.add('hidden');
+      }
+
+      try {
+        const res = await fetch(`/api/support-requests?email=${encodeURIComponent(currentUser.email)}&role=${encodeURIComponent(currentUser.role)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.requests)) {
+            userSupportRequests = data.requests;
+            renderSupportRequestsUI();
+            return;
+          }
+        }
+      } catch (_) {}
+
+      renderSupportRequestsUI();
+    }
+
+    function renderSupportRequestsUI() {
+      if (!currentUser) return;
+      const isFaculty = currentUser.role === 'FACULTY';
+
+      const sContainer = document.getElementById('student-requests-container');
+      const fContainer = document.getElementById('faculty-requests-container');
+
+      // Default meeting date = tomorrow
+      const tmrw = new Date();
+      tmrw.setDate(tmrw.getDate() + 1);
+      const defaultDate = tmrw.toISOString().split('T')[0];
+
+      if (isFaculty && fContainer) {
+        if (!userSupportRequests || userSupportRequests.length === 0) {
+          fContainer.innerHTML = `
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-center text-xs text-slate-500">
+              <span class="material-symbols-outlined text-xl text-slate-400 block mb-1">inbox</span>
+              No student appointment requests at this time.
+            </div>
+          `;
+        } else {
+          fContainer.innerHTML = userSupportRequests.map(req => {
+            const dateStr = req.submittedAt ? new Date(req.submittedAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+            const isPending = req.status === 'PENDING';
+            const isAccepted = req.status === 'ACCEPTED';
+            const isRejected = req.status === 'REJECTED';
+
+            return `
+              <div class="p-3.5 rounded-xl border ${isAccepted ? 'bg-emerald-50/40 border-emerald-300' : isRejected ? 'bg-slate-50 border-slate-200' : 'bg-purple-50/40 border-purple-200'} space-y-2.5">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isAccepted ? 'bg-emerald-100 text-emerald-800' : isRejected ? 'bg-slate-200 text-slate-700' : 'bg-purple-100 text-purple-800'}">
+                        ${req.topic}
+                      </span>
+                      <span class="text-[10px] text-slate-400">${dateStr}</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-900 mt-1">Student: ${req.studentName}</h4>
+                    <p class="text-[10px] text-slate-500 font-mono">${req.studentEmail}</p>
+                  </div>
+                  <div>
+                    ${isPending ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 flex items-center gap-1"><span class="material-symbols-outlined text-xs">pending</span>Pending</span>` : ''}
+                    ${isAccepted ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1"><span class="material-symbols-outlined text-xs">check_circle</span>Accepted</span>` : ''}
+                    ${isRejected ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-200 text-slate-700 flex items-center gap-1"><span class="material-symbols-outlined text-xs">cancel</span>Declined</span>` : ''}
+                  </div>
+                </div>
+
+                ${req.note ? `<div class="p-2 rounded-lg bg-white border border-slate-200/80 text-xs text-slate-700 leading-snug"><span class="text-[9px] font-bold text-slate-400 uppercase block mb-0.5">Student Note</span>"${req.note}"</div>` : ''}
+
+                ${isAccepted ? `
+                  <div class="p-2.5 rounded-lg bg-white border border-emerald-200 text-xs space-y-1">
+                    <div class="text-[10px] font-bold text-emerald-700 uppercase flex items-center gap-1">
+                      <span class="material-symbols-outlined text-xs">verified</span> Confirmed Meeting Time
+                    </div>
+                    <div class="flex items-center gap-3 text-xs font-semibold text-slate-800">
+                      <span>📅 ${req.scheduledDate}</span>
+                      <span>⏰ ${req.scheduledTime}</span>
+                    </div>
+                    <div class="text-[10px] text-slate-600">📍 ${req.venue || 'Faculty Cabin — Computer Engineering Dept'}</div>
+                    ${req.facultyResponse ? `<div class="text-[10px] text-slate-500 italic mt-0.5">Your Note: "${req.facultyResponse}"</div>` : ''}
+                    <button onclick="toggleScheduleBox(${req.id})" class="mt-1 text-[10px] font-bold text-blue-600 hover:text-blue-800 underline">Change / Reschedule Time</button>
+                  </div>
+                ` : ''}
+
+                ${isRejected ? `
+                  <div class="p-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-600">
+                    <span class="text-[10px] font-bold text-rose-600 uppercase block">Declined with Message:</span>
+                    <span class="text-[11px] italic">"${req.facultyResponse || 'Faculty is currently unavailable.'}"</span>
+                  </div>
+                ` : ''}
+
+                ${isPending ? `
+                  <div class="flex items-center gap-2 pt-1">
+                    <button onclick="toggleScheduleBox(${req.id})" class="flex-1 h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm active:scale-95 transition flex items-center justify-center gap-1">
+                      <span class="material-symbols-outlined text-sm">schedule</span>
+                      <span>Accept &amp; Set Time</span>
+                    </button>
+                    <button onclick="toggleDeclineBox(${req.id})" class="h-8 px-3 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-700 font-medium text-xs active:scale-95 transition">
+                      Decline
+                    </button>
+                  </div>
+                ` : ''}
+
+                <!-- Scheduling Box (Shown on click) -->
+                <div id="schedule-box-${req.id}" class="hidden p-3 rounded-xl bg-white border-2 border-emerald-400 space-y-2.5 shadow-sm">
+                  <div class="flex items-center justify-between">
+                    <h5 class="text-xs font-bold text-slate-900">Set Meeting Availability</h5>
+                    <button onclick="toggleScheduleBox(${req.id})" class="text-slate-400 hover:text-slate-600">
+                      <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-[9px] font-bold text-slate-600 uppercase mb-0.5">Meeting Date</label>
+                      <input type="date" id="sched-date-${req.id}" value="${req.scheduledDate || defaultDate}" class="w-full h-8 px-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                      <label class="block text-[9px] font-bold text-slate-600 uppercase mb-0.5">Meeting Time</label>
+                      <input type="time" id="sched-time-${req.id}" value="15:30" class="w-full h-8 px-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                    </div>
+                  </div>
+
+                  <!-- Quick Time Chips -->
+                  <div>
+                    <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Quick Select Available Slot</span>
+                    <div class="flex flex-wrap gap-1">
+                      <button type="button" onclick="setQuickTime(${req.id}, '10:30')" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 hover:bg-emerald-100 text-slate-700 transition">10:30 AM</button>
+                      <button type="button" onclick="setQuickTime(${req.id}, '11:45')" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 hover:bg-emerald-100 text-slate-700 transition">11:45 AM</button>
+                      <button type="button" onclick="setQuickTime(${req.id}, '14:00')" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 hover:bg-emerald-100 text-slate-700 transition">02:00 PM</button>
+                      <button type="button" onclick="setQuickTime(${req.id}, '15:30')" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 hover:bg-emerald-100 text-slate-700 transition">03:30 PM</button>
+                      <button type="button" onclick="setQuickTime(${req.id}, '16:30')" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 hover:bg-emerald-100 text-slate-700 transition">04:30 PM</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-[9px] font-bold text-slate-600 uppercase mb-0.5">Venue / Cabin</label>
+                    <input type="text" id="sched-venue-${req.id}" value="${req.venue || 'Faculty Cabin 204 — Computer Engineering'}" class="w-full h-8 px-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  </div>
+
+                  <div>
+                    <label class="block text-[9px] font-bold text-slate-600 uppercase mb-0.5">Message / Instruction to Student</label>
+                    <input type="text" id="sched-note-${req.id}" placeholder="e.g. Please bring your syllabus &amp; project file" class="w-full h-8 px-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  </div>
+
+                  <button onclick="submitFacultyAppointmentResponse(${req.id}, 'ACCEPTED')" class="w-full h-8 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs shadow transition flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-sm">send</span>
+                    <span>Confirm Appointment &amp; Notify Student</span>
+                  </button>
+                </div>
+
+                <!-- Decline Box -->
+                <div id="decline-box-${req.id}" class="hidden p-3 rounded-xl bg-white border border-rose-300 space-y-2 shadow-sm">
+                  <div class="flex items-center justify-between">
+                    <h5 class="text-xs font-bold text-rose-900">Decline Appointment</h5>
+                    <button onclick="toggleDeclineBox(${req.id})" class="text-slate-400 hover:text-slate-600">
+                      <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                  </div>
+                  <div>
+                    <label class="block text-[9px] font-bold text-slate-600 uppercase mb-0.5">Reason / Suggestion for Student</label>
+                    <textarea id="decline-note-${req.id}" rows="2" placeholder="e.g. Currently away on university duties. Please reschedule next week or connect with the HOD coordinator." class="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 resize-none focus:outline-none focus:ring-1 focus:ring-rose-500"></textarea>
+                  </div>
+                  <button onclick="submitFacultyAppointmentResponse(${req.id}, 'REJECTED')" class="w-full h-8 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow active:scale-[0.99] transition">
+                    Confirm Decline
+                  </button>
+                </div>
+
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      if (sContainer) {
+        if (!userSupportRequests || userSupportRequests.length === 0) {
+          sContainer.innerHTML = `
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-center text-xs text-slate-500">
+              <span class="material-symbols-outlined text-xl text-slate-400 block mb-1">contact_support</span>
+              No confidential appointment requests sent yet. Submit below to schedule guidance.
+            </div>
+          `;
+        } else {
+          sContainer.innerHTML = userSupportRequests.map(req => {
+            const dateStr = req.submittedAt ? new Date(req.submittedAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+            const isPending = req.status === 'PENDING';
+            const isAccepted = req.status === 'ACCEPTED';
+            const isRejected = req.status === 'REJECTED';
+
+            return `
+              <div class="p-3.5 rounded-xl border ${isAccepted ? 'bg-emerald-50/50 border-emerald-300' : isRejected ? 'bg-rose-50/40 border-rose-200' : 'bg-amber-50/30 border-amber-200'} space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isAccepted ? 'bg-emerald-100 text-emerald-800' : isRejected ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}">
+                        ${req.topic}
+                      </span>
+                      <span class="text-[10px] text-slate-400">${dateStr}</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800 mt-1">Mentor: ${req.recipientName}</p>
+                    <p class="text-[10px] text-slate-500 font-mono">${req.recipientEmail}</p>
+                  </div>
+                  <div>
+                    ${isPending ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 flex items-center gap-1"><span class="material-symbols-outlined text-xs">hourglass_top</span>Awaiting Teacher</span>` : ''}
+                    ${isAccepted ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1"><span class="material-symbols-outlined text-xs">verified</span>Accepted</span>` : ''}
+                    ${isRejected ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-800 flex items-center gap-1"><span class="material-symbols-outlined text-xs">cancel</span>Declined</span>` : ''}
+                  </div>
+                </div>
+
+                ${req.note ? `<p class="text-xs text-slate-600 bg-white/70 p-2 rounded-lg border border-slate-200/60 leading-snug"><span class="text-[9px] font-bold text-slate-400 uppercase block mb-0.5">Your Note</span>"${req.note}"</p>` : ''}
+
+                ${isPending ? `
+                  <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200/90 text-xs text-amber-900 flex items-start gap-2">
+                    <span class="material-symbols-outlined text-amber-600 text-base shrink-0">schedule</span>
+                    <div>
+                      <span class="font-bold text-[11px] block">Request is Pending</span>
+                      <p class="text-[10px] text-amber-700 mt-0.5">Delivered to ${req.recipientName}. Once she reviews and sets her available slot, your meeting date, time, and cabin will show right here.</p>
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${isAccepted ? `
+                  <div class="p-3 rounded-xl bg-white border-2 border-emerald-400 text-xs space-y-2 shadow-sm">
+                    <div class="flex items-center gap-1.5 font-bold text-emerald-800 text-[11px]">
+                      <span class="material-symbols-outlined text-emerald-600 text-base">event_available</span>
+                      <span>Meeting Confirmed by ${req.recipientName}!</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 bg-emerald-50/60 p-2.5 rounded-lg border border-emerald-200">
+                      <div>
+                        <span class="text-[9px] uppercase font-bold text-emerald-800 block">Date</span>
+                        <span class="text-xs font-bold text-slate-900 flex items-center gap-1"><span class="material-symbols-outlined text-xs text-emerald-600">calendar_today</span>${req.scheduledDate}</span>
+                      </div>
+                      <div>
+                        <span class="text-[9px] uppercase font-bold text-emerald-800 block">Time</span>
+                        <span class="text-xs font-bold text-slate-900 flex items-center gap-1"><span class="material-symbols-outlined text-xs text-emerald-600">schedule</span>${req.scheduledTime}</span>
+                      </div>
+                      <div class="col-span-2 pt-1 border-t border-emerald-200/60">
+                        <span class="text-[9px] uppercase font-bold text-emerald-800 block">Venue / Cabin</span>
+                        <span class="text-xs font-semibold text-slate-800 flex items-center gap-1"><span class="material-symbols-outlined text-xs text-emerald-600">location_on</span>${req.venue || 'Faculty Cabin — Computer Engineering Dept'}</span>
+                      </div>
+                    </div>
+
+                    ${req.facultyResponse ? `
+                      <div class="p-2 rounded-lg bg-emerald-50/40 text-[10px] text-emerald-900 leading-snug">
+                        <span class="font-bold text-emerald-700 block text-[9px] uppercase">Message from ${req.recipientName}:</span>
+                        "${req.facultyResponse}"
+                      </div>
+                    ` : ''}
+                  </div>
+                ` : ''}
+
+                ${isRejected ? `
+                  <div class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-900 flex items-start gap-2">
+                    <span class="material-symbols-outlined text-rose-600 text-base shrink-0">info</span>
+                    <div>
+                      <span class="font-bold text-[11px] block">Teacher Unavailable</span>
+                      <p class="text-[10px] text-rose-700 mt-0.5">${req.facultyResponse || 'Teacher is currently unavailable. Please reschedule or visit during office hours.'}</p>
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    function toggleScheduleBox(id) {
+      const box = document.getElementById(`schedule-box-${id}`);
+      if (box) box.classList.toggle('hidden');
+      const dec = document.getElementById(`decline-box-${id}`);
+      if (dec) dec.classList.add('hidden');
+    }
+
+    function toggleDeclineBox(id) {
+      const box = document.getElementById(`decline-box-${id}`);
+      if (box) box.classList.toggle('hidden');
+      const sch = document.getElementById(`schedule-box-${id}`);
+      if (sch) sch.classList.add('hidden');
+    }
+
+    function setQuickTime(id, timeStr) {
+      const inp = document.getElementById(`sched-time-${id}`);
+      if (inp) inp.value = timeStr;
+    }
+
+    async function submitFacultyAppointmentResponse(requestId, status) {
+      if (!currentUser || currentUser.role !== 'FACULTY') {
+        showToast('Only faculty can respond to appointment requests.', 'error');
+        return;
+      }
+
+      let scheduledDate = '';
+      let scheduledTime = '';
+      let venue = '';
+      let facultyResponse = '';
+
+      if (status === 'ACCEPTED') {
+        const dEl = document.getElementById(`sched-date-${requestId}`);
+        const tEl = document.getElementById(`sched-time-${requestId}`);
+        const vEl = document.getElementById(`sched-venue-${requestId}`);
+        const nEl = document.getElementById(`sched-note-${requestId}`);
+
+        scheduledDate = dEl ? dEl.value : '';
+        scheduledTime = tEl ? tEl.value : '';
+        venue = vEl ? vEl.value.trim() : 'Faculty Cabin — Computer Engineering Dept';
+        facultyResponse = nEl ? nEl.value.trim() : '';
+
+        if (!scheduledDate || !scheduledTime) {
+          showToast('Please select both date and time for the meeting.', 'error');
+          return;
+        }
+
+        // Format 24h time to readable 12h time
+        if (scheduledTime.includes(':')) {
+          const parts = scheduledTime.split(':');
+          const hr = parseInt(parts[0], 10);
+          const mn = parts[1];
+          const ampm = hr >= 12 ? 'PM' : 'AM';
+          const hr12 = hr % 12 || 12;
+          scheduledTime = `${String(hr12).padStart(2, '0')}:${mn} ${ampm}`;
+        }
+      } else {
+        const dNoteEl = document.getElementById(`decline-note-${requestId}`);
+        facultyResponse = dNoteEl ? dNoteEl.value.trim() : 'Faculty is currently unavailable.';
+      }
+
+      try {
+        const res = await fetch('/api/support-requests/respond', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            teacherEmail: currentUser.email,
+            teacherRole: currentUser.role,
+            requestId,
+            status,
+            scheduledDate,
+            scheduledTime,
+            venue,
+            facultyResponse
+          })
+        });
+
+        if (res.ok) {
+          showToast(status === 'ACCEPTED' ? 'Appointment confirmed! Student notified. ✓' : 'Appointment request declined. ✓');
+          await fetchSupportRequestsList();
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          showToast(errData.error || 'Failed to submit response', 'error');
+        }
+      } catch (err) {
+        showToast('Network error while responding.', 'error');
+      }
+    }
+
     // ─── Confidential Support Form ───────────────────────────────────────────
     async function handleSupportSubmit(e) {
       e.preventDefault();
@@ -2923,6 +3338,7 @@
 
       document.getElementById('support-note').value = '';
       showToast(`Request submitted confidentially to ${recipientName}. ✓`);
+      await fetchSupportRequestsList();
     }
 
     // ─── Toast Notification Utility ─────────────────────────────────────────
