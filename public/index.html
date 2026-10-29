@@ -165,11 +165,11 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Select Role</label>
             <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl" id="role-selector">
-              <button type="button" onclick="setLoginRole('STUDENT')" id="role-btn-student" class="py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5">
+              <button type="button" onclick="setLoginRole('STUDENT')" id="role-btn-student" class="py-2.5 text-xs font-bold rounded-xl transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-blue-600/30">
                 <span class="material-symbols-outlined text-sm">school</span>
                 <span>Student</span>
               </button>
-              <button type="button" onclick="setLoginRole('FACULTY')" id="role-btn-faculty" class="py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
+              <button type="button" onclick="setLoginRole('FACULTY')" id="role-btn-faculty" class="py-2.5 text-xs font-medium rounded-xl transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">supervisor_account</span>
                 <span>Faculty</span>
               </button>
@@ -179,24 +179,49 @@
           <!-- Step 1: Email Form -->
           <div id="login-step-email" class="space-y-4">
             <div>
-              <h2 class="text-base font-bold text-slate-900">Sign in with College Email</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Enter your official K.K. Wagh email to receive a 6-digit verification code.</p>
+              <h2 class="text-base font-bold text-slate-900" id="login-role-heading">Student Sign In</h2>
+              <p class="text-xs text-slate-500 mt-0.5" id="login-role-subheading">Choose your account or enter your official K.K. Wagh email.</p>
             </div>
 
-            <div class="p-3 bg-blue-50/70 border border-blue-100 rounded-xl flex items-center gap-2.5 text-xs text-blue-900 font-medium">
-              <span class="material-symbols-outlined text-blue-600 text-sm">verified_user</span>
-              <span>Only official <strong>@kkwagh.edu.in</strong> accounts are authorized.</span>
+            <!-- Student Account Picker -->
+            <div id="student-picker-container" class="space-y-1.5">
+              <label for="student-account-select" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">Select Student Account</label>
+              <select 
+                id="student-account-select" 
+                onchange="onStudentSelectChange(this.value)" 
+                class="w-full h-11 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
+              >
+                <option value="aalim.sayyed@kkwagh.edu.in">👨‍🎓 Aalim Sayyed (aalim.sayyed@kkwagh.edu.in)</option>
+                <option value="harsh.sonawane@kkwagh.edu.in">👨‍🎓 Harsh Sonawane (harsh.sonawane@kkwagh.edu.in)</option>
+                <option value="vaishnavi.pendharkar@kkwagh.edu.in">👩‍🎓 Vaishnavi Pendharkar (vaishnavi.pendharkar@kkwagh.edu.in)</option>
+                <option value="shreya.randhe@kkwagh.edu.in">👩‍🎓 Shreya Randhe (shreya.randhe@kkwagh.edu.in)</option>
+                <option value="custom">✏️ Enter other @kkwagh.edu.in email...</option>
+              </select>
+            </div>
+
+            <!-- Faculty Account Info (shown when Faculty role is active) -->
+            <div id="faculty-picker-container" class="hidden p-3.5 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-2xl space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-extrabold text-purple-900 flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-base text-purple-700">supervisor_account</span>
+                  Prof. Priya Rakibe
+                </span>
+                <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-purple-200 text-purple-900">Faculty Coordinator</span>
+              </div>
+              <p class="text-[10px] text-purple-800">Computer Engineering Department · K. K. Wagh College</p>
+              <p class="text-[11px] font-mono font-semibold text-purple-950 pt-0.5">priya.rakibe@kkwagh.edu.in</p>
             </div>
 
             <form onsubmit="handleRequestOtp(event)" class="space-y-3">
               <div>
-                <label for="email-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">College Email</label>
+                <label for="email-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">College Email Address</label>
                 <div class="relative">
                   <input 
                     type="email" 
                     id="email-input" 
                     required 
                     autocomplete="email"
+                    value="aalim.sayyed@kkwagh.edu.in"
                     placeholder="yourname@kkwagh.edu.in"
                     class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
                   />
@@ -462,19 +487,22 @@
 
         </div>
 
-        <!-- 6-Digit Sync Token Quick Launcher -->
-        <div class="bg-gradient-to-r from-blue-900 to-[#12254A] text-white rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3">
+        <!-- Automated Department Health Sync Quick Launcher -->
+        <div class="bg-gradient-to-r from-[#12254A] to-[#1755BE] text-white rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">pin</span>
+              <span class="material-symbols-outlined text-xl">sync</span>
             </div>
             <div>
-              <h3 class="text-xs font-bold">Six-Digit Sync Token</h3>
-              <p class="text-[10px] text-blue-200">Generate or verify health entries securely</p>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-xs font-bold">Automated Health Sync</h3>
+                <span class="text-[8px] font-bold px-1.5 py-0.2 rounded bg-emerald-400 text-slate-900 uppercase">Active</span>
+              </div>
+              <p class="text-[10px] text-blue-100">Direct nightly aggregation &amp; live DHI calculation</p>
             </div>
           </div>
-          <button onclick="navigateTo('department'); setTimeout(focusSyncToken, 100);" class="shrink-0 bg-white text-blue-950 active:scale-95 text-xs font-bold py-1.5 px-3 rounded-xl transition shadow">
-            Open
+          <button onclick="navigateTo('department');" class="shrink-0 bg-white text-[#12254A] hover:bg-blue-50 active:scale-95 text-xs font-bold py-1.5 px-3 rounded-xl transition shadow">
+            View DHI
           </button>
         </div>
 
@@ -778,80 +806,90 @@
           </div>
         </div>
 
-        <!-- 2. Six-Digit Sync Token Tool (Problem Statement Core Deliverable) -->
-        <div id="sync-token-section" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+        <!-- 2. Automated Department Health Sync (Nightly Batch + Live DHI Computation) -->
+        <div id="dept-sync-section" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3.5">
           <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-xs font-bold text-slate-900 uppercase">Six-Digit Sync Token</h3>
-              <p class="text-[10px] text-slate-400">Secure short-lived entry verification workflow</p>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#1755BE] flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-lg" id="sync-spin-icon">sync</span>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-slate-900 uppercase">Department Health Sync</h3>
+                <p class="text-[10px] text-slate-500">Automated nightly data aggregation &amp; live DHI calculation</p>
+              </div>
             </div>
-            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">Prototype</span>
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 flex items-center gap-1 border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Auto-Sync Active
+            </span>
           </div>
 
-          <!-- Sync Token Tabs: Generate vs Verify -->
-          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl">
-            <button type="button" onclick="setSyncTokenTab('generate')" id="tab-token-gen" class="py-1.5 text-[11px] font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1">
-              <span class="material-symbols-outlined text-sm">key</span>
-              <span>Generate Token</span>
-            </button>
-            <button type="button" onclick="setSyncTokenTab('verify')" id="tab-token-ver" class="py-1.5 text-[11px] font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1">
-              <span class="material-symbols-outlined text-sm">verified</span>
-              <span>Verify Token</span>
-            </button>
-          </div>
-
-          <!-- Panel A: Generate Sync Token -->
-          <div id="panel-token-generate" class="space-y-2.5">
-            <p class="text-[11px] text-slate-500">
-              Generate a single-use 6-digit cryptographic token to share with a mentor or faculty for entry verification.
-            </p>
-            <div id="generated-token-display" class="hidden p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl text-center space-y-1">
-              <div class="text-[10px] font-bold uppercase tracking-wider text-blue-800">Your 6-Digit Sync Token</div>
-              <div class="text-2xl font-black font-mono tracking-widest text-[#1755BE]" id="active-sync-token-val">------</div>
-              <div class="text-[10px] text-slate-500 font-medium" id="sync-token-timer">Expires in 10:00 (Single-use)</div>
+          <div class="p-3 bg-gradient-to-r from-slate-50 to-blue-50/50 rounded-xl border border-slate-200/70 space-y-2 text-xs">
+            <div class="flex items-center justify-between text-slate-600">
+              <span class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-blue-600">schedule</span>
+                <span>Automated Batch Schedule:</span>
+              </span>
+              <strong class="text-slate-800 font-mono text-[11px]">Nightly at 23:59 IST</strong>
             </div>
-            <button 
-              type="button" 
-              onclick="handleGenerateSyncToken()" 
-              id="generate-token-btn" 
-              class="w-full h-10 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
-            >
-              <span class="material-symbols-outlined text-sm">pin</span>
-              <span>Generate 6-Digit Token</span>
-            </button>
-          </div>
-
-          <!-- Panel B: Verify Sync Token -->
-          <div id="panel-token-verify" class="hidden space-y-2.5">
-            <p class="text-[11px] text-slate-500">
-              Enter the 6-digit Sync Token provided by a student to verify their health check-in association without exposing raw private data.
-            </p>
-            <form onsubmit="handleVerifySyncToken(event)" class="space-y-2.5">
-              <input 
-                type="text" 
-                id="verify-token-input" 
-                required 
-                maxlength="6" 
-                pattern="[0-9]{6}" 
-                inputmode="numeric"
-                placeholder="Enter 6-digit code (e.g. 849201)" 
-                class="w-full h-11 text-center text-lg font-bold tracking-widest rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]"
-              />
-              <button 
-                type="submit" 
-                id="submit-verify-token-btn" 
-                class="w-full h-10 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
-              >
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Verify &amp; Associate Entry</span>
-              </button>
-            </form>
-
-            <!-- Verification result box -->
-            <div id="token-verify-result" class="hidden p-3 rounded-xl border text-xs space-y-1">
-              <!-- populated by JS -->
+            <div class="flex items-center justify-between text-slate-600">
+              <span class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-indigo-600">groups</span>
+                <span>Department Scope:</span>
+              </span>
+              <strong class="text-slate-800 font-medium">Computer Engineering (4 Students)</strong>
+            </div>
+            <div class="flex items-center justify-between text-slate-600">
+              <span class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+                <span>Sync Status:</span>
+              </span>
+              <span class="text-emerald-700 font-bold" id="dept-sync-status-text">All valid check-ins aggregated</span>
             </div>
           </div>
+
+          <!-- Instant Sync / Recalculate Trigger -->
+          <button 
+            type="button" 
+            onclick="triggerDepartmentHealthSync()" 
+            id="trigger-sync-btn" 
+            class="w-full h-11 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-2"
+          >
+            <span class="material-symbols-outlined text-base" id="sync-btn-icon">sync</span>
+            <span id="sync-btn-label">Sync Department Data &amp; Recalculate Score</span>
+          </button>
+
+          <!-- Collapsible Optional Manual Sync Token -->
+          <details class="text-xs border-t border-slate-100 pt-2 text-slate-500">
+            <summary class="cursor-pointer font-medium text-[11px] text-slate-600 hover:text-slate-900 select-none py-1 flex items-center justify-between">
+              <span>Manual 6-Digit Sync Token (Peer Verification)</span>
+              <span class="material-symbols-outlined text-xs">expand_more</span>
+            </summary>
+            <div class="pt-2 space-y-2.5">
+              <p class="text-[10px] text-slate-500">
+                Optional: generate a 6-digit token to manually link check-ins or share with a faculty mentor.
+              </p>
+              <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl">
+                <button type="button" onclick="setSyncTokenTab('generate')" id="tab-token-gen" class="py-1 text-[10px] font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1">Generate</button>
+                <button type="button" onclick="setSyncTokenTab('verify')" id="tab-token-ver" class="py-1 text-[10px] font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1">Verify</button>
+              </div>
+              <div id="panel-token-generate" class="space-y-2">
+                <div id="generated-token-display" class="hidden p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-center">
+                  <div class="text-[9px] font-bold text-blue-800 uppercase">Sync Token</div>
+                  <div class="text-xl font-mono font-bold text-[#1755BE]" id="active-sync-token-val">------</div>
+                  <div class="text-[9px] text-slate-500" id="sync-token-timer">Expires in 10:00</div>
+                </div>
+                <button type="button" onclick="handleGenerateSyncToken()" class="w-full h-8 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-[11px] rounded-lg transition">Generate 6-Digit Token</button>
+              </div>
+              <div id="panel-token-verify" class="hidden space-y-2">
+                <form onsubmit="handleVerifySyncToken(event)" class="space-y-1.5">
+                  <input type="text" id="verify-token-input" maxlength="6" pattern="[0-9]{6}" placeholder="Enter 6-digit code" class="w-full h-8 text-center text-xs font-mono rounded-lg border border-slate-200" />
+                  <button type="submit" class="w-full h-8 bg-emerald-600 text-white font-bold text-[11px] rounded-lg">Verify Token</button>
+                </form>
+                <div id="token-verify-result" class="hidden p-2 rounded-lg border text-[10px]"></div>
+              </div>
+            </div>
+          </details>
         </div>
 
         <!-- 3. Faculty Weekly Goal Setting Panel -->
@@ -1241,19 +1279,19 @@
     // ─── Authorized Users Profile (Strict Surname-Based Access) ──────────────
     // 1 Faculty + 4 Students
     const AUTHORIZED_PROFILES = {
-      'sayyed':     { displayName: 'Aalim Sayyed',         role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in' },
-      'sonawane':   { displayName: 'Harsh Sonawane',       role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in' },
-      'pendharkar': { displayName: 'Vaishnavi Pendharkar', role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in' },
-      'randhe':     { displayName: 'Shreya Randhe',        role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in' },
-      'rakibe':     { displayName: 'Prof. Priya Rakibe',   role: 'FACULTY', title: 'Faculty Coordinator', defaultEmail: 'priya.rakibe@kkwagh.edu.in' }
+      'sayyed':     { key: 'sayyed',     displayName: 'Aalim Sayyed',         role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in',         aliases: ['sayyed', 'aalim', 'aasayyed'] },
+      'sonawane':   { key: 'sonawane',   displayName: 'Harsh Sonawane',       role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in',       aliases: ['sonawane', 'harsh'] },
+      'pendharkar': { key: 'pendharkar', displayName: 'Vaishnavi Pendharkar', role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in', aliases: ['pendharkar', 'vaishnavi'] },
+      'randhe':     { key: 'randhe',     displayName: 'Shreya Randhe',        role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in',        aliases: ['randhe', 'shreya'] },
+      'rakibe':     { key: 'rakibe',     displayName: 'Prof. Priya Rakibe',   role: 'FACULTY', title: 'Faculty Coordinator',                 defaultEmail: 'priya.rakibe@kkwagh.edu.in', aliases: ['rakibe', 'priya'] }
     };
 
     function matchAuthorizedSurname(email) {
       if (!email || typeof email !== 'string') return null;
       const lower = email.trim().toLowerCase();
-      for (const [surname, prof] of Object.entries(AUTHORIZED_PROFILES)) {
-        if (lower.includes(surname)) {
-          return { surname, ...prof };
+      for (const [key, prof] of Object.entries(AUTHORIZED_PROFILES)) {
+        if (prof.aliases.some(alias => lower.includes(alias))) {
+          return { surname: key, key, ...prof };
         }
       }
       return null;
@@ -1377,13 +1415,71 @@
       selectedLoginRole = role;
       const sBtn = document.getElementById('role-btn-student');
       const fBtn = document.getElementById('role-btn-faculty');
+      const heading = document.getElementById('login-role-heading');
+      const subheading = document.getElementById('login-role-subheading');
+      const studentPicker = document.getElementById('student-picker-container');
+      const facultyPicker = document.getElementById('faculty-picker-container');
+      const emailInput = document.getElementById('email-input');
+
       if (role === 'FACULTY') {
-        fBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-purple-900 shadow-sm flex items-center justify-center gap-1.5';
-        sBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (fBtn) fBtn.className = 'py-2.5 text-xs font-bold rounded-xl transition bg-white text-purple-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-purple-600/30';
+        if (sBtn) sBtn.className = 'py-2.5 text-xs font-medium rounded-xl transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (heading) heading.textContent = 'Faculty Sign In';
+        if (subheading) subheading.textContent = 'Sign in as Faculty Coordinator to review DHI & configure weekly goals.';
+        if (studentPicker) studentPicker.classList.add('hidden');
+        if (facultyPicker) facultyPicker.classList.remove('hidden');
+        if (emailInput) emailInput.value = 'priya.rakibe@kkwagh.edu.in';
       } else {
-        sBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5';
-        fBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (sBtn) sBtn.className = 'py-2.5 text-xs font-bold rounded-xl transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5 ring-2 ring-blue-600/30';
+        if (fBtn) fBtn.className = 'py-2.5 text-xs font-medium rounded-xl transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+        if (heading) heading.textContent = 'Student Sign In';
+        if (subheading) subheading.textContent = 'Choose your account or enter your official K.K. Wagh email.';
+        if (studentPicker) studentPicker.classList.remove('hidden');
+        if (facultyPicker) facultyPicker.classList.add('hidden');
+        const stSelect = document.getElementById('student-account-select');
+        if (emailInput && stSelect) {
+          emailInput.value = stSelect.value !== 'custom' ? stSelect.value : 'aalim.sayyed@kkwagh.edu.in';
+        }
       }
+    }
+
+    function onStudentSelectChange(val) {
+      const emailInput = document.getElementById('email-input');
+      if (!emailInput) return;
+      if (val === 'custom') {
+        emailInput.value = '';
+        emailInput.placeholder = 'yourname@kkwagh.edu.in';
+        emailInput.focus();
+      } else {
+        emailInput.value = val;
+      }
+    }
+
+    function triggerDepartmentHealthSync() {
+      const icon = document.getElementById('sync-spin-icon');
+      const btnIcon = document.getElementById('sync-btn-icon');
+      const label = document.getElementById('sync-btn-label');
+      const btn = document.getElementById('trigger-sync-btn');
+      const statusText = document.getElementById('dept-sync-status-text');
+
+      if (icon) icon.classList.add('animate-spin');
+      if (btnIcon) btnIcon.classList.add('animate-spin');
+      if (label) label.textContent = 'Synchronizing student health records...';
+      if (btn) btn.disabled = true;
+
+      setTimeout(() => {
+        // Recalculate DHI from all student checkins
+        renderDepartmentDHI();
+        if (icon) icon.classList.remove('animate-spin');
+        if (btnIcon) btnIcon.classList.remove('animate-spin');
+        if (label) label.textContent = 'Sync Department Data & Recalculate Score';
+        if (btn) btn.disabled = false;
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        if (statusText) statusText.textContent = `Batch Synced today at ${timeStr}`;
+        showToast(`Department synced successfully! DHI calculated. 🎉`);
+      }, 700);
     }
 
     function loginWithAuthorizedProfile(email, profile) {
@@ -1409,6 +1505,7 @@
       const loginView = document.getElementById('login-view');
       if (!currentUser || !currentUser.email) {
         loginView.classList.remove('hidden');
+        setLoginRole(selectedLoginRole || 'STUDENT');
       } else {
         loginView.classList.add('hidden');
         applyUserToUI(currentUser);
@@ -1472,6 +1569,10 @@
       const btnText = document.getElementById('send-otp-btn-text');
 
       let email = emailInput.value.trim().toLowerCase();
+      if (!email.includes('@')) {
+        email += '@kkwagh.edu.in';
+        emailInput.value = email;
+      }
       if (email.endsWith('@kkwag.edu.in')) {
         email = email.replace('@kkwag.edu.in', '@kkwagh.edu.in');
         emailInput.value = email;
@@ -1483,7 +1584,7 @@
         return;
       }
 
-      // Check surname whitelist (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
+      // Check surname/alias whitelist (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe)
       const matched = matchAuthorizedSurname(email);
       if (!matched) {
         emailErrTxt.textContent = 'Access restricted: Only authorized members (Sayyed, Sonawane, Pendharkar, Randhe, Rakibe) can log in.';

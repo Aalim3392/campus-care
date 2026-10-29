@@ -66,19 +66,19 @@ let departmentGoals = {
 
 // Authorized Prototype Users: 1 Faculty + 4 Students
 const ALLOWED_PROFILES = {
-  'sayyed':     { displayName: 'Aalim Sayyed',        role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in' },
-  'sonawane':   { displayName: 'Harsh Sonawane',      role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in' },
-  'pendharkar': { displayName: 'Vaishnavi Pendharkar',role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in' },
-  'randhe':     { displayName: 'Shreya Randhe',       role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in' },
-  'rakibe':     { displayName: 'Prof. Priya Rakibe',  role: 'FACULTY', title: 'Faculty Coordinator — Computer Engineering', defaultEmail: 'priya.rakibe@kkwagh.edu.in' }
+  'sayyed':     { displayName: 'Aalim Sayyed',        role: 'STUDENT', defaultEmail: 'aalim.sayyed@kkwagh.edu.in', aliases: ['sayyed', 'aalim', 'aasayyed'] },
+  'sonawane':   { displayName: 'Harsh Sonawane',      role: 'STUDENT', defaultEmail: 'harsh.sonawane@kkwagh.edu.in', aliases: ['sonawane', 'harsh'] },
+  'pendharkar': { displayName: 'Vaishnavi Pendharkar',role: 'STUDENT', defaultEmail: 'vaishnavi.pendharkar@kkwagh.edu.in', aliases: ['pendharkar', 'vaishnavi'] },
+  'randhe':     { displayName: 'Shreya Randhe',       role: 'STUDENT', defaultEmail: 'shreya.randhe@kkwagh.edu.in', aliases: ['randhe', 'shreya'] },
+  'rakibe':     { displayName: 'Prof. Priya Rakibe',  role: 'FACULTY', title: 'Faculty Coordinator — Computer Engineering', defaultEmail: 'priya.rakibe@kkwagh.edu.in', aliases: ['rakibe', 'priya'] }
 };
 
 function matchAuthorizedSurname(email) {
   if (!email || typeof email !== 'string') return null;
   const lower = email.trim().toLowerCase();
-  for (const surname of Object.keys(ALLOWED_PROFILES)) {
-    if (lower.includes(surname)) {
-      return { surname, ...ALLOWED_PROFILES[surname] };
+  for (const [key, prof] of Object.entries(ALLOWED_PROFILES)) {
+    if (prof.aliases.some(alias => lower.includes(alias))) {
+      return { key, surname: key, ...prof };
     }
   }
   return null;
