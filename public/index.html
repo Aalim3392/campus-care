@@ -548,10 +548,10 @@
             <p class="text-[11px] text-slate-500 mt-0.5">Records your sleep, hydration, and daily steps. Confidential &amp; validated.</p>
           </div>
 
-          <!-- Duplicate entry warning banner if entry exists for selected date -->
-          <div id="duplicate-warning-banner" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 font-medium flex items-center gap-2">
-            <span class="material-symbols-outlined text-amber-600 text-base shrink-0">edit_note</span>
-            <span id="duplicate-warning-text">An entry for this date already exists. Submitting will update your existing record.</span>
+          <!-- Locked entry notification banner (Single submission, non-editable) -->
+          <div id="duplicate-warning-banner" class="hidden p-3 bg-amber-50 border border-amber-300 rounded-xl text-xs text-amber-950 font-medium flex items-center gap-2.5 shadow-sm">
+            <span class="material-symbols-outlined text-amber-700 text-lg shrink-0">lock</span>
+            <span id="duplicate-warning-text">Daily check-in for this date has already been submitted and cannot be edited.</span>
           </div>
 
           <form id="checkin-form" onsubmit="handleCheckinSubmit(event)" class="space-y-4">
@@ -1964,19 +1964,92 @@
       });
     }
 
-    // ─── Check-in Form Submission & Duplicate Prevention ─────────────────────
+    // ─── Check-in Form Submission & Non-Editable Enforcement ────────────────
     function checkDateDuplicate(selectedDate) {
       if (!currentUser) return;
       const existing = userCheckinRecords.find(r => r.date === selectedDate);
       const banner = document.getElementById('duplicate-warning-banner');
+      const bannerText = document.getElementById('duplicate-warning-text');
+      const submitBtn = document.getElementById('save-checkin-btn');
       const btnText = document.getElementById('save-checkin-btn-text');
 
+      const sleepInput = document.getElementById('checkin-sleep');
+      const stepsInput = document.getElementById('checkin-steps');
+      const studyInput = document.getElementById('checkin-study');
+      const stressInput = document.getElementById('checkin-stress');
+      const moodButtons = document.querySelectorAll('.mood-btn');
+      const waterButtons = document.querySelectorAll('#view-checkin button[onclick*="adjustWater"]');
+      const presetButtons = document.querySelectorAll('#view-checkin button[onclick*="setStepsPreset"]');
+
       if (existing) {
-        if (banner) banner.classList.remove('hidden');
-        if (btnText) btnText.textContent = `Update Existing Check-in (${selectedDate})`;
+        // NON-EDITABLE: Check-in already submitted for this date
+        selectMood(existing.mood || 'Good');
+        if (sleepInput) {
+          sleepInput.value = existing.sleep;
+          sleepInput.disabled = true;
+        }
+        updateSleepDisplay(existing.sleep);
+
+        waterGlasses = existing.water || Math.round((existing.waterLiters || 2.5) / 0.25);
+        const wDisp = document.getElementById('water-display');
+        const wBox = document.getElementById('water-count-box');
+        if (wDisp) wDisp.textContent = `${(existing.waterLiters || (waterGlasses * 0.25)).toFixed(1)} L (${waterGlasses} glasses)`;
+        if (wBox) wBox.textContent = `${waterGlasses} glasses · ${(existing.waterLiters || (waterGlasses * 0.25)).toFixed(2)} Litres`;
+
+        if (stepsInput) {
+          stepsInput.value = existing.steps || 0;
+          stepsInput.disabled = true;
+        }
+        updateStepsDisplay(existing.steps || 0);
+
+        if (studyInput) {
+          studyInput.value = existing.study || 0;
+          studyInput.disabled = true;
+        }
+        updateStudyDisplay(existing.study || 0);
+
+        if (stressInput) {
+          stressInput.value = existing.stress || 2;
+          stressInput.disabled = true;
+        }
+        updateStressBadge(existing.stress || 2);
+
+        // Disable input buttons
+        moodButtons.forEach(btn => btn.disabled = true);
+        waterButtons.forEach(btn => btn.disabled = true);
+        presetButtons.forEach(btn => btn.disabled = true);
+
+        // Show locked banner
+        if (banner) {
+          banner.className = 'p-3 bg-amber-50 border border-amber-300 rounded-xl text-xs text-amber-950 font-medium flex items-center gap-2.5 shadow-sm';
+          if (bannerText) {
+            bannerText.innerHTML = `<strong>Entry Locked (Non-Editable):</strong> Daily check-in for <strong>${selectedDate}</strong> has already been submitted. Check-ins can only be submitted once per day and cannot be modified.`;
+          }
+          banner.classList.remove('hidden');
+        }
+
+        // Disable submit button
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.className = 'w-full h-11 bg-slate-200 text-slate-500 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-not-allowed';
+        }
+        if (btnText) btnText.textContent = `✓ Already Submitted for ${selectedDate} (Non-Editable)`;
       } else {
+        // UNLOCKED: Ready for single submission
+        if (sleepInput) sleepInput.disabled = false;
+        if (stepsInput) stepsInput.disabled = false;
+        if (studyInput) studyInput.disabled = false;
+        if (stressInput) stressInput.disabled = false;
+        moodButtons.forEach(btn => btn.disabled = false);
+        waterButtons.forEach(btn => btn.disabled = false);
+        presetButtons.forEach(btn => btn.disabled = false);
+
         if (banner) banner.classList.add('hidden');
-        if (btnText) btnText.textContent = "Save Daily Health Check-in";
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.className = 'w-full h-11 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5';
+        }
+        if (btnText) btnText.textContent = 'Save Daily Health Check-in';
       }
     }
 
@@ -2065,22 +2138,22 @@
         updatedAt: new Date().toISOString()
       };
 
-      // Upsert: replace if entry for same email + date exists, or append
-      const existingIdx = allDepartmentCheckins.findIndex(r => r.email === currentUser.email && r.date === dateVal);
-      const wasUpdate = existingIdx !== -1;
-      if (wasUpdate) {
-        allDepartmentCheckins[existingIdx] = record;
-      } else {
-        allDepartmentCheckins.push(record);
+      // Strict non-editable enforcement: Only one submission per person per date
+      const alreadySubmitted = userCheckinRecords.some(r => r.date === dateVal);
+      if (alreadySubmitted) {
+        showToast(`Check-in for ${dateVal} has already been submitted and cannot be edited.`, 'error');
+        checkDateDuplicate(dateVal);
+        return;
       }
 
+      allDepartmentCheckins.push(record);
       localStorage.setItem('cw_all_checkins', JSON.stringify(allDepartmentCheckins));
       syncUserData();
 
-      // Clear duplicate warning
+      // Immediately lock the form for this date
       checkDateDuplicate(dateVal);
 
-      showToast(wasUpdate ? `Check-in updated for ${dateVal}! 🌟` : `Check-in saved for ${dateVal}! 🌟`);
+      showToast(`Daily check-in recorded for ${dateVal}! 🌟 (Entry Locked)`);
       navigateTo('home');
 
       // Attempt background backend sync
@@ -2357,6 +2430,10 @@
       });
 
       if (tabId !== 'support') clearSearch();
+      if (tabId === 'checkin') {
+        const dInp = document.getElementById('checkin-date');
+        if (dInp) checkDateDuplicate(dInp.value);
+      }
       const main = document.getElementById('app-main');
       if (main) main.scrollTop = 0;
     }

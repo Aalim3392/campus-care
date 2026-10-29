@@ -404,13 +404,20 @@ const server = http.createServer(async (req, res) => {
         updatedAt: new Date().toISOString()
       };
 
-      // Upsert into in-memory store
-      const existingIdx = inMemoryCheckins.findIndex(r => r.email === normalizedEmail && r.date === record.date);
-      if (existingIdx !== -1) {
-        inMemoryCheckins[existingIdx] = record;
-      } else {
-        inMemoryCheckins.push(record);
+      // Single-submission check: non-editable per date
+      const matched = matchAuthorizedSurname(normalizedEmail);
+      const existing = inMemoryCheckins.find(r => 
+        (r.email === normalizedEmail || (matched && r.surname === matched.surname)) && 
+        r.date === record.date
+      );
+      if (existing) {
+        return sendJson(res, 409, {
+          success: false,
+          error: `Daily check-in for ${record.date} has already been submitted and cannot be edited.`
+        });
       }
+
+      inMemoryCheckins.push(record);
 
       // If Supabase is configured, attempt to save to Supabase checkins table
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
