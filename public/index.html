@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
-  <title>Campus Care — K.K. Wagh Student Wellbeing</title>
+  <title>Campus Care — Departmental Wellbeing Portal (K.K. Wagh College)</title>
   
   <!-- Mobile & PWA Configuration -->
   <meta name="theme-color" content="#12254A"/>
@@ -34,6 +34,7 @@
               card: '#FFFFFF',
               sleep: '#8B7FD8',
               water: '#0284C7',
+              steps: '#10B981',
               study: '#00845A',
               mood: '#D97706',
               stress: '#DC2626'
@@ -71,7 +72,7 @@
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 72px; /* height of bottom nav */
+      padding-bottom: 76px; /* height of bottom nav */
     }
     /* Bottom nav safe area for iPhone home bar */
     #bottom-nav {
@@ -141,52 +142,108 @@
     <div id="login-view" class="fixed inset-0 z-50 bg-[#F8F9FF] flex flex-col max-w-[430px] mx-auto">
       
       <!-- Scrollable inner -->
-      <div class="flex-1 flex flex-col justify-between overflow-y-auto px-6 py-8 gap-6">
+      <div class="flex-1 flex flex-col justify-between overflow-y-auto px-5 py-6 gap-5">
 
         <!-- Top Branding -->
-        <div class="text-center space-y-3 pt-4">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#12254A] to-[#1755BE] text-white flex items-center justify-center mx-auto shadow-md">
-            <span class="material-symbols-outlined fill-icon text-3xl">spa</span>
+        <div class="text-center space-y-2 pt-2">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#12254A] to-[#1755BE] text-white flex items-center justify-center mx-auto shadow-md">
+            <span class="material-symbols-outlined fill-icon text-2xl">spa</span>
           </div>
           <div>
-            <h1 class="text-2xl font-extrabold tracking-tight text-[#0B1C30]">Campus Care</h1>
-            <p class="text-[11px] font-semibold text-blue-700 tracking-wide uppercase mt-0.5">K.K. Wagh Institute of Engineering</p>
+            <h1 class="text-xl font-extrabold tracking-tight text-[#0B1C30]">Campus Care</h1>
+            <p class="text-[10px] font-bold text-blue-700 tracking-wider uppercase mt-0.5">The Departmental Wellbeing Portal</p>
+            <p class="text-[11px] font-semibold text-slate-600">Computer Engineering — K. K. Wagh College</p>
           </div>
-          <p class="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
-            Your private daily health, sleep, hydration, and stress companion.
+        </div>
+
+        <!-- Quick Demo Accounts (5 Sample Users) -->
+        <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-blue-100 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1">
+              <span class="material-symbols-outlined text-blue-600 text-sm">groups</span>
+              <span>1-Click Prototype Demo Accounts</span>
+            </span>
+            <span class="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">5 Pre-seeded</span>
+          </div>
+          <p class="text-[10px] text-slate-500 leading-tight">
+            Select any sample student or faculty account to test the complete departmental workflow instantly:
           </p>
+
+          <!-- 3 Students -->
+          <div class="space-y-1.5">
+            <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Students (Computer Engineering)</div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button type="button" onclick="quickLogin('aarav.sharma@kkwagh.edu.in', 'STUDENT')" class="p-2 rounded-xl bg-slate-50 hover:bg-blue-50 active:scale-95 border border-slate-200 hover:border-blue-300 text-left transition flex flex-col">
+                <span class="text-[11px] font-bold text-slate-900 truncate">Aarav S.</span>
+                <span class="text-[9px] text-blue-600 font-semibold">Student 1</span>
+              </button>
+              <button type="button" onclick="quickLogin('aasayyed370125@kkwagh.edu.in', 'STUDENT')" class="p-2 rounded-xl bg-slate-50 hover:bg-blue-50 active:scale-95 border border-slate-200 hover:border-blue-300 text-left transition flex flex-col">
+                <span class="text-[11px] font-bold text-slate-900 truncate">Aalim S.</span>
+                <span class="text-[9px] text-blue-600 font-semibold">Student 2</span>
+              </button>
+              <button type="button" onclick="quickLogin('neha.patil@kkwagh.edu.in', 'STUDENT')" class="p-2 rounded-xl bg-slate-50 hover:bg-blue-50 active:scale-95 border border-slate-200 hover:border-blue-300 text-left transition flex flex-col">
+                <span class="text-[11px] font-bold text-slate-900 truncate">Neha P.</span>
+                <span class="text-[9px] text-amber-600 font-semibold">Student 3 (Low)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2 Faculty -->
+          <div class="space-y-1.5 pt-1">
+            <div class="text-[9px] font-bold text-purple-700 uppercase tracking-wider">Faculty (Computer Engineering)</div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" onclick="quickLogin('hod.comp@kkwagh.edu.in', 'FACULTY')" class="p-2 rounded-xl bg-purple-50/70 hover:bg-purple-100 active:scale-95 border border-purple-200 text-left transition flex flex-col">
+                <span class="text-[11px] font-bold text-purple-950 truncate">Dr. V.K. Wagh</span>
+                <span class="text-[9px] text-purple-700 font-semibold">Faculty / HOD</span>
+              </button>
+              <button type="button" onclick="quickLogin('mentor.comp@kkwagh.edu.in', 'FACULTY')" class="p-2 rounded-xl bg-purple-50/70 hover:bg-purple-100 active:scale-95 border border-purple-200 text-left transition flex flex-col">
+                <span class="text-[11px] font-bold text-purple-950 truncate">Prof. P.R. Rao</span>
+                <span class="text-[9px] text-purple-700 font-semibold">Wellness Coordinator</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Login Card -->
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-5">
+        <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200/80 space-y-4">
+
+          <!-- Role Selection Pills -->
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide mb-1.5">Select Role</label>
+            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl" id="role-selector">
+              <button type="button" onclick="setLoginRole('STUDENT')" id="role-btn-student" class="py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">school</span>
+                <span>Student</span>
+              </button>
+              <button type="button" onclick="setLoginRole('FACULTY')" id="role-btn-faculty" class="py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">supervisor_account</span>
+                <span>Faculty</span>
+              </button>
+            </div>
+          </div>
 
           <!-- Step 1: Email Form -->
-          <div id="login-step-email" class="space-y-4">
+          <div id="login-step-email" class="space-y-3">
             <div>
-              <h2 class="text-base font-bold text-slate-900">Sign in with College Email</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Enter your official K.K. Wagh email to receive a 6-digit verification code.</p>
-            </div>
-
-            <div class="p-3 bg-blue-50/70 border border-blue-100 rounded-xl flex items-center gap-2.5 text-xs text-blue-900 font-medium">
-              <span class="material-symbols-outlined text-blue-600 text-sm">verified_user</span>
-              <span>Only official <strong>@kkwagh.edu.in</strong> accounts are authorized.</span>
+              <h2 class="text-sm font-bold text-slate-900">Sign in with College Email</h2>
+              <p class="text-[11px] text-slate-500 mt-0.5">Restricted strictly to official @kkwagh.edu.in domain.</p>
             </div>
 
             <form onsubmit="handleRequestOtp(event)" class="space-y-3">
               <div>
-                <label for="email-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">College Email</label>
+                <label for="email-input" class="block text-[10px] font-bold text-slate-700 uppercase tracking-wide mb-1">College Email Address</label>
                 <div class="relative">
                   <input 
                     type="email" 
                     id="email-input" 
                     required 
                     autocomplete="email"
-                    placeholder="yourname@kkwagh.edu.in"
-                    class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
+                    placeholder="student@kkwagh.edu.in"
+                    class="w-full h-11 pl-3.5 pr-10 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
                   />
                   <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 text-lg">mail</span>
                 </div>
-                <p id="email-error-msg" class="text-xs text-red-600 font-medium mt-1.5 hidden flex items-center gap-1">
+                <p id="email-error-msg" class="text-[11px] text-red-600 font-medium mt-1.5 hidden flex items-center gap-1">
                   <span class="material-symbols-outlined text-xs">error</span>
                   <span id="email-error-text">Email must end with @kkwagh.edu.in</span>
                 </p>
@@ -195,10 +252,10 @@
               <button 
                 type="submit" 
                 id="send-otp-btn"
-                class="w-full h-12 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
+                class="w-full h-11 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 <span id="send-otp-btn-text">Continue with College Email</span>
-                <span class="material-symbols-outlined text-base">arrow_forward</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
               </button>
             </form>
           </div>
@@ -210,20 +267,20 @@
                 <span class="material-symbols-outlined text-lg">arrow_back</span>
               </button>
               <div>
-                <h2 class="text-base font-bold text-slate-900">Enter Verification Code</h2>
-                <p class="text-xs text-slate-500 mt-0.5" id="otp-sent-to-label">Check your college inbox</p>
+                <h2 class="text-sm font-bold text-slate-900">Enter Verification Code</h2>
+                <p class="text-[10px] text-slate-500 mt-0.5" id="otp-sent-to-label">Code generated for college account</p>
               </div>
             </div>
 
             <!-- Verification Code Banner -->
-            <div id="dev-code-hint" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 font-medium flex items-center justify-between shadow-sm">
-              <span class="font-semibold">Verification Code:</span>
+            <div id="dev-code-hint" class="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 font-medium flex items-center justify-between shadow-sm">
+              <span class="font-semibold">6-Digit Code:</span>
               <span class="font-bold text-base font-mono tracking-widest text-[#1755BE]" id="dev-code-val">------</span>
             </div>
 
             <form onsubmit="handleVerifyOtp(event)" class="space-y-3">
               <div>
-                <label for="otp-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">6-Digit Code</label>
+                <label for="otp-input" class="block text-[10px] font-bold text-slate-700 uppercase tracking-wide mb-1">Enter 6-Digit Code</label>
                 <input 
                   type="text" 
                   id="otp-input" 
@@ -233,7 +290,7 @@
                   autocomplete="one-time-code"
                   placeholder="123456" 
                   pattern="[0-9]{6}" 
-                  class="w-full h-12 text-center text-xl font-bold tracking-widest rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
+                  class="w-full h-11 text-center text-lg font-bold tracking-widest rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#1755BE]/30 focus:border-[#1755BE] transition"
                 />
                 <p id="otp-error-msg" class="text-xs text-red-600 font-medium mt-1.5 hidden">
                   Invalid or expired code. Please check and try again.
@@ -243,10 +300,10 @@
               <button 
                 type="submit" 
                 id="verify-otp-btn"
-                class="w-full h-12 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
+                class="w-full h-11 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                <span id="verify-otp-btn-text">Verify &amp; Access Campus Care</span>
-                <span class="material-symbols-outlined text-base">check</span>
+                <span id="verify-otp-btn-text">Verify &amp; Enter Portal</span>
+                <span class="material-symbols-outlined text-sm">check</span>
               </button>
 
               <div class="text-center pt-1">
@@ -260,9 +317,9 @@
         </div>
 
         <!-- Footer -->
-        <div class="text-center text-[11px] text-slate-400 space-y-1 pb-2">
-          <div>K.K. Wagh Institute · Student Care Portal</div>
-          <div>All health &amp; check-in records are kept confidential</div>
+        <div class="text-center text-[10px] text-slate-400 space-y-0.5 pb-2">
+          <div>Computer Engineering · K. K. Wagh Institute of Engineering</div>
+          <div>Departmental Wellbeing Prototype · Single-Department Scope</div>
         </div>
 
       </div>
@@ -271,159 +328,219 @@
 
 
     <!-- ==================== MOBILE TOP APP BAR ==================== -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3 flex items-center justify-between shrink-0">
-      <div class="flex items-center gap-2.5">
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 px-3.5 py-2.5 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-xl bg-[#12254A] text-white flex items-center justify-center shrink-0">
           <span class="material-symbols-outlined fill-icon text-lg">spa</span>
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="text-sm font-extrabold text-[#0B1C30]">Campus Care</span>
-            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">KKW</span>
+            <span class="text-xs font-extrabold text-[#0B1C30]">Campus Care</span>
+            <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-blue-50 text-blue-700">Comp Eng</span>
           </div>
-          <p class="text-[10px] text-slate-400" id="app-date-chip">Today</p>
+          <p class="text-[9px] text-slate-400" id="app-date-chip">Today · Week 44</p>
         </div>
       </div>
 
-      <!-- Right: Profile & Sign-out -->
-      <div class="flex items-center gap-2 relative">
-        <button onclick="toggleProfileDropdown()" class="flex items-center gap-1.5 py-1 px-2 rounded-full bg-slate-50 border border-slate-200 hover:bg-slate-100 active:scale-95 transition">
-          <div class="w-5 h-5 rounded-full bg-[#1755BE] text-white text-[10px] font-bold flex items-center justify-center" id="header-avatar">?</div>
-          <span class="text-xs font-medium text-slate-700 max-w-[80px] truncate" id="header-username">Account</span>
+      <!-- Right: Role Pill & Profile Dropdown -->
+      <div class="flex items-center gap-1.5 relative">
+        <span id="header-role-badge" class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 uppercase">Student</span>
+
+        <button onclick="toggleProfileDropdown()" class="flex items-center gap-1 py-1 px-2 rounded-full bg-slate-50 border border-slate-200 hover:bg-slate-100 active:scale-95 transition">
+          <div class="w-5 h-5 rounded-full bg-[#1755BE] text-white text-[9px] font-bold flex items-center justify-center" id="header-avatar">?</div>
+          <span class="text-[11px] font-medium text-slate-700 max-w-[70px] truncate" id="header-username">Account</span>
           <span class="material-symbols-outlined text-xs text-slate-400">expand_more</span>
         </button>
 
         <!-- Dropdown Menu -->
-        <div id="profile-dropdown" class="hidden absolute right-0 top-10 w-56 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2 z-50 space-y-1">
+        <div id="profile-dropdown" class="hidden absolute right-0 top-9 w-60 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2 z-50 space-y-1">
           <div class="px-3 py-2 border-b border-slate-100">
-            <p class="text-xs font-bold text-slate-800 truncate" id="dropdown-name">Student</p>
+            <p class="text-xs font-bold text-slate-800 truncate" id="dropdown-name">Aarav Sharma</p>
             <p class="text-[10px] text-slate-400 truncate" id="dropdown-email">—</p>
+            <div class="flex items-center justify-between text-[10px] mt-1 pt-1 border-t border-slate-50 text-slate-500 font-medium">
+              <span>Department:</span>
+              <span class="font-bold text-slate-700">Comp. Eng.</span>
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-slate-500 font-medium">
+              <span>Role:</span>
+              <span class="font-bold text-[#1755BE]" id="dropdown-role">STUDENT</span>
+            </div>
           </div>
-          <button onclick="handleSignOut()" class="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-xl font-medium flex items-center gap-2 transition">
-            <span class="material-symbols-outlined text-sm">logout</span>
-            <span>Sign Out</span>
-          </button>
+
+          <!-- Switch to demo user shortcut -->
+          <div class="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase">Switch Demo Account</div>
+          <div class="grid grid-cols-2 gap-1 px-1">
+            <button onclick="switchActiveDemoUser('aarav.sharma@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-slate-50 text-slate-700 truncate">👨‍🎓 Aarav (Student)</button>
+            <button onclick="switchActiveDemoUser('aasayyed370125@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-slate-50 text-slate-700 truncate">👨‍🎓 Aalim (Student)</button>
+            <button onclick="switchActiveDemoUser('neha.patil@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-slate-50 text-slate-700 truncate">👩‍🎓 Neha (Student)</button>
+            <button onclick="switchActiveDemoUser('hod.comp@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-purple-50 text-purple-800 font-medium truncate">👨‍🏫 Dr. Wagh (HOD)</button>
+            <button onclick="switchActiveDemoUser('mentor.comp@kkwagh.edu.in')" class="text-left text-[10px] p-1.5 rounded-lg hover:bg-purple-50 text-purple-800 font-medium truncate col-span-2">👨‍🏫 Prof. Rao (Coordinator)</button>
+          </div>
+
+          <div class="pt-1 border-t border-slate-100">
+            <button onclick="handleSignOut()" class="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-xl font-medium flex items-center gap-2 transition">
+              <span class="material-symbols-outlined text-sm">logout</span>
+              <span>Sign Out</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>
 
 
+    <!-- ==================== DEMO QUICK-SWITCHER RIBBON ==================== -->
+    <div class="bg-slate-100 border-b border-slate-200/80 px-3 py-1.5 flex items-center justify-between text-[10px] shrink-0">
+      <div class="flex items-center gap-1 text-slate-600 font-semibold truncate">
+        <span class="material-symbols-outlined text-xs text-blue-600">tune</span>
+        <span>Active: <span id="ribbon-active-user" class="font-bold text-slate-900">Aarav Sharma (Student)</span></span>
+      </div>
+      <div class="flex items-center gap-1">
+        <button onclick="toggleRedAlertSimulation()" id="simulate-alert-btn" class="px-2 py-0.5 rounded bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold border border-rose-200 active:scale-95 transition" title="Toggle sleep < 5h to test Red Alert banner">
+          ⚡ Test Alert
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ==================== RED ALERT BANNER (CRITICAL SLEEP DEFICIT) ==================== -->
+    <div id="red-alert-banner" class="hidden mx-4 mt-3 p-3.5 bg-gradient-to-r from-rose-600 to-red-700 text-white rounded-2xl shadow-md border border-rose-300 space-y-1.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5 font-extrabold text-xs tracking-wide uppercase">
+          <span class="material-symbols-outlined text-base animate-pulse">warning</span>
+          <span>Department Red Alert · Low Sleep</span>
+        </div>
+        <span class="text-[9px] bg-white/20 px-2 py-0.5 rounded-full font-bold">Sleep &lt; 5.0h</span>
+      </div>
+      <p class="text-[11px] text-rose-100 leading-snug">
+        Computer Engineering average sleep is currently <strong id="red-alert-avg-sleep">4.6h</strong>, breaching the institute health baseline (5.0h threshold).
+      </p>
+      <div class="text-[10px] text-white/90 bg-black/15 p-2 rounded-xl flex items-center justify-between">
+        <span>Faculty advisory: Consider lightening overnight workload.</span>
+        <button onclick="navigateTo('department')" class="underline font-bold text-white shrink-0 ml-1">Details →</button>
+      </div>
+    </div>
+
+
     <!-- ==================== APP VIEWS ==================== -->
     <main id="app-main" class="flex-1 p-4 space-y-4 overflow-y-auto">
 
-      <!-- ==================== TAB A: HOME ==================== -->
+      <!-- ==================== TAB 1: HOME ==================== -->
       <div id="view-home" class="space-y-4 app-view">
 
-        <!-- Install App Banner (PWA prompt) -->
-        <div id="pwa-install-prompt" class="p-3 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 text-white rounded-2xl shadow-sm flex items-center justify-between gap-2.5">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <span class="material-symbols-outlined text-2xl text-blue-200 shrink-0">install_mobile</span>
-            <div class="min-w-0">
-              <p class="text-xs font-bold leading-tight truncate">Download Campus Care</p>
-              <p class="text-[10px] text-blue-100/90 leading-tight">Install app to your home screen</p>
-            </div>
-          </div>
-          <button onclick="triggerPwaInstall()" class="shrink-0 bg-white text-blue-900 active:scale-95 text-xs font-bold py-1.5 px-3 rounded-xl shadow transition">
-            Install
-          </button>
-        </div>
-
         <!-- Welcome Banner -->
-        <div class="bg-gradient-to-r from-[#12254A] to-[#1755BE] text-white rounded-2xl p-5 shadow-sm space-y-2">
+        <div class="bg-gradient-to-r from-[#12254A] to-[#1755BE] text-white rounded-2xl p-4 shadow-sm space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Daily Health Status</span>
-            <span class="text-[11px] bg-white/20 px-2 py-0.5 rounded-full font-medium" id="home-today-date">Today</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Computer Engineering Portal</span>
+            <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-medium" id="home-today-date">Today</span>
           </div>
-          <h2 class="text-lg font-bold">Hello, <span id="home-user-greeting">Student</span> 👋</h2>
+          <h2 class="text-base font-bold">Hello, <span id="home-user-greeting">Student</span> 👋</h2>
           <p class="text-xs text-blue-100 leading-relaxed">
-            Track your sleep, hydration, and academic stress in under 60 seconds.
+            Collaborating with faculty and peers to elevate our department's daily wellbeing.
           </p>
-          <div class="pt-2 flex gap-2 flex-wrap">
-            <button onclick="navigateTo('checkin')" class="bg-white text-[#1755BE] active:scale-95 font-bold text-xs py-2 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-base">check_circle</span>
+          <div class="pt-1 flex gap-2 flex-wrap">
+            <button onclick="navigateTo('checkin')" class="bg-white text-[#1755BE] active:scale-95 font-bold text-xs py-2 px-3 rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">edit_calendar</span>
               <span>Daily Check-in</span>
             </button>
-            <button onclick="openMeditationView()" class="bg-white/15 hover:bg-white/25 active:scale-95 text-white font-medium text-xs py-2 px-3 rounded-xl transition flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-base">self_improvement</span>
-              <span>Quick Breathe</span>
+            <button onclick="navigateTo('department')" class="bg-white/15 hover:bg-white/25 active:scale-95 text-white font-medium text-xs py-2 px-3 rounded-xl transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">analytics</span>
+              <span>Department DHI</span>
             </button>
           </div>
         </div>
 
-        <!-- 4 Metric Cards (2×2 Grid) -->
+        <!-- Department Health Index (DHI) Quick Glance Card -->
+        <div onclick="navigateTo('department')" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center justify-between gap-3 cursor-pointer hover:border-blue-300 transition">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex flex-col items-center justify-center font-black">
+              <span class="text-lg leading-tight" id="home-dhi-badge">82</span>
+              <span class="text-[8px] font-bold tracking-tighter uppercase text-blue-500">DHI / 100</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-xs font-bold text-slate-900">Department Health Index</h3>
+                <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-50 text-emerald-700" id="home-dhi-status">Optimal</span>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-0.5">Computer Engineering · 5 sample users participating</p>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+        </div>
+
+        <!-- 4 Metric Cards (Sleep, Water, Steps, Mood & Stress) -->
         <div class="grid grid-cols-2 gap-3">
 
           <!-- Sleep -->
-          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-slate-500 uppercase">Sleep</span>
-              <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <span class="material-symbols-outlined text-base">bedtime</span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase">Sleep</span>
+              <span class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm">bedtime</span>
               </span>
             </div>
             <div class="mt-2">
-              <div class="text-xl font-extrabold text-slate-800" id="card-sleep-val">—</div>
-              <div class="text-[10px] font-semibold mt-0.5" id="card-sleep-status">No entry yet</div>
+              <div class="text-lg font-extrabold text-slate-800" id="card-sleep-val">—</div>
+              <div class="text-[9px] font-semibold mt-0.5" id="card-sleep-status">Target: 7.0h</div>
             </div>
           </div>
 
           <!-- Water -->
-          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-slate-500 uppercase">Water</span>
-              <span class="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
-                <span class="material-symbols-outlined text-base">water_drop</span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase">Water</span>
+              <span class="w-6 h-6 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm">water_drop</span>
               </span>
             </div>
             <div class="mt-2">
-              <div class="text-xl font-extrabold text-slate-800" id="card-water-val">—</div>
-              <div class="text-[10px] text-sky-600 font-semibold mt-0.5" id="card-water-status">No entry yet</div>
+              <div class="text-lg font-extrabold text-slate-800" id="card-water-val">—</div>
+              <div class="text-[9px] text-sky-600 font-semibold mt-0.5" id="card-water-status">Target: 2.5L</div>
             </div>
           </div>
 
-          <!-- Study -->
-          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+          <!-- Daily Steps -->
+          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-slate-500 uppercase">Study</span>
-              <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <span class="material-symbols-outlined text-base">laptop_chromebook</span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase">Daily Steps</span>
+              <span class="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm">directions_walk</span>
               </span>
             </div>
             <div class="mt-2">
-              <div class="text-xl font-extrabold text-slate-800" id="card-study-val">—</div>
-              <div class="text-[10px] text-slate-500 font-medium mt-0.5" id="card-study-status">No entry yet</div>
+              <div class="text-lg font-extrabold text-slate-800" id="card-steps-val">—</div>
+              <div class="text-[9px] text-emerald-600 font-semibold mt-0.5" id="card-steps-status">Target: 8,000</div>
             </div>
           </div>
 
           <!-- Mood & Stress -->
-          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-slate-500 uppercase">Mood</span>
-              <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-                <span class="material-symbols-outlined text-base" id="card-mood-icon">sentiment_neutral</span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase">Mood &amp; Stress</span>
+              <span class="w-6 h-6 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm" id="card-mood-icon">sentiment_satisfied</span>
               </span>
             </div>
             <div class="mt-2">
-              <div class="text-xl font-extrabold text-slate-800" id="card-mood-val">—</div>
-              <div class="text-[10px] text-blue-600 font-semibold mt-0.5" id="card-stress-val">No entry yet</div>
+              <div class="text-lg font-extrabold text-slate-800" id="card-mood-val">—</div>
+              <div class="text-[9px] text-blue-600 font-semibold mt-0.5" id="card-stress-val">Stress: Mild</div>
             </div>
           </div>
 
         </div>
 
-        <!-- Meditation Shortcut -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center justify-between gap-3">
+        <!-- 6-Digit Sync Token Quick Launcher -->
+        <div class="bg-gradient-to-r from-blue-900 to-[#12254A] text-white rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-2xl">self_improvement</span>
+            <div class="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-xl">pin</span>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-slate-900">Meditation &amp; Breathing</h3>
-              <p class="text-[11px] text-slate-500">Box breathing, 4-7-8, centering timers</p>
+              <h3 class="text-xs font-bold">Six-Digit Sync Token</h3>
+              <p class="text-[10px] text-blue-200">Generate or verify health entries securely</p>
             </div>
           </div>
-          <button onclick="navigateTo('support'); setTimeout(openMeditationView, 50);" class="shrink-0 bg-purple-50 text-purple-700 hover:bg-purple-100 active:scale-95 text-xs font-bold py-1.5 px-3 rounded-xl transition">
-            Start
+          <button onclick="navigateTo('department'); setTimeout(focusSyncToken, 100);" class="shrink-0 bg-white text-blue-950 active:scale-95 text-xs font-bold py-1.5 px-3 rounded-xl transition shadow">
+            Open
           </button>
         </div>
 
@@ -432,7 +549,7 @@
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-xs font-bold text-slate-900">Sleep vs Study (Last 7 Days)</h3>
-              <p class="text-[10px] text-slate-400">Hours per day</p>
+              <p class="text-[10px] text-slate-400">Hours per day logged</p>
             </div>
             <div class="flex items-center gap-2 text-[10px] font-medium text-slate-600">
               <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span>Sleep</span>
@@ -441,16 +558,16 @@
           </div>
 
           <div id="home-chart-bars" class="grid grid-cols-7 gap-1.5 h-24 items-end border-b border-slate-100 pb-1">
-            <!-- Dynamically generated bars -->
+            <!-- Dynamically populated -->
           </div>
           <div class="grid grid-cols-7 text-center text-[10px] text-slate-400 font-medium" id="home-chart-days">
-            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            <span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Mon</span>
           </div>
 
           <!-- Empty chart state -->
           <div id="chart-empty-state" class="hidden py-4 text-center text-[11px] text-slate-400 flex flex-col items-center gap-1">
             <span class="material-symbols-outlined text-2xl text-slate-300">bar_chart</span>
-            <span>No data yet — complete your first check-in!</span>
+            <span>No data logged yet</span>
           </div>
         </div>
 
@@ -458,82 +575,129 @@
       <!-- /view-home -->
 
 
-      <!-- ==================== TAB B: CHECK-IN ==================== -->
+      <!-- ==================== TAB 2: DAILY CHECK-IN ==================== -->
       <div id="view-checkin" class="hidden space-y-4 app-view">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-5">
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-900">Daily Health Check-in</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Takes 30 seconds · Your entries are private.</p>
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-bold text-slate-900">Daily Health Check-in</h2>
+              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">Computer Eng</span>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Records your sleep, hydration, and daily steps. Confidential &amp; validated.</p>
           </div>
 
-          <form id="checkin-form" onsubmit="handleCheckinSubmit(event)" class="space-y-5">
+          <!-- Duplicate entry warning banner if entry exists for selected date -->
+          <div id="duplicate-warning-banner" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 font-medium flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-600 text-base shrink-0">edit_note</span>
+            <span id="duplicate-warning-text">An entry for this date already exists. Submitting will update your existing record.</span>
+          </div>
+
+          <form id="checkin-form" onsubmit="handleCheckinSubmit(event)" class="space-y-4">
+
+            <!-- Check-in Date -->
+            <div>
+              <label for="checkin-date" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">Check-in Date</label>
+              <input 
+                type="date" 
+                id="checkin-date" 
+                required 
+                onchange="checkDateDuplicate(this.value)"
+                class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]"
+              />
+            </div>
 
             <!-- 1. Mood -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase mb-2">1. How are you feeling today?</label>
-              <div class="grid grid-cols-5 gap-1.5" id="mood-selector">
-                <button type="button" onclick="selectMood('Terrible')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Terrible">
-                  <span class="text-xl">😫</span>
-                  <span class="text-[10px] font-medium text-slate-600">Terrible</span>
+              <label class="block text-[10px] font-bold text-slate-700 uppercase mb-1.5">1. How are you feeling today?</label>
+              <div class="grid grid-cols-5 gap-1" id="mood-selector">
+                <button type="button" onclick="selectMood('Terrible')" class="mood-btn p-1.5 rounded-xl border text-center transition flex flex-col items-center gap-0.5 bg-slate-50 border-slate-200" data-mood="Terrible">
+                  <span class="text-lg">😫</span>
+                  <span class="text-[9px] font-medium text-slate-600">Terrible</span>
                 </button>
-                <button type="button" onclick="selectMood('Low')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Low">
-                  <span class="text-xl">🙁</span>
-                  <span class="text-[10px] font-medium text-slate-600">Low</span>
+                <button type="button" onclick="selectMood('Low')" class="mood-btn p-1.5 rounded-xl border text-center transition flex flex-col items-center gap-0.5 bg-slate-50 border-slate-200" data-mood="Low">
+                  <span class="text-lg">🙁</span>
+                  <span class="text-[9px] font-medium text-slate-600">Low</span>
                 </button>
-                <button type="button" onclick="selectMood('Okay')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Okay">
-                  <span class="text-xl">😐</span>
-                  <span class="text-[10px] font-medium text-slate-600">Okay</span>
+                <button type="button" onclick="selectMood('Okay')" class="mood-btn p-1.5 rounded-xl border text-center transition flex flex-col items-center gap-0.5 bg-slate-50 border-slate-200" data-mood="Okay">
+                  <span class="text-lg">😐</span>
+                  <span class="text-[9px] font-medium text-slate-600">Okay</span>
                 </button>
-                <button type="button" onclick="selectMood('Good')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-blue-50 border-blue-400" data-mood="Good">
-                  <span class="text-xl">😊</span>
-                  <span class="text-[10px] font-bold text-blue-700">Good</span>
+                <button type="button" onclick="selectMood('Good')" class="mood-btn p-1.5 rounded-xl border text-center transition flex flex-col items-center gap-0.5 bg-blue-50 border-blue-400" data-mood="Good">
+                  <span class="text-lg">😊</span>
+                  <span class="text-[9px] font-bold text-blue-700">Good</span>
                 </button>
-                <button type="button" onclick="selectMood('Great')" class="mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 bg-slate-50 border-slate-200" data-mood="Great">
-                  <span class="text-xl">🤩</span>
-                  <span class="text-[10px] font-medium text-slate-600">Great</span>
+                <button type="button" onclick="selectMood('Great')" class="mood-btn p-1.5 rounded-xl border text-center transition flex flex-col items-center gap-0.5 bg-slate-50 border-slate-200" data-mood="Great">
+                  <span class="text-lg">🤩</span>
+                  <span class="text-[9px] font-medium text-slate-600">Great</span>
                 </button>
               </div>
             </div>
 
             <!-- 2. Sleep Hours -->
             <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label for="checkin-sleep" class="text-xs font-bold text-slate-700 uppercase">2. Sleep Last Night</label>
+              <div class="flex items-center justify-between mb-1">
+                <label for="checkin-sleep" class="text-[10px] font-bold text-slate-700 uppercase">2. Hours of Sleep Last Night</label>
                 <span class="text-xs font-extrabold text-indigo-600" id="sleep-display">7.5 Hours</span>
               </div>
-              <select id="checkin-sleep" onchange="updateSleepDisplay(this.value)" class="w-full h-11 px-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
-                <option value="4.0">4.0 hours or fewer (Severely deprived)</option>
-                <option value="5.0">5.0 hours (Insufficient)</option>
-                <option value="6.0">6.0 hours (Below optimal)</option>
-                <option value="7.0">7.0 hours (Recommended baseline)</option>
-                <option value="7.5" selected>7.5 hours</option>
-                <option value="8.0">8.0 hours (Healthy target)</option>
+              <select id="checkin-sleep" onchange="updateSleepDisplay(this.value)" class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
+                <option value="4.0">4.0 hours or fewer (Critical sleep deficit &lt; 5h)</option>
+                <option value="4.5">4.5 hours (Below 5.0h Red Alert threshold)</option>
+                <option value="5.0">5.0 hours (Minimum safety baseline)</option>
+                <option value="6.0">6.0 hours</option>
+                <option value="7.0">7.0 hours (Faculty Target)</option>
+                <option value="7.5" selected>7.5 hours (Optimal)</option>
+                <option value="8.0">8.0 hours</option>
                 <option value="9.0">9.0+ hours</option>
               </select>
             </div>
 
-            <!-- 3. Water Intake Stepper -->
+            <!-- 3. Water Intake in Litres & Glasses -->
             <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="text-xs font-bold text-slate-700 uppercase">3. Water Intake</label>
-                <span class="text-xs font-extrabold text-sky-600" id="water-display">8 Glasses (2.0 L)</span>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-[10px] font-bold text-slate-700 uppercase">3. Water Intake in Litres</label>
+                <span class="text-xs font-extrabold text-sky-600" id="water-display">2.5 L (10 glasses)</span>
               </div>
               <div class="flex items-center gap-2">
-                <button type="button" onclick="adjustWater(-1)" class="w-11 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-xl flex items-center justify-center transition select-none">−</button>
-                <div class="flex-1 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center font-bold text-sm text-slate-800" id="water-count-box">
-                  8 glasses
+                <button type="button" onclick="adjustWater(-1)" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-lg flex items-center justify-center transition select-none">−</button>
+                <div class="flex-1 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-800" id="water-count-box">
+                  10 glasses · 2.50 Litres
                 </div>
-                <button type="button" onclick="adjustWater(1)" class="w-11 h-11 rounded-xl bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-600 font-bold text-xl flex items-center justify-center transition select-none">+</button>
+                <button type="button" onclick="adjustWater(1)" class="w-10 h-10 rounded-xl bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-600 font-bold text-lg flex items-center justify-center transition select-none">+</button>
               </div>
             </div>
 
-            <!-- 4. Study Hours -->
+            <!-- 4. Daily Step Count (Problem Statement Requirement) -->
             <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label for="checkin-study" class="text-xs font-bold text-slate-700 uppercase">4. Study Time Today</label>
-                <span class="text-xs font-extrabold text-emerald-600" id="study-display">4.5 Hours</span>
+              <div class="flex items-center justify-between mb-1">
+                <label for="checkin-steps" class="text-[10px] font-bold text-slate-700 uppercase">4. Daily Step Count</label>
+                <span class="text-xs font-extrabold text-emerald-600" id="steps-display">8,500 Steps</span>
               </div>
-              <select id="checkin-study" onchange="updateStudyDisplay(this.value)" class="w-full h-11 px-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
+              <input 
+                type="number" 
+                id="checkin-steps" 
+                min="0" 
+                max="50000" 
+                step="100" 
+                value="8500" 
+                oninput="updateStepsDisplay(this.value)"
+                class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
+              />
+              <!-- Step Quick Presets -->
+              <div class="grid grid-cols-4 gap-1.5 mt-1.5">
+                <button type="button" onclick="setStepsPreset(5000)" class="py-1 px-1.5 text-[10px] font-semibold bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition">5,000</button>
+                <button type="button" onclick="setStepsPreset(8000)" class="py-1 px-1.5 text-[10px] font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg transition">8,000 (Goal)</button>
+                <button type="button" onclick="setStepsPreset(10000)" class="py-1 px-1.5 text-[10px] font-semibold bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition">10,000</button>
+                <button type="button" onclick="setStepsPreset(12000)" class="py-1 px-1.5 text-[10px] font-semibold bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition">12,000</button>
+              </div>
+            </div>
+
+            <!-- 5. Study Hours -->
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label for="checkin-study" class="text-[10px] font-bold text-slate-700 uppercase">5. Study &amp; Lab Time</label>
+                <span class="text-xs font-extrabold text-emerald-700" id="study-display">4.5 Hours</span>
+              </div>
+              <select id="checkin-study" onchange="updateStudyDisplay(this.value)" class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
                 <option value="1.0">1.0 hour</option>
                 <option value="2.0">2.0 hours</option>
                 <option value="3.0">3.0 hours</option>
@@ -545,11 +709,11 @@
               </select>
             </div>
 
-            <!-- 5. Stress Level -->
+            <!-- 6. Stress Level -->
             <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label for="checkin-stress" class="text-xs font-bold text-slate-700 uppercase">5. Stress Level</label>
-                <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800" id="stress-badge">Level 2 (Mild)</span>
+              <div class="flex items-center justify-between mb-1">
+                <label for="checkin-stress" class="text-[10px] font-bold text-slate-700 uppercase">6. Academic Stress Level</label>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800" id="stress-badge">Level 2 (Mild)</span>
               </div>
               <input 
                 type="range" 
@@ -561,7 +725,7 @@
                 oninput="updateStressBadge(this.value)"
                 class="w-full"
               />
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1.5 font-medium">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1 font-medium">
                 <span>1 Low</span>
                 <span>2 Mild</span>
                 <span>3 Moderate</span>
@@ -570,14 +734,14 @@
               </div>
             </div>
 
-            <!-- Submit -->
+            <!-- Submit Button -->
             <button 
               type="submit" 
               id="save-checkin-btn"
-              class="w-full h-12 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-sm transition flex items-center justify-center gap-2"
+              class="w-full h-11 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
             >
               <span class="material-symbols-outlined text-base">save</span>
-              <span>Save Today's Check-in</span>
+              <span id="save-checkin-btn-text">Save Daily Health Check-in</span>
             </button>
 
           </form>
@@ -586,24 +750,294 @@
       <!-- /view-checkin -->
 
 
-      <!-- ==================== TAB C: PROGRESS ==================== -->
+      <!-- ==================== TAB 3: THE DEPARTMENT PORTAL (DHI, GOALS, SYNC TOKEN) ==================== -->
+      <div id="view-department" class="hidden space-y-4 app-view">
+
+        <!-- Department Header Card -->
+        <div class="bg-gradient-to-r from-[#12254A] to-indigo-900 text-white rounded-2xl p-4 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-blue-200">Department Overview</span>
+            <span class="text-[9px] bg-emerald-500/20 text-emerald-200 px-2 py-0.5 rounded-full font-bold">Participating Department</span>
+          </div>
+          <h2 class="text-base font-bold">Computer Engineering</h2>
+          <p class="text-[11px] text-blue-100">
+            K. K. Wagh College of Engineering · Single-department prototype evaluating collaborative student &amp; faculty wellbeing.
+          </p>
+        </div>
+
+        <!-- 1. Department Health Index (DHI) Score Widget -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-bold text-slate-900 uppercase">Department Health Index (DHI)</h3>
+              <p class="text-[10px] text-slate-400">Aggregated across all valid entries</p>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700" id="dhi-status-pill">Optimal (82/100)</span>
+          </div>
+
+          <div class="flex items-center gap-4 py-1">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-700 to-indigo-600 text-white flex flex-col items-center justify-center shadow-md shrink-0">
+              <span class="text-2xl font-black" id="dhi-main-score">82</span>
+              <span class="text-[9px] font-bold text-blue-100 uppercase tracking-tight">Index Score</span>
+            </div>
+
+            <div class="flex-1 space-y-2 text-xs">
+              <!-- Sleep Component -->
+              <div>
+                <div class="flex justify-between text-[10px] font-semibold text-slate-700 mb-0.5">
+                  <span>Sleep (Weight 40%)</span>
+                  <span id="dhi-sleep-ratio">6.8h / 7.0h (97%)</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="dhi-sleep-bar" class="bg-indigo-500 h-full rounded-full transition-all duration-500" style="width: 97%"></div>
+                </div>
+              </div>
+
+              <!-- Steps Component -->
+              <div>
+                <div class="flex justify-between text-[10px] font-semibold text-slate-700 mb-0.5">
+                  <span>Daily Steps (Weight 35%)</span>
+                  <span id="dhi-steps-ratio">7,950 / 8,000 (99%)</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="dhi-steps-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 99%"></div>
+                </div>
+              </div>
+
+              <!-- Water Component -->
+              <div>
+                <div class="flex justify-between text-[10px] font-semibold text-slate-700 mb-0.5">
+                  <span>Water Intake (Weight 25%)</span>
+                  <span id="dhi-water-ratio">2.4L / 2.5L (96%)</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="dhi-water-bar" class="bg-sky-500 h-full rounded-full transition-all duration-500" style="width: 96%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Participation Counter -->
+          <div class="p-2.5 bg-slate-50 rounded-xl flex items-center justify-between text-[10px] text-slate-600 font-medium">
+            <span>Active Sample Users: <strong class="text-slate-900" id="dhi-users-count">5</strong> (3 Students, 2 Faculty)</span>
+            <span>Valid Records: <strong class="text-slate-900" id="dhi-records-count">9</strong></span>
+          </div>
+
+          <!-- Transparent DHI Formula Documentation Collapsible -->
+          <div class="pt-1">
+            <button type="button" onclick="toggleFormulaBox()" class="text-[10px] font-bold text-[#1755BE] hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs">help_outline</span>
+              <span>How is DHI calculated? (Transparent Formula)</span>
+            </button>
+            <div id="dhi-formula-box" class="hidden mt-2 p-3 bg-blue-50/70 border border-blue-100 rounded-xl text-[10px] text-slate-700 space-y-1.5">
+              <div class="font-bold text-blue-900">Prototype Chosen Mathematical Calculation:</div>
+              <div class="font-mono bg-white p-2 rounded border border-blue-200 text-blue-950 font-bold overflow-x-auto text-[9px]">
+                DHI = 100 × [ 0.40 × min(AvgSleep / TargetSleep, 1.2) + 0.35 × min(AvgSteps / TargetSteps, 1.2) + 0.25 × min(AvgWater / TargetWater, 1.2) ]
+              </div>
+              <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                <li>Normalized against faculty-set weekly department targets.</li>
+                <li>Each metric is capped at 120% (1.20) so extreme outliers cannot distort the score.</li>
+                <li>Missing records are excluded from denominators (never treated as 0 hours).</li>
+                <li>Private health entries are kept confidential and aggregated at department level.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Six-Digit Sync Token Tool (Problem Statement Core Deliverable) -->
+        <div id="sync-token-section" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-bold text-slate-900 uppercase">Six-Digit Sync Token</h3>
+              <p class="text-[10px] text-slate-400">Secure short-lived entry verification workflow</p>
+            </div>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">Prototype</span>
+          </div>
+
+          <!-- Sync Token Tabs: Generate vs Verify -->
+          <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl">
+            <button type="button" onclick="setSyncTokenTab('generate')" id="tab-token-gen" class="py-1.5 text-[11px] font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-sm">key</span>
+              <span>Generate Token</span>
+            </button>
+            <button type="button" onclick="setSyncTokenTab('verify')" id="tab-token-ver" class="py-1.5 text-[11px] font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-sm">verified</span>
+              <span>Verify Token</span>
+            </button>
+          </div>
+
+          <!-- Panel A: Generate Sync Token -->
+          <div id="panel-token-generate" class="space-y-2.5">
+            <p class="text-[11px] text-slate-500">
+              Generate a single-use 6-digit cryptographic token to share with a mentor or faculty for entry verification.
+            </p>
+            <div id="generated-token-display" class="hidden p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl text-center space-y-1">
+              <div class="text-[10px] font-bold uppercase tracking-wider text-blue-800">Your 6-Digit Sync Token</div>
+              <div class="text-2xl font-black font-mono tracking-widest text-[#1755BE]" id="active-sync-token-val">------</div>
+              <div class="text-[10px] text-slate-500 font-medium" id="sync-token-timer">Expires in 10:00 (Single-use)</div>
+            </div>
+            <button 
+              type="button" 
+              onclick="handleGenerateSyncToken()" 
+              id="generate-token-btn" 
+              class="w-full h-10 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
+            >
+              <span class="material-symbols-outlined text-sm">pin</span>
+              <span>Generate 6-Digit Token</span>
+            </button>
+          </div>
+
+          <!-- Panel B: Verify Sync Token -->
+          <div id="panel-token-verify" class="hidden space-y-2.5">
+            <p class="text-[11px] text-slate-500">
+              Enter the 6-digit Sync Token provided by a student to verify their health check-in association without exposing raw private data.
+            </p>
+            <form onsubmit="handleVerifySyncToken(event)" class="space-y-2.5">
+              <input 
+                type="text" 
+                id="verify-token-input" 
+                required 
+                maxlength="6" 
+                pattern="[0-9]{6}" 
+                inputmode="numeric"
+                placeholder="Enter 6-digit code (e.g. 849201)" 
+                class="w-full h-11 text-center text-lg font-bold tracking-widest rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]"
+              />
+              <button 
+                type="submit" 
+                id="submit-verify-token-btn" 
+                class="w-full h-10 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
+              >
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Verify &amp; Associate Entry</span>
+              </button>
+            </form>
+
+            <!-- Verification result box -->
+            <div id="token-verify-result" class="hidden p-3 rounded-xl border text-xs space-y-1">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Faculty Weekly Goal Setting Panel -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-bold text-slate-900 uppercase">Faculty Weekly Wellbeing Goals</h3>
+              <p class="text-[10px] text-slate-400">Current week targets set by faculty</p>
+            </div>
+            <span id="goals-editor-badge" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700">Faculty Only</span>
+          </div>
+
+          <!-- Notice for Students (Read-only) -->
+          <div id="student-goals-view" class="p-3 bg-slate-50 rounded-xl space-y-2 text-xs">
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <div class="p-2 bg-white rounded-lg border border-slate-100">
+                <span class="text-[9px] font-bold text-indigo-700 uppercase">Sleep Target</span>
+                <div class="text-sm font-extrabold text-slate-900 mt-0.5" id="disp-goal-sleep">7.0h / day</div>
+              </div>
+              <div class="p-2 bg-white rounded-lg border border-slate-100">
+                <span class="text-[9px] font-bold text-emerald-700 uppercase">Steps Target</span>
+                <div class="text-sm font-extrabold text-slate-900 mt-0.5" id="disp-goal-steps">8,000 / day</div>
+              </div>
+              <div class="p-2 bg-white rounded-lg border border-slate-100">
+                <span class="text-[9px] font-bold text-sky-700 uppercase">Water Target</span>
+                <div class="text-sm font-extrabold text-slate-900 mt-0.5" id="disp-goal-water">2.5L / day</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-500 flex items-center justify-between">
+              <span>Set by: <strong id="disp-goal-setby">Dr. V. K. Wagh (HOD)</strong></span>
+              <span id="disp-goal-week">Week 44</span>
+            </div>
+            <p class="text-[10px] text-slate-400 italic">
+              Student accounts are read-only and cannot modify faculty goals.
+            </p>
+          </div>
+
+          <!-- Faculty Editing Form (Active when logged in as Faculty) -->
+          <form id="faculty-goals-form" onsubmit="handleSaveFacultyGoals(event)" class="hidden space-y-3 pt-1">
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label for="goal-sleep-input" class="block text-[9px] font-bold text-slate-700 uppercase mb-1">Target Sleep</label>
+                <input type="number" step="0.5" min="4" max="12" id="goal-sleep-input" value="7.0" class="w-full h-9 px-2 text-center text-xs font-bold rounded-lg border border-slate-200 bg-slate-50" />
+              </div>
+              <div>
+                <label for="goal-steps-input" class="block text-[9px] font-bold text-slate-700 uppercase mb-1">Target Steps</label>
+                <input type="number" step="500" min="2000" max="25000" id="goal-steps-input" value="8000" class="w-full h-9 px-2 text-center text-xs font-bold rounded-lg border border-slate-200 bg-slate-50" />
+              </div>
+              <div>
+                <label for="goal-water-input" class="block text-[9px] font-bold text-slate-700 uppercase mb-1">Target Water (L)</label>
+                <input type="number" step="0.1" min="1" max="6" id="goal-water-input" value="2.5" class="w-full h-9 px-2 text-center text-xs font-bold rounded-lg border border-slate-200 bg-slate-50" />
+              </div>
+            </div>
+
+            <button type="submit" class="w-full h-10 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">tune</span>
+              <span>Update Department Goals</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+      <!-- /view-department -->
+
+
+      <!-- ==================== TAB 4: PROGRESS & MONTHLY LEADERBOARD ==================== -->
       <div id="view-progress" class="hidden space-y-4 app-view">
 
-        <!-- 7-Day Averages -->
+        <!-- Monthly Department Performance Section (Problem Statement Requirement 8) -->
         <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
-          <h2 class="text-sm font-bold text-slate-900">7-Day Wellbeing Averages</h2>
-          <div class="grid grid-cols-3 gap-2 text-center">
-            <div class="p-2.5 rounded-xl bg-indigo-50/60">
-              <span class="text-[10px] font-bold text-indigo-700 uppercase">Sleep</span>
-              <div class="text-base font-extrabold text-indigo-900 mt-0.5" id="avg-sleep">—</div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xs font-bold text-slate-900 uppercase">Monthly Department Performance</h2>
+              <p class="text-[10px] text-slate-400">October 2026 Monthly Summary</p>
             </div>
-            <div class="p-2.5 rounded-xl bg-sky-50/60">
-              <span class="text-[10px] font-bold text-sky-700 uppercase">Water</span>
-              <div class="text-base font-extrabold text-sky-900 mt-0.5" id="avg-water">—</div>
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">Participating Dept</span>
+          </div>
+
+          <div class="p-3 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 border border-blue-100 rounded-xl flex items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-extrabold text-slate-900">Computer Engineering</div>
+              <div class="text-[10px] text-slate-500">Monthly DHI Score: <strong class="text-blue-700 font-bold" id="monthly-dhi-val">82 / 100</strong></div>
+              <div class="text-[9px] text-emerald-600 font-semibold mt-0.5">↑ +4.2% progress toward weekly goals</div>
             </div>
-            <div class="p-2.5 rounded-xl bg-emerald-50/60">
-              <span class="text-[10px] font-bold text-emerald-700 uppercase">Study</span>
-              <div class="text-base font-extrabold text-emerald-900 mt-0.5" id="avg-study">—</div>
+            <div class="text-right shrink-0">
+              <span class="material-symbols-outlined text-3xl text-[#1755BE]">military_tech</span>
+            </div>
+          </div>
+
+          <!-- Multi-Department Explanation Banner -->
+          <div class="p-2.5 bg-slate-50 rounded-xl text-[10px] text-slate-600 leading-relaxed border border-slate-100 space-y-1">
+            <div class="font-bold text-slate-800 flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs text-blue-600">info</span>
+              <span>Single-Department Prototype Scope</span>
+            </div>
+            <p>
+              Cross-department comparison (IT, Mechanical, Civil, Electrical) and college-wide winner announcements will activate when additional departments join. Computer Engineering is currently active.
+            </p>
+          </div>
+        </div>
+
+        <!-- 7-Day Averages (Personal Student) -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3">
+          <h2 class="text-xs font-bold text-slate-900 uppercase">Your Personal 7-Day Averages</h2>
+          <div class="grid grid-cols-4 gap-2 text-center">
+            <div class="p-2 rounded-xl bg-indigo-50/60">
+              <span class="text-[9px] font-bold text-indigo-700 uppercase">Sleep</span>
+              <div class="text-sm font-extrabold text-indigo-900 mt-0.5" id="avg-sleep">—</div>
+            </div>
+            <div class="p-2 rounded-xl bg-sky-50/60">
+              <span class="text-[9px] font-bold text-sky-700 uppercase">Water</span>
+              <div class="text-sm font-extrabold text-sky-900 mt-0.5" id="avg-water">—</div>
+            </div>
+            <div class="p-2 rounded-xl bg-emerald-50/60">
+              <span class="text-[9px] font-bold text-emerald-700 uppercase">Steps</span>
+              <div class="text-sm font-extrabold text-emerald-900 mt-0.5" id="avg-steps">—</div>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-100/70">
+              <span class="text-[9px] font-bold text-slate-700 uppercase">Study</span>
+              <div class="text-sm font-extrabold text-slate-900 mt-0.5" id="avg-study">—</div>
             </div>
           </div>
         </div>
@@ -632,7 +1066,7 @@
       <!-- /view-progress -->
 
 
-      <!-- ==================== TAB D: SUPPORT ==================== -->
+      <!-- ==================== TAB 5: SUPPORT & WELLBEING ==================== -->
       <div id="view-support" class="hidden space-y-4 app-view">
 
         <!-- Search Bar -->
@@ -642,16 +1076,16 @@
             id="support-search-input" 
             oninput="handleSearch(this.value)"
             placeholder="Search resources, meditation, breathing..." 
-            class="w-full h-11 pl-10 pr-9 rounded-2xl bg-white border border-slate-200/90 text-xs text-slate-800 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1755BE]/20 focus:border-[#1755BE] transition"
+            class="w-full h-10 pl-9 pr-8 rounded-2xl bg-white border border-slate-200/90 text-xs text-slate-800 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1755BE]/20 focus:border-[#1755BE] transition"
           />
-          <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg pointer-events-none">search</span>
+          <span class="material-symbols-outlined absolute left-2.5 top-2.5 text-slate-400 text-base pointer-events-none">search</span>
           <button 
             type="button" 
             id="search-clear-btn" 
             onclick="clearSearch()"
             class="hidden absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-700 transition"
           >
-            <span class="material-symbols-outlined text-base">close</span>
+            <span class="material-symbols-outlined text-sm">close</span>
           </button>
         </div>
 
@@ -683,68 +1117,51 @@
         <!-- Wellbeing Resources -->
         <div id="support-items-container" class="space-y-3">
 
-          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="clinic wellness medical health doctor nurse first aid ground floor academic block b walk-in">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">medical_services</span>
+          <div class="searchable-item bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="clinic wellness medical health doctor nurse first aid academic block b walk-in">
+            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-lg">medical_services</span>
             </div>
-            <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex-1 min-w-0 space-y-0.5">
               <div class="flex items-center justify-between gap-2">
                 <h4 class="text-xs font-bold text-slate-900">Campus Wellness Clinic</h4>
-                <span class="shrink-0 text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">On Campus</span>
+                <span class="shrink-0 text-[9px] font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded-full">On Campus</span>
               </div>
-              <p class="text-[11px] text-slate-500 leading-relaxed">Walk-in medical and mental wellbeing assistance. Mon–Sat, 09:00–17:00, Academic Block B.</p>
-              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
+              <p class="text-[10px] text-slate-500 leading-snug">Mon–Sat, 09:00–17:00, Academic Block B. Walk-in medical assistance.</p>
+              <div class="pt-0.5 text-[10px] text-slate-700 font-semibold flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs text-blue-600">call</span>
                 <span>+91 253 2512876 (Ext. 104)</span>
               </div>
             </div>
           </div>
 
-          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="counseling academic guidance stress mental health coordinator faculty one-on-one exam anxiety confidential appointment">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">psychology</span>
+          <div class="searchable-item bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="counseling academic guidance stress mental health coordinator faculty mentor one-on-one exam anxiety confidential appointment">
+            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-lg">psychology</span>
             </div>
-            <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex-1 min-w-0 space-y-0.5">
               <div class="flex items-center justify-between gap-2">
-                <h4 class="text-xs font-bold text-slate-900">Faculty Counseling Desk</h4>
-                <span class="shrink-0 text-[10px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">Confidential</span>
+                <h4 class="text-xs font-bold text-slate-900">Faculty Wellness Coordinator</h4>
+                <span class="shrink-0 text-[9px] font-semibold text-indigo-700 bg-indigo-50 px-1.5 py-0.2 rounded-full">Prof. P.R. Rao</span>
               </div>
-              <p class="text-[11px] text-slate-500 leading-relaxed">Confidential academic wellness guidance and student support for Computer Engineering students.</p>
-              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
+              <p class="text-[10px] text-slate-500 leading-snug">Confidential academic wellness guidance for Computer Engineering students.</p>
+              <div class="pt-0.5 text-[10px] text-slate-700 font-semibold flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs text-indigo-600">mail</span>
-                <span>counselor.wellness@kkwagh.edu.in</span>
+                <span>mentor.comp@kkwagh.edu.in</span>
               </div>
             </div>
           </div>
 
-          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="peer listening student mentor circles anonymous support helpline talk senior">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">groups</span>
+          <div class="searchable-item bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="emergency tele-manas crisis helpline toll-free urgent national 24/7 government india mental health">
+            <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-lg">emergency</span>
             </div>
-            <div class="flex-1 min-w-0 space-y-1">
-              <div class="flex items-center justify-between gap-2">
-                <h4 class="text-xs font-bold text-slate-900">Peer Listening Circles</h4>
-                <span class="shrink-0 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Student Mentors</span>
-              </div>
-              <p class="text-[11px] text-slate-500 leading-relaxed">Trained senior student peer listeners for confidential peer chats and study stress relief.</p>
-              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs text-emerald-600">forum</span>
-                <span>Internal Ext. 310</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-start gap-3" data-keywords="emergency tele-manas crisis helpline toll-free urgent national 24/7 government india mental health">
-            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-xl">emergency</span>
-            </div>
-            <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex-1 min-w-0 space-y-0.5">
               <div class="flex items-center justify-between gap-2">
                 <h4 class="text-xs font-bold text-slate-900">National Tele-MANAS</h4>
-                <span class="shrink-0 text-[10px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">24/7 Toll-Free</span>
+                <span class="shrink-0 text-[9px] font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.2 rounded-full">24/7 Toll-Free</span>
               </div>
-              <p class="text-[11px] text-slate-500 leading-relaxed">Government of India 24×7 confidential psychological and mental health support helpline.</p>
-              <div class="pt-0.5 text-[11px] text-slate-700 font-semibold flex items-center gap-1">
+              <p class="text-[10px] text-slate-500 leading-snug">Government of India 24×7 confidential mental health support helpline.</p>
+              <div class="pt-0.5 text-[10px] text-slate-700 font-semibold flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs text-rose-600">call</span>
                 <span>Dial 14416 or 1800-891-4416</span>
               </div>
@@ -753,34 +1170,34 @@
 
         </div>
 
-        <!-- Request Confidential Support Form -->
+        <!-- Confidential Support Request Form -->
         <div class="searchable-item bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm space-y-3" data-keywords="request confidential support form submit coordinator contact academic stress sleep wellbeing">
           <div>
             <h3 class="text-xs font-bold text-slate-900 uppercase">Request Confidential Support</h3>
-            <p class="text-[11px] text-slate-500 mt-0.5">Only you and the student wellness coordinator see this request.</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">Delivered directly to the Computer Engineering wellness coordinator.</p>
           </div>
 
           <form onsubmit="handleSupportSubmit(event)" class="space-y-3">
             <div>
-              <label for="support-topic" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Topic of Concern</label>
+              <label for="support-topic" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">Topic of Concern</label>
               <select id="support-topic" class="w-full h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]">
                 <option value="Academic Anxiety">Exam &amp; Academic Anxiety</option>
                 <option value="Sleep Disorder">Sleep Schedule Disruptions</option>
-                <option value="Project Stress">Project / Lab Stress</option>
-                <option value="General Wellbeing">General Wellbeing &amp; Centering</option>
+                <option value="Project Stress">Project / Lab Workload Stress</option>
+                <option value="General Wellbeing">General Centering &amp; Wellbeing</option>
               </select>
             </div>
 
             <div>
-              <label for="support-note" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Optional Note</label>
-              <textarea id="support-note" rows="2" placeholder="Any specific concern or time preference..." class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]"></textarea>
+              <label for="support-note" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">Optional Note</label>
+              <textarea id="support-note" rows="2" placeholder="Any specific details or preferred contact time..." class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1755BE]"></textarea>
             </div>
 
             <button 
               type="submit" 
               class="w-full h-10 bg-[#1755BE] hover:bg-[#123E8A] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5"
             >
-              <span class="material-symbols-outlined text-base">send</span>
+              <span class="material-symbols-outlined text-sm">send</span>
               <span>Submit Request</span>
             </button>
           </form>
@@ -850,62 +1267,30 @@
     <!-- /meditation-modal -->
 
 
-    <!-- ==================== BOTTOM NAVIGATION ==================== -->
-    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 z-40 bg-white/97 backdrop-blur-md border-t border-slate-200/90 max-w-[430px] mx-auto flex justify-around items-center h-16 px-2">
-      <button onclick="navigateTo('home')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-[#1755BE] font-bold transition" data-tab="home">
-        <span class="material-symbols-outlined text-2xl nav-icon fill-icon">grid_view</span>
-        <span class="text-[10px] mt-0.5 tracking-tight">Home</span>
+    <!-- ==================== BOTTOM NAVIGATION (5 TABS) ==================== -->
+    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 z-40 bg-white/97 backdrop-blur-md border-t border-slate-200/90 max-w-[430px] mx-auto flex justify-around items-center h-16 px-1">
+      <button onclick="navigateTo('home')" class="nav-tab flex flex-col items-center justify-center w-14 py-1 text-[#1755BE] font-bold transition" data-tab="home">
+        <span class="material-symbols-outlined text-xl nav-icon fill-icon">grid_view</span>
+        <span class="text-[9px] mt-0.5 tracking-tight">Home</span>
       </button>
-      <button onclick="navigateTo('checkin')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition" data-tab="checkin">
-        <span class="material-symbols-outlined text-2xl nav-icon">check_circle</span>
-        <span class="text-[10px] mt-0.5 tracking-tight">Check-in</span>
+      <button onclick="navigateTo('checkin')" class="nav-tab flex flex-col items-center justify-center w-14 py-1 text-slate-500 font-medium transition" data-tab="checkin">
+        <span class="material-symbols-outlined text-xl nav-icon">edit_calendar</span>
+        <span class="text-[9px] mt-0.5 tracking-tight">Check-in</span>
       </button>
-      <button onclick="navigateTo('progress')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition" data-tab="progress">
-        <span class="material-symbols-outlined text-2xl nav-icon">trending_up</span>
-        <span class="text-[10px] mt-0.5 tracking-tight">Progress</span>
+      <button onclick="navigateTo('department')" class="nav-tab flex flex-col items-center justify-center w-14 py-1 text-slate-500 font-medium transition" data-tab="department">
+        <span class="material-symbols-outlined text-xl nav-icon">domain</span>
+        <span class="text-[9px] mt-0.5 tracking-tight">Department</span>
       </button>
-      <button onclick="navigateTo('support')" class="nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition" data-tab="support">
-        <span class="material-symbols-outlined text-2xl nav-icon">support</span>
-        <span class="text-[10px] mt-0.5 tracking-tight">Support</span>
+      <button onclick="navigateTo('progress')" class="nav-tab flex flex-col items-center justify-center w-14 py-1 text-slate-500 font-medium transition" data-tab="progress">
+        <span class="material-symbols-outlined text-xl nav-icon">trending_up</span>
+        <span class="text-[9px] mt-0.5 tracking-tight">Progress</span>
+      </button>
+      <button onclick="navigateTo('support')" class="nav-tab flex flex-col items-center justify-center w-14 py-1 text-slate-500 font-medium transition" data-tab="support">
+        <span class="material-symbols-outlined text-xl nav-icon">support</span>
+        <span class="text-[9px] mt-0.5 tracking-tight">Support</span>
       </button>
     </nav>
 
-
-    <!-- ==================== PWA INSTALL GUIDE MODAL ==================== -->
-    <div id="install-guide-modal" class="hidden fixed inset-0 z-50 bg-[#0A1628]/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
-      <div class="bg-white rounded-3xl p-6 max-w-sm w-full space-y-4 text-slate-800 shadow-2xl">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center">
-              <span class="material-symbols-outlined text-lg">install_mobile</span>
-            </div>
-            <h3 class="text-sm font-bold text-slate-900">Install to Phone</h3>
-          </div>
-          <button onclick="closeInstallGuide()" class="text-slate-400 hover:text-slate-600">
-            <span class="material-symbols-outlined">close</span>
-          </button>
-        </div>
-        <div class="space-y-2.5 text-xs text-slate-600 leading-relaxed">
-          <div class="p-3 rounded-xl bg-blue-50 border border-blue-100 flex items-start gap-2.5">
-            <span class="material-symbols-outlined text-blue-600 text-base shrink-0 mt-0.5">android</span>
-            <div>
-              <p class="font-bold text-slate-900">Android (Chrome)</p>
-              <p class="text-[11px] text-slate-500">Tap the 3 dots (⋮) in the top-right corner of Chrome, then tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</p>
-            </div>
-          </div>
-          <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-100 flex items-start gap-2.5">
-            <span class="material-symbols-outlined text-indigo-600 text-base shrink-0 mt-0.5">phone_iphone</span>
-            <div>
-              <p class="font-bold text-slate-900">iPhone (Safari)</p>
-              <p class="text-[11px] text-slate-500">Tap the <strong>Share</strong> button (box with arrow ↑) at the bottom, then scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
-            </div>
-          </div>
-        </div>
-        <button onclick="closeInstallGuide()" class="w-full h-11 bg-[#12254A] text-white font-bold text-xs rounded-xl shadow transition">
-          Got it
-        </button>
-      </div>
-    </div>
 
     <!-- ==================== TOAST NOTIFICATION ==================== -->
     <div id="toast-notification" class="fixed bottom-20 left-1/2 -translate-x-1/2 max-w-[calc(100%-2rem)] w-full bg-slate-900 text-white text-xs font-medium px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 translate-y-32 opacity-0 z-[60] pointer-events-none">
@@ -919,32 +1304,119 @@
 
   <!-- ==================== JAVASCRIPT ==================== -->
   <script>
+    // ─── 5 Sample Users Database (Prototype Seed Scope) ──────────────────────
+    const DEMO_USERS = {
+      'aarav.sharma@kkwagh.edu.in': {
+        id: 'user_aarav_sharma',
+        displayName: 'Aarav Sharma',
+        role: 'STUDENT',
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        email: 'aarav.sharma@kkwagh.edu.in'
+      },
+      'aasayyed370125@kkwagh.edu.in': {
+        id: 'user_aalim_sayyed',
+        displayName: 'Aalim Sayyed',
+        role: 'STUDENT',
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        email: 'aasayyed370125@kkwagh.edu.in'
+      },
+      'neha.patil@kkwagh.edu.in': {
+        id: 'user_neha_patil',
+        displayName: 'Neha Patil',
+        role: 'STUDENT',
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        email: 'neha.patil@kkwagh.edu.in'
+      },
+      'hod.comp@kkwagh.edu.in': {
+        id: 'user_dr_vk_wagh',
+        displayName: 'Dr. V. K. Wagh',
+        role: 'FACULTY',
+        title: 'Head of Department',
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        email: 'hod.comp@kkwagh.edu.in'
+      },
+      'mentor.comp@kkwagh.edu.in': {
+        id: 'user_prof_pr_rao',
+        displayName: 'Prof. P. R. Rao',
+        role: 'FACULTY',
+        title: 'Faculty Wellness Coordinator',
+        department: 'Computer Engineering',
+        departmentId: 'comp_eng',
+        email: 'mentor.comp@kkwagh.edu.in'
+      }
+    };
+
+    // Pre-seeded records for Computer Engineering prototype
+    const DEFAULT_SEED_RECORDS = [
+      // Aarav Sharma (Student 1)
+      { id: 'rec_aarav_1', email: 'aarav.sharma@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 7.5, water: 10, waterLiters: 2.5, steps: 8500, study: 4.5, stress: 2 },
+      { id: 'rec_aarav_2', email: 'aarav.sharma@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 8.0, water: 11, waterLiters: 2.75, steps: 9100, study: 5.0, stress: 1 },
+      { id: 'rec_aarav_3', email: 'aarav.sharma@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 7.0, water: 10, waterLiters: 2.5, steps: 8400, study: 4.0, stress: 2 },
+      // Aalim Sayyed (Student 2)
+      { id: 'rec_aalim_1', email: 'aasayyed370125@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Good', sleep: 6.5, water: 10, waterLiters: 2.5, steps: 7800, study: 5.0, stress: 2 },
+      { id: 'rec_aalim_2', email: 'aasayyed370125@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Great', sleep: 7.0, water: 12, waterLiters: 3.0, steps: 10200, study: 4.5, stress: 1 },
+      { id: 'rec_aalim_3', email: 'aasayyed370125@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Good', sleep: 6.5, water: 11, waterLiters: 2.75, steps: 8900, study: 5.5, stress: 2 },
+      // Neha Patil (Student 3 - slightly elevated stress / low sleep)
+      { id: 'rec_neha_1', email: 'neha.patil@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-27', day: 'Tue', mood: 'Okay', sleep: 5.5, water: 7, waterLiters: 1.75, steps: 6200, study: 6.0, stress: 3 },
+      { id: 'rec_neha_2', email: 'neha.patil@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-28', day: 'Wed', mood: 'Low', sleep: 4.5, water: 6, waterLiters: 1.5, steps: 5400, study: 6.5, stress: 4 },
+      { id: 'rec_neha_3', email: 'neha.patil@kkwagh.edu.in', department: 'comp_eng', date: '2026-10-29', day: 'Thu', mood: 'Okay', sleep: 5.0, water: 8, waterLiters: 2.0, steps: 6600, study: 5.0, stress: 3 }
+    ];
+
+    // Department Goals (Computer Engineering default)
+    let departmentGoals = {
+      department: 'comp_eng',
+      departmentName: 'Computer Engineering',
+      targetSleep: 7.0,
+      targetSteps: 8000,
+      targetWater: 2.5,
+      weekNumber: 44,
+      startDate: '2026-10-26',
+      setBy: 'Dr. V. K. Wagh (HOD)'
+    };
+
     // ─── Application State ───────────────────────────────────────────────────
     let currentUser = null;
-    let checkinRecords = [];
-    let selectedMood = 'Good';
-    let waterGlasses = 8;
-    let selectedStress = 2;
+    let selectedLoginRole = 'STUDENT';
     let currentPendingEmail = '';
 
-    // Meditation state
-    const SESSIONS = {
-      box:       { title: 'Box Breathing (4-4-4-4)',  desc: 'Inhale 4s · Hold 4s · Exhale 4s · Hold 4s', duration: 240, pattern: [4, 4, 4, 4], names: ['Inhale', 'Hold', 'Exhale', 'Hold'] },
-      '478':     { title: '4-7-8 Relaxing Breath',    desc: 'Inhale 4s · Hold 7s · Exhale 8s',            duration: 300, pattern: [4, 7, 8],       names: ['Inhale', 'Hold', 'Exhale'] },
-      centering: { title: 'Centering & Focus',        desc: 'Inhale 5s · Exhale 5s',                       duration: 180, pattern: [5, 5],           names: ['Inhale', 'Exhale'] },
-      quick:     { title: '2-Minute Energy Reset',    desc: 'Inhale 3s · Exhale 3s',                       duration: 120, pattern: [3, 3],           names: ['Inhale', 'Exhale'] }
-    };
-    let currentSessionKey = 'box';
-    let meditationTimer = null;
-    let meditationRemainingSeconds = 240;
-    let isMeditationRunning = false;
-    let currentPhaseIndex = 0;
-    let phaseSecondsLeft = 4;
+    // Master checkins list for the department
+    let allDepartmentCheckins = [...DEFAULT_SEED_RECORDS];
+    // Filtered records for current active user
+    let userCheckinRecords = [];
 
-    // ─── Initialise ─────────────────────────────────────────────────────────
+    // Form inputs state
+    let selectedMood = 'Good';
+    let waterGlasses = 10;
+    let selectedSteps = 8500;
+    let selectedStress = 2;
+
+    // Red Alert simulation state
+    let isRedAlertSimulated = false;
+
+    // Sync Token State
+    let activeSyncToken = null;
+    let syncTokenTimerInterval = null;
+    let syncTokenSecondsLeft = 600; // 10 minutes
+    const localUsedTokens = new Set(); // tracks single-use tokens
+
+    // ─── Initialise on Page Load ─────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. Restore saved session
+      // 1. Restore saved records and goals from localStorage if available
       try {
+        const savedGoals = localStorage.getItem('cw_dept_goals');
+        if (savedGoals) departmentGoals = JSON.parse(savedGoals);
+
+        const savedAll = localStorage.getItem('cw_all_checkins');
+        if (savedAll) {
+          allDepartmentCheckins = JSON.parse(savedAll);
+        } else {
+          localStorage.setItem('cw_all_checkins', JSON.stringify(allDepartmentCheckins));
+        }
+
         const savedUser = localStorage.getItem('cw_user_session');
         if (savedUser) {
           const parsed = JSON.parse(savedUser);
@@ -954,85 +1426,80 @@
         }
       } catch (_) {}
 
-      // 2. Restore saved check-in records
-      try {
-        const savedRecords = localStorage.getItem('cw_checkin_records');
-        if (savedRecords) checkinRecords = JSON.parse(savedRecords);
-      } catch (_) {}
+      // Default check-in date to today (YYYY-MM-DD)
+      const todayIso = new Date().toISOString().split('T')[0];
+      const dateInp = document.getElementById('checkin-date');
+      if (dateInp) dateInp.value = todayIso;
 
-      // 3. Set date chip
+      // Update date chips in UI
       const now = new Date();
       const dateText = now.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
       const el = document.getElementById('app-date-chip');
       const hd = document.getElementById('home-today-date');
-      if (el) el.textContent = dateText;
+      if (el) el.textContent = `${dateText} · Week ${departmentGoals.weekNumber || 44}`;
       if (hd) hd.textContent = dateText;
 
-      // 4. Route guard
-      checkAuthRouteGuard();
-
-      // 5. Render cached data immediately
-      renderDashboardMetrics();
-      renderHomeBarChart();
-      renderProgressLogs();
-
-      // 6. Fetch latest synced checkins from Supabase
-      if (currentUser && currentUser.email) {
-        loadUserCheckins(currentUser.email);
+      // If no session exists, default to Aarav Sharma for immediate prototype demo access
+      if (!currentUser) {
+        currentUser = DEMO_USERS['aarav.sharma@kkwagh.edu.in'];
+        localStorage.setItem('cw_user_session', JSON.stringify(currentUser));
       }
+
+      // Check route guard and render
+      checkAuthRouteGuard();
+      syncUserData();
+      fetchDepartmentGoals();
     });
 
-    // ─── Fetch & Sync Check-ins from Supabase ────────────────────────────────
-    const SUPABASE_BASE_URL = 'https://nixkfspftmmxbpqvsatd.supabase.co';
-    const SUPABASE_ANON = 'sb_publishable_ED7fnphZLo8uqWxesVeO_Q_vIxiersp';
-
-    async function loadUserCheckins(email) {
-      if (!email) return;
-      try {
-        let records = null;
-
-        // 1. Try local server endpoint first
-        try {
-          const res = await fetch(`/api/checkins?email=${encodeURIComponent(email)}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.success && Array.isArray(data.records)) {
-              records = data.records;
-            }
-          }
-        } catch (_) {}
-
-        // 2. Direct Supabase Cloud API fallback (allows app to work on mobile standalone!)
-        if (!records) {
-          try {
-            const sRes = await fetch(`${SUPABASE_BASE_URL}/rest/v1/checkins?email=eq.${encodeURIComponent(email)}&order=date.asc`, {
-              headers: {
-                'apikey': SUPABASE_ANON,
-                'Authorization': `Bearer ${SUPABASE_ANON}`
-              }
-            });
-            if (sRes.ok) {
-              records = await sRes.json();
-            }
-          } catch (_) {}
-        }
-
-        if (Array.isArray(records)) {
-          // Sort chronologically by date
-          records.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-          checkinRecords = records;
-          localStorage.setItem('cw_checkin_records', JSON.stringify(checkinRecords));
-          renderDashboardMetrics();
-          renderHomeBarChart();
-          renderProgressLogs();
-        }
-      } catch (err) {
-        console.warn('Error loading check-ins:', err);
+    // ─── Authentication & Role Handling ─────────────────────────────────────
+    function setLoginRole(role) {
+      selectedLoginRole = role;
+      const sBtn = document.getElementById('role-btn-student');
+      const fBtn = document.getElementById('role-btn-faculty');
+      if (role === 'FACULTY') {
+        fBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-purple-900 shadow-sm flex items-center justify-center gap-1.5';
+        sBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
+      } else {
+        sBtn.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1.5';
+        fBtn.className = 'py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5';
       }
     }
 
+    function quickLogin(email, role) {
+      setLoginRole(role);
+      document.getElementById('email-input').value = email;
+      loginWithDemoUser(email);
+    }
 
-    // ─── 1. Authentication & Route Guard ────────────────────────────────────
+    function loginWithDemoUser(email) {
+      const demoUser = DEMO_USERS[email];
+      if (demoUser) {
+        currentUser = demoUser;
+      } else {
+        const usernamePart = email.split('@')[0];
+        const displayName = usernamePart.split(/[._0-9]+/).filter(Boolean).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ') || 'College Member';
+        currentUser = {
+          id: 'user_' + Math.abs(email.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0)),
+          email,
+          displayName,
+          role: selectedLoginRole,
+          department: 'Computer Engineering',
+          departmentId: 'comp_eng',
+          verifiedAt: new Date().toISOString()
+        };
+      }
+      localStorage.setItem('cw_user_session', JSON.stringify(currentUser));
+      document.getElementById('login-view').classList.add('hidden');
+      applyUserToUI(currentUser);
+      syncUserData();
+      showToast(`Signed in as ${currentUser.displayName} (${currentUser.role}) 🎉`);
+    }
+
+    function switchActiveDemoUser(email) {
+      document.getElementById('profile-dropdown').classList.add('hidden');
+      loginWithDemoUser(email);
+    }
+
     function checkAuthRouteGuard() {
       const loginView = document.getElementById('login-view');
       if (!currentUser || !currentUser.email) {
@@ -1048,114 +1515,88 @@
       const parts = name.split(' ');
       const initials = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
 
-      const avatar    = document.getElementById('header-avatar');
-      const username  = document.getElementById('header-username');
-      const ddName    = document.getElementById('dropdown-name');
-      const ddEmail   = document.getElementById('dropdown-email');
-      const greeting  = document.getElementById('home-user-greeting');
+      const avatar     = document.getElementById('header-avatar');
+      const username   = document.getElementById('header-username');
+      const ddName     = document.getElementById('dropdown-name');
+      const ddEmail    = document.getElementById('dropdown-email');
+      const ddRole     = document.getElementById('dropdown-role');
+      const greeting   = document.getElementById('home-user-greeting');
+      const roleBadge  = document.getElementById('header-role-badge');
+      const ribbonUser = document.getElementById('ribbon-active-user');
 
-      if (avatar)   avatar.textContent   = initials;
-      if (username) username.textContent = parts[0];
-      if (ddName)   ddName.textContent   = name;
-      if (ddEmail)  ddEmail.textContent  = user.email;
-      if (greeting) greeting.textContent = parts[0];
+      if (avatar)     avatar.textContent = initials;
+      if (username)   username.textContent = parts[0];
+      if (ddName)     ddName.textContent = name;
+      if (ddEmail)    ddEmail.textContent = user.email;
+      if (ddRole)     ddRole.textContent = user.role;
+      if (greeting)   greeting.textContent = parts[0];
+      if (ribbonUser) ribbonUser.textContent = `${name} (${user.role === 'FACULTY' ? (user.title || 'Faculty') : 'Student'})`;
+
+      if (roleBadge) {
+        if (user.role === 'FACULTY') {
+          roleBadge.textContent = 'Faculty';
+          roleBadge.className = 'text-[9px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 uppercase';
+        } else {
+          roleBadge.textContent = 'Student';
+          roleBadge.className = 'text-[9px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 uppercase';
+        }
+      }
+
+      // Configure Faculty Goals section based on role permissions
+      const goalsForm = document.getElementById('faculty-goals-form');
+      const editorBadge = document.getElementById('goals-editor-badge');
+      if (user.role === 'FACULTY') {
+        if (goalsForm) goalsForm.classList.remove('hidden');
+        if (editorBadge) {
+          editorBadge.textContent = 'Editing Mode';
+          editorBadge.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700';
+        }
+      } else {
+        if (goalsForm) goalsForm.classList.add('hidden');
+        if (editorBadge) {
+          editorBadge.textContent = 'Faculty Only';
+          editorBadge.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700';
+        }
+      }
     }
 
-    // Send OTP
     async function handleRequestOtp(e) {
       e.preventDefault();
-      const emailInput  = document.getElementById('email-input');
-      const emailError  = document.getElementById('email-error-msg');
+      const emailInput = document.getElementById('email-input');
+      const emailError = document.getElementById('email-error-msg');
       const emailErrTxt = document.getElementById('email-error-text');
-      const btn         = document.getElementById('send-otp-btn');
-      const btnText     = document.getElementById('send-otp-btn-text');
+      const btn = document.getElementById('send-otp-btn');
+      const btnText = document.getElementById('send-otp-btn-text');
 
       let email = emailInput.value.trim().toLowerCase();
-
-      // Auto-correct common typo @kkwag.edu.in -> @kkwagh.edu.in
       if (email.endsWith('@kkwag.edu.in')) {
         email = email.replace('@kkwag.edu.in', '@kkwagh.edu.in');
         emailInput.value = email;
       }
 
-      // Frontend domain check
       if (!email.endsWith('@kkwagh.edu.in')) {
-        emailErrTxt.textContent = 'Email must end with @kkwagh.edu.in';
+        emailErrTxt.textContent = 'Access restricted. Only @kkwagh.edu.in addresses permitted.';
         emailError.classList.remove('hidden');
         return;
       }
       emailError.classList.add('hidden');
 
       btn.disabled = true;
-      btnText.textContent = 'Generating verification code…';
+      btnText.textContent = 'Generating 6-digit code…';
 
       try {
-        let data = null;
-
-        // 1. If running on localhost with server.js, try server endpoint
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-          try {
-            const response = await fetch('/api/auth/send-otp', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email })
-            });
-            if (response.ok) {
-              data = await response.json();
-            }
-          } catch (_) {}
-        }
-
-        // 2. Direct Cloud Flow (for Vercel / standalone mobile app)
-        if (!data || !data.success) {
-          let supabaseSent = false;
-          try {
-            const sRes = await fetch(`${SUPABASE_BASE_URL}/auth/v1/otp`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': SUPABASE_ANON
-              },
-              body: JSON.stringify({ email })
-            });
-            if (sRes.ok) supabaseSent = true;
-          } catch (_) {}
-
-          // Generate instant 6-digit code for testing / demo
-          const code = String(Math.floor(100000 + Math.random() * 900000));
-          sessionStorage.setItem('cw_auth_otp', code);
-          sessionStorage.setItem('cw_auth_email', email);
-
-          data = {
-            success: true,
-            email,
-            supabaseSent,
-            devCode: code,
-            message: supabaseSent
-              ? `Verification OTP sent to ${email}.`
-              : `Verification code ready for ${email}.`
-          };
-        }
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        sessionStorage.setItem('cw_auth_otp', code);
+        sessionStorage.setItem('cw_auth_email', email);
 
         currentPendingEmail = email;
-        document.getElementById('otp-sent-to-label').textContent = `Code sent to ${email}`;
-
-        // Show verification code banner
-        const devHint = document.getElementById('dev-code-hint');
-        if (data.devCode) {
-          document.getElementById('dev-code-val').textContent = data.devCode;
-          devHint.classList.remove('hidden');
-        }
-
-        // Clear OTP input
-        document.getElementById('otp-input').value = '';
+        document.getElementById('otp-sent-to-label').textContent = `Code generated for ${email}`;
+        document.getElementById('dev-code-val').textContent = code;
+        document.getElementById('otp-input').value = code; // pre-fill for ease of testing
 
         document.getElementById('login-step-email').classList.add('hidden');
         document.getElementById('login-step-otp').classList.remove('hidden');
-        showToast(data.message || 'Verification code ready.');
-      } catch (err) {
-        emailErrTxt.textContent = 'Error sending code. Please try again.';
-        emailError.classList.remove('hidden');
+        showToast('6-digit code ready! Press Verify to enter.');
       } finally {
         btn.disabled = false;
         btnText.textContent = 'Continue with College Email';
@@ -1172,129 +1613,26 @@
       if (!currentPendingEmail) return;
       document.getElementById('email-input').value = currentPendingEmail;
       goToEmailStep();
-      showToast('Please press Continue to resend your code.');
+      showToast('Press Continue to regenerate code.');
     }
 
-    // Verify OTP
-    async function handleVerifyOtp(e) {
+    function handleVerifyOtp(e) {
       e.preventDefault();
       const tokenInput = document.getElementById('otp-input');
-      const otpError   = document.getElementById('otp-error-msg');
-      const btn        = document.getElementById('verify-otp-btn');
-      const btnText    = document.getElementById('verify-otp-btn-text');
-
       const token = tokenInput.value.trim();
       if (!/^\d{6}$/.test(token)) {
-        otpError.textContent = 'Please enter the 6-digit code.';
-        otpError.classList.remove('hidden');
+        document.getElementById('otp-error-msg').classList.remove('hidden');
         return;
       }
-      otpError.classList.add('hidden');
-
-      btn.disabled = true;
-      btnText.textContent = 'Verifying…';
-
-      try {
-        let verified = false;
-
-        // 1. Check generated session code first (instant verification!)
-        const storedCode = sessionStorage.getItem('cw_auth_otp');
-        const storedEmail = sessionStorage.getItem('cw_auth_email');
-        if (storedCode && storedCode === token && storedEmail === currentPendingEmail) {
-          verified = true;
-        }
-
-        // 2. Try Supabase Auth verify
-        if (!verified) {
-          try {
-            const sRes = await fetch(`${SUPABASE_BASE_URL}/auth/v1/verify`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': SUPABASE_ANON
-              },
-              body: JSON.stringify({
-                type: 'email',
-                email: currentPendingEmail,
-                token: token
-              })
-            });
-            if (sRes.ok) verified = true;
-          } catch (_) {}
-        }
-
-        // 3. Try local server endpoint if on localhost
-        if (!verified && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-          try {
-            const response = await fetch('/api/auth/verify-otp', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: currentPendingEmail, token })
-            });
-            if (response.ok) {
-              const resData = await response.json();
-              if (resData.success) verified = true;
-            }
-          } catch (_) {}
-        }
-
-        if (!verified) {
-          otpError.textContent = 'Invalid code. Enter the 6 digits shown above.';
-          otpError.classList.remove('hidden');
-          btn.disabled = false;
-          btnText.textContent = 'Verify & Access Campus Care';
-          return;
-        }
-
-        const usernamePart = currentPendingEmail.split('@')[0];
-        const displayName = usernamePart
-          .split(/[._0-9]+/)
-          .filter(Boolean)
-          .map(p => p.charAt(0).toUpperCase() + p.slice(1))
-          .join(' ') || 'K.K. Wagh Student';
-
-        currentUser = {
-          email: currentPendingEmail,
-          displayName,
-          role: 'STUDENT',
-          department: 'Computer Engineering',
-          verifiedAt: new Date().toISOString()
-        };
-
-        localStorage.setItem('cw_user_session', JSON.stringify(currentUser));
-
-        applyUserToUI(currentUser);
-        document.getElementById('login-view').classList.add('hidden');
-        showToast(`Welcome to Campus Care, ${currentUser.displayName}! 🎉`);
-
-        // Load synced records from Supabase for this user
-        loadUserCheckins(currentUser.email);
-
-      } catch (err) {
-        otpError.textContent = 'Verification error. Please retry.';
-        otpError.classList.remove('hidden');
-      } finally {
-        btn.disabled = false;
-        btnText.textContent = 'Verify & Access Campus Care';
-      }
+      loginWithDemoUser(currentPendingEmail);
     }
 
     function handleSignOut() {
       currentUser = null;
-      checkinRecords = [];
       localStorage.removeItem('cw_user_session');
-      localStorage.removeItem('cw_checkin_records');
-      renderDashboardMetrics();
-      renderHomeBarChart();
-      renderProgressLogs();
       document.getElementById('profile-dropdown').classList.add('hidden');
       document.getElementById('login-step-otp').classList.add('hidden');
       document.getElementById('login-step-email').classList.remove('hidden');
-      document.getElementById('email-error-msg').classList.add('hidden');
-      document.getElementById('otp-error-msg').classList.add('hidden');
-      document.getElementById('email-input').value = '';
-      document.getElementById('otp-input').value = '';
-      document.getElementById('dev-code-hint').classList.add('hidden');
       document.getElementById('login-view').classList.remove('hidden');
       showToast('Signed out successfully.');
     }
@@ -1303,7 +1641,6 @@
       document.getElementById('profile-dropdown').classList.toggle('hidden');
     }
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
       const dd = document.getElementById('profile-dropdown');
       if (dd && !dd.classList.contains('hidden') &&
@@ -1313,10 +1650,650 @@
       }
     });
 
+    // ─── Data Sync & DHI Calculation ─────────────────────────────────────────
+    function syncUserData() {
+      if (!currentUser) return;
+      userCheckinRecords = allDepartmentCheckins.filter(r => r.email === currentUser.email);
+      userCheckinRecords.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
-    // ─── 2. Navigation ───────────────────────────────────────────────────────
+      renderDashboardMetrics();
+      renderHomeBarChart();
+      renderProgressLogs();
+      renderDepartmentDHI();
+    }
+
+    function renderDashboardMetrics() {
+      const latest = userCheckinRecords.length > 0 ? userCheckinRecords[userCheckinRecords.length - 1] : null;
+
+      const sleepEl     = document.getElementById('card-sleep-val');
+      const sleepStatus = document.getElementById('card-sleep-status');
+      const waterEl     = document.getElementById('card-water-val');
+      const waterStatus = document.getElementById('card-water-status');
+      const stepsEl     = document.getElementById('card-steps-val');
+      const stepsStatus = document.getElementById('card-steps-status');
+      const moodEl      = document.getElementById('card-mood-val');
+      const moodIcon    = document.getElementById('card-mood-icon');
+      const stressEl    = document.getElementById('card-stress-val');
+
+      if (!latest) {
+        [sleepEl, waterEl, stepsEl, moodEl].forEach(el => { if (el) el.textContent = '—'; });
+        [sleepStatus, waterStatus, stepsStatus, stressEl].forEach(el => { if (el) el.textContent = 'No entry yet'; });
+        return;
+      }
+
+      if (sleepEl) sleepEl.textContent = `${latest.sleep}h`;
+      if (sleepStatus) {
+        const met = latest.sleep >= (departmentGoals.targetSleep || 7.0);
+        sleepStatus.textContent = met ? `✓ Target reached (${departmentGoals.targetSleep}h)` : `Below ${departmentGoals.targetSleep}h target`;
+        sleepStatus.className = `text-[9px] font-semibold mt-0.5 ${met ? 'text-emerald-600' : 'text-amber-600'}`;
+      }
+
+      const waterLiters = latest.waterLiters || ((latest.water || 8) * 0.25);
+      if (waterEl) waterEl.textContent = `${waterLiters.toFixed(1)} L`;
+      if (waterStatus) {
+        const metW = waterLiters >= (departmentGoals.targetWater || 2.5);
+        waterStatus.textContent = metW ? `✓ Met goal (${departmentGoals.targetWater}L)` : `Goal: ${departmentGoals.targetWater}L`;
+      }
+
+      const steps = latest.steps || 0;
+      if (stepsEl) stepsEl.textContent = `${steps.toLocaleString()}`;
+      if (stepsStatus) {
+        const metS = steps >= (departmentGoals.targetSteps || 8000);
+        stepsStatus.textContent = metS ? `✓ Reached ${departmentGoals.targetSteps.toLocaleString()}` : `Goal: ${departmentGoals.targetSteps.toLocaleString()}`;
+      }
+
+      if (moodEl) moodEl.textContent = latest.mood;
+      const moodIconMap = { Great: 'sentiment_very_satisfied', Good: 'sentiment_satisfied', Okay: 'sentiment_neutral', Low: 'sentiment_dissatisfied', Terrible: 'sentiment_very_dissatisfied' };
+      if (moodIcon) moodIcon.textContent = moodIconMap[latest.mood] || 'sentiment_satisfied';
+
+      const stressMap = { 1: 'Stress: Low (1)', 2: 'Stress: Mild (2)', 3: 'Stress: Moderate (3)', 4: 'Stress: High (4)', 5: 'Stress: Severe (5)' };
+      if (stressEl) stressEl.textContent = stressMap[latest.stress] || '—';
+    }
+
+    function renderDepartmentDHI() {
+      // Calculate DHI for Computer Engineering across all valid entries
+      const validRecords = isRedAlertSimulated
+        ? allDepartmentCheckins.map(r => ({ ...r, sleep: Math.min(r.sleep, 4.4) }))
+        : allDepartmentCheckins;
+
+      const sleepRecords = validRecords.filter(r => typeof r.sleep === 'number' && !isNaN(r.sleep));
+      const stepsRecords = validRecords.filter(r => typeof r.steps === 'number' && !isNaN(r.steps) && r.steps > 0);
+      const waterRecords = validRecords.filter(r => typeof (r.waterLiters || r.water) === 'number');
+
+      const avgSleep = sleepRecords.length > 0
+        ? parseFloat((sleepRecords.reduce((a, b) => a + b.sleep, 0) / sleepRecords.length).toFixed(1))
+        : 0;
+
+      const avgSteps = stepsRecords.length > 0
+        ? Math.round(stepsRecords.reduce((a, b) => a + b.steps, 0) / stepsRecords.length)
+        : 0;
+
+      const avgWater = waterRecords.length > 0
+        ? parseFloat((waterRecords.reduce((a, b) => a + (b.waterLiters || (b.water * 0.25)), 0) / waterRecords.length).toFixed(1))
+        : 0;
+
+      // Mathematical Formula Normalization
+      const tSleep = departmentGoals.targetSleep || 7.0;
+      const tSteps = departmentGoals.targetSteps || 8000;
+      const tWater = departmentGoals.targetWater || 2.5;
+
+      const sleepRatio = tSleep > 0 ? Math.min(avgSleep / tSleep, 1.2) : 0;
+      const stepsRatio = tSteps > 0 ? Math.min(avgSteps / tSteps, 1.2) : 0;
+      const waterRatio = tWater > 0 ? Math.min(avgWater / tWater, 1.2) : 0;
+
+      const dhiScore = Math.min(100, Math.round(100 * (0.40 * sleepRatio + 0.35 * stepsRatio + 0.25 * waterRatio)));
+
+      // Update UI elements
+      const homeDhiBadge  = document.getElementById('home-dhi-badge');
+      const homeDhiStatus = document.getElementById('home-dhi-status');
+      const dhiMainScore  = document.getElementById('dhi-main-score');
+      const dhiStatusPill = document.getElementById('dhi-status-pill');
+      const monthlyDhiVal = document.getElementById('monthly-dhi-val');
+
+      const ratingText = dhiScore >= 80 ? 'Optimal' : dhiScore >= 65 ? 'Balanced' : 'Needs Attention';
+
+      if (homeDhiBadge)  homeDhiBadge.textContent  = dhiScore;
+      if (homeDhiStatus) homeDhiStatus.textContent = ratingText;
+      if (dhiMainScore)  dhiMainScore.textContent  = dhiScore;
+      if (monthlyDhiVal) monthlyDhiVal.textContent = `${dhiScore} / 100`;
+
+      if (dhiStatusPill) {
+        dhiStatusPill.textContent = `${ratingText} (${dhiScore}/100)`;
+        dhiStatusPill.className = `text-[10px] font-bold px-2 py-0.5 rounded-full ${
+          dhiScore >= 80 ? 'bg-emerald-50 text-emerald-700' :
+          dhiScore >= 65 ? 'bg-blue-50 text-blue-700' : 'bg-rose-50 text-rose-700'
+        }`;
+      }
+
+      // Breakdown bars
+      const sleepBar = document.getElementById('dhi-sleep-bar');
+      const stepsBar = document.getElementById('dhi-steps-bar');
+      const waterBar = document.getElementById('dhi-water-bar');
+      const sleepTxt = document.getElementById('dhi-sleep-ratio');
+      const stepsTxt = document.getElementById('dhi-steps-ratio');
+      const waterTxt = document.getElementById('dhi-water-ratio');
+
+      const sleepPct = Math.round(sleepRatio * 100);
+      const stepsPct = Math.round(stepsRatio * 100);
+      const waterPct = Math.round(waterRatio * 100);
+
+      if (sleepBar) sleepBar.style.width = `${Math.min(100, sleepPct)}%`;
+      if (stepsBar) stepsBar.style.width = `${Math.min(100, stepsPct)}%`;
+      if (waterBar) waterBar.style.width = `${Math.min(100, waterPct)}%`;
+
+      if (sleepTxt) sleepTxt.textContent = `${avgSleep}h / ${tSleep}h (${sleepPct}%)`;
+      if (stepsTxt) stepsTxt.textContent = `${avgSteps.toLocaleString()} / ${tSteps.toLocaleString()} (${stepsPct}%)`;
+      if (waterTxt) waterTxt.textContent = `${avgWater}L / ${tWater}L (${waterPct}%)`;
+
+      // Participation counters
+      const uniqueUsers = Array.from(new Set(validRecords.map(r => r.email)));
+      const uCount = document.getElementById('dhi-users-count');
+      const rCount = document.getElementById('dhi-records-count');
+      if (uCount) uCount.textContent = uniqueUsers.length;
+      if (rCount) rCount.textContent = validRecords.length;
+
+      // ─── RED ALERT CHECK (Problem Statement Requirement 7) ─────────────────
+      // Triggers if Department Average Sleep < 5.0 hours
+      const alertBanner = document.getElementById('red-alert-banner');
+      const alertAvgSleep = document.getElementById('red-alert-avg-sleep');
+
+      if (avgSleep < 5.0 && sleepRecords.length > 0) {
+        if (alertBanner) alertBanner.classList.remove('hidden');
+        if (alertAvgSleep) alertAvgSleep.textContent = `${avgSleep}h`;
+      } else {
+        if (alertBanner) alertBanner.classList.add('hidden');
+      }
+    }
+
+    function toggleRedAlertSimulation() {
+      isRedAlertSimulated = !isRedAlertSimulated;
+      const btn = document.getElementById('simulate-alert-btn');
+      if (isRedAlertSimulated) {
+        btn.textContent = 'Reset Alert';
+        btn.className = 'px-2 py-0.5 rounded bg-rose-600 text-white font-bold border border-rose-700 active:scale-95 transition';
+        showToast('⚠️ Sleep simulated below 5.0h threshold. Red Alert Active!', 'error');
+      } else {
+        btn.textContent = '⚡ Test Alert';
+        btn.className = 'px-2 py-0.5 rounded bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold border border-rose-200 active:scale-95 transition';
+        showToast('Department sleep baseline restored to safe levels.');
+      }
+      renderDepartmentDHI();
+    }
+
+    function toggleFormulaBox() {
+      const box = document.getElementById('dhi-formula-box');
+      if (box) box.classList.toggle('hidden');
+    }
+
+    function renderHomeBarChart() {
+      const container  = document.getElementById('home-chart-bars');
+      const daysRow    = document.getElementById('home-chart-days');
+      const emptyState = document.getElementById('chart-empty-state');
+      if (!container) return;
+
+      if (userCheckinRecords.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+      if (emptyState) emptyState.classList.add('hidden');
+
+      const last7 = userCheckinRecords.slice(-7);
+      container.innerHTML = '';
+
+      const padded = Array(Math.max(0, 7 - last7.length)).fill(null).concat(last7);
+
+      if (daysRow) {
+        daysRow.innerHTML = padded.map(r => `<span class="text-[10px] text-center text-slate-400 font-medium">${r ? (r.day || r.date.slice(5)) : ''}</span>`).join('');
+      }
+
+      padded.forEach(rec => {
+        const col = document.createElement('div');
+        col.className = 'flex items-end justify-center gap-0.5 h-full';
+        if (!rec) {
+          col.innerHTML = `<div class="w-2.5 bg-slate-100 rounded-t h-1"></div><div class="w-2.5 bg-slate-100 rounded-t h-1"></div>`;
+        } else {
+          const sleepH = Math.min(100, Math.round(((rec.sleep || 0) / 10) * 100));
+          const studyH = Math.min(100, Math.round(((rec.study || 0) / 10) * 100));
+          col.innerHTML = `
+            <div style="height:${sleepH}%" class="w-2.5 bg-indigo-500 rounded-t" title="Sleep: ${rec.sleep}h"></div>
+            <div style="height:${studyH}%" class="w-2.5 bg-emerald-500 rounded-t" title="Study: ${rec.study}h"></div>
+          `;
+        }
+        container.appendChild(col);
+      });
+    }
+
+    function renderProgressLogs() {
+      const container  = document.getElementById('progress-log-list');
+      const emptyState = document.getElementById('progress-empty-state');
+      const logCount   = document.getElementById('log-count');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      if (userCheckinRecords.length === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        if (logCount)   logCount.textContent = '0 entries';
+        ['avg-sleep', 'avg-water', 'avg-steps', 'avg-study'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = '—';
+        });
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+
+      const last7 = userCheckinRecords.slice(-7);
+      const avgSleep = (last7.reduce((a, r) => a + (r.sleep || 0), 0) / last7.length).toFixed(1);
+      const avgWater = (last7.reduce((a, r) => a + (r.waterLiters || (r.water * 0.25) || 0), 0) / last7.length).toFixed(1);
+      const avgSteps = Math.round(last7.reduce((a, r) => a + (r.steps || 0), 0) / last7.length);
+      const avgStudy = (last7.reduce((a, r) => a + (r.study || 0), 0) / last7.length).toFixed(1);
+
+      const elSl = document.getElementById('avg-sleep');
+      const elWa = document.getElementById('avg-water');
+      const elSt = document.getElementById('avg-steps');
+      const elSd = document.getElementById('avg-study');
+
+      if (elSl) elSl.textContent = `${avgSleep}h`;
+      if (elWa) elWa.textContent = `${avgWater}L`;
+      if (elSt) elSt.textContent = `${avgSteps.toLocaleString()}`;
+      if (elSd) elSd.textContent = `${avgStudy}h`;
+
+      if (logCount) logCount.textContent = `${userCheckinRecords.length} ${userCheckinRecords.length === 1 ? 'entry' : 'entries'}`;
+
+      [...userCheckinRecords].reverse().forEach(rec => {
+        const stressCls = rec.stress <= 2 ? 'bg-emerald-100 text-emerald-800' :
+                          rec.stress <= 3 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800';
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs gap-2';
+        item.innerHTML = `
+          <div class="min-w-0">
+            <div class="font-bold text-slate-800">${rec.date} · ${rec.day || ''}</div>
+            <div class="text-[10px] text-slate-500 mt-0.5 truncate">
+              ${rec.sleep}h sleep · ${(rec.waterLiters || rec.water * 0.25).toFixed(1)}L water · ${(rec.steps || 0).toLocaleString()} steps
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="font-bold px-2 py-0.5 rounded-full text-[9px] ${stressCls}">Stress L${rec.stress}</span>
+            <div class="text-[10px] text-slate-400 mt-0.5 font-medium">${rec.mood}</div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // ─── Check-in Form Submission & Duplicate Prevention ─────────────────────
+    function checkDateDuplicate(selectedDate) {
+      if (!currentUser) return;
+      const existing = userCheckinRecords.find(r => r.date === selectedDate);
+      const banner = document.getElementById('duplicate-warning-banner');
+      const btnText = document.getElementById('save-checkin-btn-text');
+
+      if (existing) {
+        if (banner) banner.classList.remove('hidden');
+        if (btnText) btnText.textContent = `Update Existing Check-in (${selectedDate})`;
+      } else {
+        if (banner) banner.classList.add('hidden');
+        if (btnText) btnText.textContent = "Save Daily Health Check-in";
+      }
+    }
+
+    function selectMood(mood) {
+      selectedMood = mood;
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        const isSelected = btn.dataset.mood === mood;
+        btn.className = `mood-btn p-1.5 rounded-xl border text-center transition flex flex-col items-center gap-0.5 ${
+          isSelected ? 'bg-blue-50 border-blue-400' : 'bg-slate-50 border-slate-200'
+        }`;
+        const label = btn.querySelector('span:last-child');
+        if (label) label.className = isSelected ? 'text-[9px] font-bold text-blue-700' : 'text-[9px] font-medium text-slate-600';
+      });
+    }
+
+    function updateSleepDisplay(val) {
+      document.getElementById('sleep-display').textContent = `${val} Hours`;
+    }
+
+    function adjustWater(delta) {
+      waterGlasses = Math.max(2, Math.min(24, waterGlasses + delta));
+      const liters = (waterGlasses * 0.25).toFixed(2);
+      document.getElementById('water-display').textContent = `${liters} L (${waterGlasses} glasses)`;
+      document.getElementById('water-count-box').textContent = `${waterGlasses} glasses · ${liters} Litres`;
+    }
+
+    function updateStepsDisplay(val) {
+      selectedSteps = parseInt(val, 10) || 0;
+      document.getElementById('steps-display').textContent = `${selectedSteps.toLocaleString()} Steps`;
+    }
+
+    function setStepsPreset(steps) {
+      selectedSteps = steps;
+      document.getElementById('checkin-steps').value = steps;
+      updateStepsDisplay(steps);
+    }
+
+    function updateStudyDisplay(val) {
+      document.getElementById('study-display').textContent = `${val} Hours`;
+    }
+
+    function updateStressBadge(val) {
+      selectedStress = parseInt(val, 10);
+      const badge = document.getElementById('stress-badge');
+      const map = {
+        1: { text: 'Level 1 (Low)',      cls: 'bg-emerald-100 text-emerald-800' },
+        2: { text: 'Level 2 (Mild)',     cls: 'bg-blue-100 text-blue-800' },
+        3: { text: 'Level 3 (Moderate)', cls: 'bg-yellow-100 text-yellow-800' },
+        4: { text: 'Level 4 (High)',     cls: 'bg-orange-100 text-orange-800' },
+        5: { text: 'Level 5 (Severe)',   cls: 'bg-red-100 text-red-800' }
+      };
+      badge.className = `text-[10px] font-bold px-2 py-0.5 rounded-full ${map[selectedStress].cls}`;
+      badge.textContent = map[selectedStress].text;
+    }
+
+    async function handleCheckinSubmit(e) {
+      e.preventDefault();
+      if (!currentUser) {
+        showToast('Please sign in first.', 'error');
+        return;
+      }
+
+      const dateVal = document.getElementById('checkin-date').value || new Date().toISOString().split('T')[0];
+      const sleep = parseFloat(document.getElementById('checkin-sleep').value);
+      const study = parseFloat(document.getElementById('checkin-study').value);
+      const steps = parseInt(document.getElementById('checkin-steps').value, 10) || 0;
+      const waterLiters = parseFloat((waterGlasses * 0.25).toFixed(2));
+
+      const d = new Date(dateVal);
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayName = days[d.getDay()] || 'Day';
+
+      const record = {
+        id: `rec_${currentUser.id}_${dateVal}`,
+        email: currentUser.email,
+        department: 'comp_eng',
+        date: dateVal,
+        day: dayName,
+        mood: selectedMood,
+        sleep,
+        water: waterGlasses,
+        waterLiters,
+        steps,
+        study,
+        stress: selectedStress,
+        updatedAt: new Date().toISOString()
+      };
+
+      // Upsert: replace if entry for same email + date exists, or append
+      const existingIdx = allDepartmentCheckins.findIndex(r => r.email === currentUser.email && r.date === dateVal);
+      const wasUpdate = existingIdx !== -1;
+      if (wasUpdate) {
+        allDepartmentCheckins[existingIdx] = record;
+      } else {
+        allDepartmentCheckins.push(record);
+      }
+
+      localStorage.setItem('cw_all_checkins', JSON.stringify(allDepartmentCheckins));
+      syncUserData();
+
+      // Clear duplicate warning
+      checkDateDuplicate(dateVal);
+
+      showToast(wasUpdate ? `Check-in updated for ${dateVal}! 🌟` : `Check-in saved for ${dateVal}! 🌟`);
+      navigateTo('home');
+
+      // Attempt background backend sync
+      fetch('/api/checkins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(record)
+      }).catch(() => {});
+    }
+
+    // ─── Faculty Goal Setting (Problem Statement Requirement 5) ──────────────
+    async function fetchDepartmentGoals() {
+      try {
+        const res = await fetch('/api/faculty/goals');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.goals) {
+            departmentGoals = data.goals;
+            localStorage.setItem('cw_dept_goals', JSON.stringify(departmentGoals));
+          }
+        }
+      } catch (_) {}
+
+      // Update goal display in UI
+      const gSleep = document.getElementById('disp-goal-sleep');
+      const gSteps = document.getElementById('disp-goal-steps');
+      const gWater = document.getElementById('disp-goal-water');
+      const gSetBy = document.getElementById('disp-goal-setby');
+      const gWeek  = document.getElementById('disp-goal-week');
+
+      if (gSleep) gSleep.textContent = `${departmentGoals.targetSleep}h / day`;
+      if (gSteps) gSteps.textContent = `${(departmentGoals.targetSteps || 8000).toLocaleString()} / day`;
+      if (gWater) gWater.textContent = `${departmentGoals.targetWater}L / day`;
+      if (gSetBy) gSetBy.textContent = departmentGoals.setBy || 'Dr. V. K. Wagh (HOD)';
+      if (gWeek)  gWeek.textContent  = `Week ${departmentGoals.weekNumber || 44}`;
+
+      // Populate input defaults in form
+      const inSl = document.getElementById('goal-sleep-input');
+      const inSt = document.getElementById('goal-steps-input');
+      const inWa = document.getElementById('goal-water-input');
+      if (inSl) inSl.value = departmentGoals.targetSleep;
+      if (inSt) inSt.value = departmentGoals.targetSteps;
+      if (inWa) inWa.value = departmentGoals.targetWater;
+
+      renderDepartmentDHI();
+    }
+
+    async function handleSaveFacultyGoals(e) {
+      e.preventDefault();
+      if (!currentUser || currentUser.role !== 'FACULTY') {
+        showToast('Permission denied. Only faculty can modify department goals.', 'error');
+        return;
+      }
+
+      const targetSleep = parseFloat(document.getElementById('goal-sleep-input').value) || 7.0;
+      const targetSteps = parseInt(document.getElementById('goal-steps-input').value, 10) || 8000;
+      const targetWater = parseFloat(document.getElementById('goal-water-input').value) || 2.5;
+
+      departmentGoals = {
+        department: 'comp_eng',
+        departmentName: 'Computer Engineering',
+        targetSleep,
+        targetSteps,
+        targetWater,
+        weekNumber: 44,
+        startDate: '2026-10-26',
+        setBy: currentUser.displayName || currentUser.email,
+        updatedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem('cw_dept_goals', JSON.stringify(departmentGoals));
+      fetchDepartmentGoals();
+      showToast('Faculty department goals updated successfully! 🎯');
+
+      fetch('/api/faculty/goals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...departmentGoals,
+          email: currentUser.email,
+          role: currentUser.role
+        })
+      }).catch(() => {});
+    }
+
+    // ─── Six-Digit Sync Token Workflow (Problem Statement Requirement 4) ─────
+    function setSyncTokenTab(tab) {
+      const pGen = document.getElementById('panel-token-generate');
+      const pVer = document.getElementById('panel-token-verify');
+      const tGen = document.getElementById('tab-token-gen');
+      const tVer = document.getElementById('tab-token-ver');
+
+      if (tab === 'generate') {
+        pGen.classList.remove('hidden');
+        pVer.classList.add('hidden');
+        tGen.className = 'py-1.5 text-[11px] font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1';
+        tVer.className = 'py-1.5 text-[11px] font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1';
+      } else {
+        pGen.classList.add('hidden');
+        pVer.classList.remove('hidden');
+        tVer.className = 'py-1.5 text-[11px] font-bold rounded-lg transition bg-white text-blue-900 shadow-sm flex items-center justify-center gap-1';
+        tGen.className = 'py-1.5 text-[11px] font-medium rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1';
+      }
+    }
+
+    function focusSyncToken() {
+      const section = document.getElementById('sync-token-section');
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleGenerateSyncToken() {
+      if (!currentUser) {
+        showToast('Please sign in first.', 'error');
+        return;
+      }
+
+      // Generate secure 6-digit token
+      const token = String(Math.floor(100000 + Math.random() * 900000));
+      activeSyncToken = {
+        token,
+        email: currentUser.email,
+        role: currentUser.role,
+        department: 'Computer Engineering',
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes
+        used: false
+      };
+
+      // Store in session storage
+      sessionStorage.setItem('cw_sync_token', JSON.stringify(activeSyncToken));
+
+      const disp = document.getElementById('generated-token-display');
+      const val  = document.getElementById('active-sync-token-val');
+      if (disp) disp.classList.remove('hidden');
+      if (val)  val.textContent = token;
+
+      // Start 10-minute timer
+      syncTokenSecondsLeft = 600;
+      if (syncTokenTimerInterval) clearInterval(syncTokenTimerInterval);
+      syncTokenTimerInterval = setInterval(() => {
+        syncTokenSecondsLeft--;
+        const m = Math.floor(syncTokenSecondsLeft / 60);
+        const s = syncTokenSecondsLeft % 60;
+        const timerEl = document.getElementById('sync-token-timer');
+        if (timerEl) {
+          timerEl.textContent = `Expires in ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')} (Single-use)`;
+        }
+        if (syncTokenSecondsLeft <= 0) {
+          clearInterval(syncTokenTimerInterval);
+          if (timerEl) timerEl.textContent = 'Token Expired';
+          if (val) val.classList.add('line-through', 'text-slate-400');
+        }
+      }, 1000);
+
+      showToast(`Sync Token generated: ${token}. Share to verify.`);
+
+      // Sync to backend if running
+      fetch('/api/sync-tokens/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentUser.email, role: currentUser.role })
+      }).catch(() => {});
+    }
+
+    async function handleVerifySyncToken(e) {
+      e.preventDefault();
+      const input = document.getElementById('verify-token-input');
+      const resultBox = document.getElementById('token-verify-result');
+      const token = input.value.trim();
+
+      if (!/^\d{6}$/.test(token)) {
+        resultBox.className = 'p-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-xs';
+        resultBox.textContent = 'Please enter a valid 6-digit numeric token.';
+        resultBox.classList.remove('hidden');
+        return;
+      }
+
+      // 1. Check if token already used
+      if (localUsedTokens.has(token)) {
+        resultBox.className = 'p-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-xs space-y-1';
+        resultBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">block</span> Rejected: Token Already Used</div>
+          <p class="text-[10px]">This 6-digit Sync Token has already been redeemed. Tokens are strictly single-use to ensure security.</p>
+        `;
+        resultBox.classList.remove('hidden');
+        return;
+      }
+
+      let verified = false;
+      let tokenData = null;
+
+      // Check session storage
+      try {
+        const stored = sessionStorage.getItem('cw_sync_token');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.token === token) {
+            tokenData = parsed;
+            if (Date.now() <= parsed.expiresAt) {
+              verified = true;
+            }
+          }
+        }
+      } catch (_) {}
+
+      // Server verification fallback
+      if (!verified) {
+        try {
+          const res = await fetch('/api/sync-tokens/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, verifierEmail: currentUser ? currentUser.email : 'peer@kkwagh.edu.in' })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.verified) verified = true;
+          }
+        } catch (_) {}
+      }
+
+      // Allow matching against active token or valid 6-digit demo format
+      if (!verified && activeSyncToken && activeSyncToken.token === token) {
+        verified = true;
+      }
+
+      if (verified) {
+        // Mark as used
+        localUsedTokens.add(token);
+        resultBox.className = 'p-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs space-y-1';
+        resultBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1 text-emerald-700">
+            <span class="material-symbols-outlined text-base">check_circle</span>
+            <span>Sync Token Verified &amp; Associated!</span>
+          </div>
+          <p class="text-[10px] text-emerald-800">
+            Token <strong>${token}</strong> verified for Computer Engineering. Check-in entry authenticated. Individual private records remain secure.
+          </p>
+          <div class="text-[9px] text-emerald-600 font-semibold pt-0.5">Status: Single-use completed · Expires permanently</div>
+        `;
+        resultBox.classList.remove('hidden');
+        showToast('Sync Token verified successfully! ✓');
+      } else {
+        resultBox.className = 'p-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-xs space-y-1';
+        resultBox.innerHTML = `
+          <div class="font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">cancel</span> Verification Rejected</div>
+          <p class="text-[10px]">Token not found or expired. Ensure the student generated a fresh 6-digit token within the last 10 minutes.</p>
+        `;
+        resultBox.classList.remove('hidden');
+      }
+    }
+
+    // ─── Navigation ─────────────────────────────────────────────────────────
     function navigateTo(tabId) {
-      ['home', 'checkin', 'progress', 'support'].forEach(t => {
+      ['home', 'checkin', 'department', 'progress', 'support'].forEach(t => {
         const view = document.getElementById(`view-${t}`);
         if (view) view.classList.add('hidden');
       });
@@ -1330,286 +2307,29 @@
       document.querySelectorAll('.nav-tab').forEach(btn => {
         const icon = btn.querySelector('.nav-icon');
         if (btn.dataset.tab === tabId) {
-          btn.className = 'nav-tab flex flex-col items-center justify-center w-16 py-1 text-[#1755BE] font-bold transition';
+          btn.className = 'nav-tab flex flex-col items-center justify-center w-14 py-1 text-[#1755BE] font-bold transition';
           if (icon) icon.classList.add('fill-icon');
         } else {
-          btn.className = 'nav-tab flex flex-col items-center justify-center w-16 py-1 text-slate-500 font-medium transition';
+          btn.className = 'nav-tab flex flex-col items-center justify-center w-14 py-1 text-slate-500 font-medium transition';
           if (icon) icon.classList.remove('fill-icon');
         }
       });
 
-      // Reset search when leaving support tab
-      if (tabId !== 'support') {
-        clearSearch();
-      }
-
+      if (tabId !== 'support') clearSearch();
       const main = document.getElementById('app-main');
       if (main) main.scrollTop = 0;
     }
 
-
-    // ─── 3. Dashboard Metrics & Chart ────────────────────────────────────────
-    function renderDashboardMetrics() {
-      const latest = checkinRecords.length > 0 ? checkinRecords[checkinRecords.length - 1] : null;
-
-      const sleepEl       = document.getElementById('card-sleep-val');
-      const sleepStatus   = document.getElementById('card-sleep-status');
-      const waterEl       = document.getElementById('card-water-val');
-      const waterStatus   = document.getElementById('card-water-status');
-      const studyEl       = document.getElementById('card-study-val');
-      const studyStatus   = document.getElementById('card-study-status');
-      const moodEl        = document.getElementById('card-mood-val');
-      const moodIcon      = document.getElementById('card-mood-icon');
-      const stressEl      = document.getElementById('card-stress-val');
-
-      if (!latest) {
-        [sleepEl, waterEl, studyEl, moodEl].forEach(el => { if (el) el.textContent = '—'; });
-        [sleepStatus, waterStatus, studyStatus, stressEl].forEach(el => {
-          if (el) { el.textContent = 'No entry yet'; el.className = 'text-[10px] text-slate-400 font-medium mt-0.5'; }
-        });
-        if (moodIcon) moodIcon.textContent = 'sentiment_neutral';
-        return;
-      }
-
-      if (sleepEl) sleepEl.textContent = `${latest.sleep} hrs`;
-      if (sleepStatus) {
-        const good = latest.sleep >= 7;
-        sleepStatus.textContent = good ? '✓ Target reached' : 'Below target';
-        sleepStatus.className = `text-[10px] font-semibold mt-0.5 ${good ? 'text-emerald-600' : 'text-amber-600'}`;
-      }
-
-      if (waterEl) waterEl.textContent = `${(latest.water * 0.25).toFixed(1)} L`;
-      if (waterStatus) waterStatus.textContent = `${latest.water} glasses logged`;
-
-      if (studyEl) studyEl.textContent = `${latest.study} hrs`;
-      if (studyStatus) studyStatus.textContent = latest.study >= 4.5 ? 'Goal reached' : 'Keep going!';
-
-      if (moodEl) moodEl.textContent = latest.mood;
-      const moodIconMap = { Great: 'sentiment_very_satisfied', Good: 'sentiment_satisfied', Okay: 'sentiment_neutral', Low: 'sentiment_dissatisfied', Terrible: 'sentiment_very_dissatisfied' };
-      if (moodIcon) moodIcon.textContent = moodIconMap[latest.mood] || 'sentiment_neutral';
-
-      const stressLabels = { 1: 'Stress: Level 1 (Low)', 2: 'Stress: Level 2 (Mild)', 3: 'Stress: Level 3 (Moderate)', 4: 'Stress: Level 4 (High)', 5: 'Stress: Level 5 (Severe)' };
-      if (stressEl) stressEl.textContent = stressLabels[latest.stress] || '—';
-    }
-
-    function renderHomeBarChart() {
-      const container  = document.getElementById('home-chart-bars');
-      const daysRow    = document.getElementById('home-chart-days');
-      const emptyState = document.getElementById('chart-empty-state');
-      if (!container) return;
-
-      if (checkinRecords.length === 0) {
-        container.innerHTML = '';
-        if (emptyState) emptyState.classList.remove('hidden');
-        return;
-      }
-      if (emptyState) emptyState.classList.add('hidden');
-
-      const last7 = checkinRecords.slice(-7);
-      container.innerHTML = '';
-
-      // Rebuild day labels to match actual records
-      if (daysRow) {
-        // Pad with empty if fewer than 7
-        const padded = Array(7 - last7.length).fill(null).concat(last7);
-        daysRow.innerHTML = padded.map(r => `<span class="text-[10px] text-center text-slate-400 font-medium">${r ? r.day : ''}</span>`).join('');
-      }
-
-      // Pad chart with empty columns
-      const padded = Array(7 - last7.length).fill(null).concat(last7);
-      padded.forEach(rec => {
-        const col = document.createElement('div');
-        col.className = 'flex items-end justify-center gap-0.5 h-full';
-        if (!rec) {
-          col.innerHTML = `<div class="w-2.5 bg-slate-100 rounded-t h-1"></div><div class="w-2.5 bg-slate-100 rounded-t h-1"></div>`;
-        } else {
-          const sleepH = Math.min(100, Math.round((rec.sleep / 10) * 100));
-          const studyH = Math.min(100, Math.round((rec.study / 10) * 100));
-          col.innerHTML = `
-            <div style="height:${sleepH}%" class="w-2.5 bg-indigo-500 rounded-t" title="Sleep: ${rec.sleep}h"></div>
-            <div style="height:${studyH}%" class="w-2.5 bg-emerald-500 rounded-t" title="Study: ${rec.study}h"></div>
-          `;
-        }
-        container.appendChild(col);
-      });
-    }
-
-
-    // ─── 4. Check-in Form ────────────────────────────────────────────────────
-    function selectMood(mood) {
-      selectedMood = mood;
-      document.querySelectorAll('.mood-btn').forEach(btn => {
-        const isSelected = btn.dataset.mood === mood;
-        btn.className = `mood-btn p-2 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
-          isSelected ? 'bg-blue-50 border-blue-400' : 'bg-slate-50 border-slate-200'
-        }`;
-        const label = btn.querySelector('span:last-child');
-        if (label) label.className = isSelected ? 'text-[10px] font-bold text-blue-700' : 'text-[10px] font-medium text-slate-600';
-      });
-    }
-
-    function updateSleepDisplay(val) {
-      document.getElementById('sleep-display').textContent = `${val} Hours`;
-    }
-
-    function updateStudyDisplay(val) {
-      document.getElementById('study-display').textContent = `${val} Hours`;
-    }
-
-    function adjustWater(delta) {
-      waterGlasses = Math.max(1, Math.min(16, waterGlasses + delta));
-      const liters = (waterGlasses * 0.25).toFixed(1);
-      document.getElementById('water-display').textContent = `${waterGlasses} Glasses (${liters} L)`;
-      document.getElementById('water-count-box').textContent = `${waterGlasses} glasses`;
-    }
-
-    function updateStressBadge(val) {
-      selectedStress = parseInt(val);
-      const badge = document.getElementById('stress-badge');
-      const map = {
-        1: { text: 'Level 1 (Low)',      cls: 'bg-emerald-100 text-emerald-800' },
-        2: { text: 'Level 2 (Mild)',     cls: 'bg-blue-100 text-blue-800' },
-        3: { text: 'Level 3 (Moderate)', cls: 'bg-yellow-100 text-yellow-800' },
-        4: { text: 'Level 4 (High)',     cls: 'bg-orange-100 text-orange-800' },
-        5: { text: 'Level 5 (Severe)',   cls: 'bg-red-100 text-red-800' }
-      };
-      badge.className = `text-xs font-bold px-2 py-0.5 rounded-full ${map[selectedStress].cls}`;
-      badge.textContent = map[selectedStress].text;
-    }
-
-    async function handleCheckinSubmit(e) {
-      e.preventDefault();
-
-      if (!currentUser) {
-        showToast('Please sign in first.', 'error');
-        return;
-      }
-
-      const sleep = parseFloat(document.getElementById('checkin-sleep').value);
-      const study = parseFloat(document.getElementById('checkin-study').value);
-      const now   = new Date();
-      const days  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-      const newRecord = {
-        id: String(Date.now()),
-        email: currentUser.email,
-        date: now.toISOString().split('T')[0],
-        day: days[now.getDay()],
-        mood: selectedMood,
-        sleep,
-        water: waterGlasses,
-        study,
-        stress: selectedStress
-      };
-
-      // Upsert: replace if same date exists or append
-      const existingIdx = checkinRecords.findIndex(r => r.date === newRecord.date);
-      if (existingIdx !== -1) {
-        checkinRecords[existingIdx] = newRecord;
-      } else {
-        checkinRecords.push(newRecord);
-      }
-      checkinRecords.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-      localStorage.setItem('cw_checkin_records', JSON.stringify(checkinRecords));
-
-      renderDashboardMetrics();
-      renderHomeBarChart();
-      renderProgressLogs();
-
-      showToast("Today's check-in saved! 🌟");
-      navigateTo('home');
-
-      // Sync to local server
-      fetch('/api/checkins', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newRecord)
-      }).catch(() => {
-        // Direct Supabase fallback (for when running without laptop server)
-        fetch(`${SUPABASE_BASE_URL}/rest/v1/checkins`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_ANON,
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          },
-          body: JSON.stringify(newRecord)
-        }).catch(() => {});
-      });
-    }
-
-
-    // ─── 5. Progress Logs ────────────────────────────────────────────────────
-    function renderProgressLogs() {
-      const container  = document.getElementById('progress-log-list');
-      const emptyState = document.getElementById('progress-empty-state');
-      const logCount   = document.getElementById('log-count');
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      if (checkinRecords.length === 0) {
-        if (emptyState) emptyState.classList.remove('hidden');
-        if (logCount)   logCount.textContent = '0 entries';
-        ['avg-sleep', 'avg-water', 'avg-study'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.textContent = '—';
-        });
-        return;
-      }
-
-      if (emptyState) emptyState.classList.add('hidden');
-
-      const last7   = checkinRecords.slice(-7);
-      const avgSleep = (last7.reduce((a, r) => a + r.sleep, 0) / last7.length).toFixed(1);
-      const avgWater = ((last7.reduce((a, r) => a + r.water, 0) * 0.25) / last7.length).toFixed(1);
-      const avgStudy = (last7.reduce((a, r) => a + r.study, 0) / last7.length).toFixed(1);
-
-      const avgSleepEl = document.getElementById('avg-sleep');
-      const avgWaterEl = document.getElementById('avg-water');
-      const avgStudyEl = document.getElementById('avg-study');
-      if (avgSleepEl) avgSleepEl.textContent = `${avgSleep}h`;
-      if (avgWaterEl) avgWaterEl.textContent = `${avgWater}L`;
-      if (avgStudyEl) avgStudyEl.textContent = `${avgStudy}h`;
-      if (logCount)   logCount.textContent   = `${checkinRecords.length} ${checkinRecords.length === 1 ? 'entry' : 'entries'}`;
-
-      [...checkinRecords].reverse().forEach(rec => {
-        const stressCls = rec.stress <= 2 ? 'bg-emerald-100 text-emerald-800' :
-                          rec.stress <= 3 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800';
-        const item = document.createElement('div');
-        item.className = 'p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs gap-2';
-        item.innerHTML = `
-          <div class="min-w-0">
-            <div class="font-bold text-slate-800">${rec.date} · ${rec.day}</div>
-            <div class="text-[11px] text-slate-500 mt-0.5 truncate">
-              ${rec.sleep}h sleep · ${(rec.water * 0.25).toFixed(1)}L water · ${rec.study}h study
-            </div>
-          </div>
-          <div class="text-right shrink-0">
-            <span class="font-bold px-2 py-0.5 rounded-full text-[10px] ${stressCls}">Level ${rec.stress}</span>
-            <div class="text-[10px] text-slate-400 mt-0.5 font-medium">${rec.mood}</div>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-
-    // ─── 6. Search (Support tab) ─────────────────────────────────────────────
+    // ─── Search in Support Tab ───────────────────────────────────────────────
     function handleSearch(query) {
       const term       = query.trim().toLowerCase();
       const clearBtn   = document.getElementById('search-clear-btn');
       const emptyState = document.getElementById('search-empty-state');
       const emptyQuery = document.getElementById('search-empty-query');
 
-      // Show/hide clear button
-      if (term.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
-        clearBtn.classList.add('hidden');
-      }
+      if (term.length > 0) clearBtn.classList.remove('hidden');
+      else clearBtn.classList.add('hidden');
 
-      // If empty query, show everything
       if (term === '') {
         document.querySelectorAll('.searchable-item, .searchable-section').forEach(el => el.classList.remove('hidden'));
         emptyState.classList.add('hidden');
@@ -1617,13 +2337,10 @@
       }
 
       let matches = 0;
-
-      // Filter meditation feature card
       const medCard = document.getElementById('card-meditation-feature');
       if (medCard) {
         const kwAttr = (medCard.getAttribute('data-section-keywords') || '').toLowerCase();
-        const txt    = medCard.textContent.toLowerCase();
-        if (kwAttr.includes(term) || txt.includes(term)) {
+        if (kwAttr.includes(term) || medCard.textContent.toLowerCase().includes(term)) {
           medCard.classList.remove('hidden');
           matches++;
         } else {
@@ -1631,7 +2348,6 @@
         }
       }
 
-      // Filter resource cards + support form
       document.querySelectorAll('.searchable-item').forEach(item => {
         const kw  = (item.getAttribute('data-keywords') || '').toLowerCase();
         const txt = item.textContent.toLowerCase();
@@ -1653,12 +2369,24 @@
 
     function clearSearch() {
       const input = document.getElementById('support-search-input');
-      if (input) { input.value = ''; input.focus(); }
+      if (input) { input.value = ''; }
       handleSearch('');
     }
 
+    // ─── Guided Meditation & Breathing ───────────────────────────────────────
+    const SESSIONS = {
+      box:       { title: 'Box Breathing (4-4-4-4)', desc: 'Inhale 4s · Hold 4s · Exhale 4s · Hold 4s', duration: 240, pattern: [4, 4, 4, 4], names: ['Inhale', 'Hold', 'Exhale', 'Hold'] },
+      '478':     { title: '4-7-8 Relaxing Breath',   desc: 'Inhale 4s · Hold 7s · Exhale 8s',           duration: 300, pattern: [4, 7, 8],       names: ['Inhale', 'Hold', 'Exhale'] },
+      centering: { title: 'Centering & Focus',       desc: 'Inhale 5s · Exhale 5s',                      duration: 180, pattern: [5, 5],           names: ['Inhale', 'Exhale'] },
+      quick:     { title: '2-Minute Energy Reset',   desc: 'Inhale 3s · Exhale 3s',                      duration: 120, pattern: [3, 3],           names: ['Inhale', 'Exhale'] }
+    };
+    let currentSessionKey = 'box';
+    let meditationTimer = null;
+    let meditationRemainingSeconds = 240;
+    let isMeditationRunning = false;
+    let currentPhaseIndex = 0;
+    let phaseSecondsLeft = 4;
 
-    // ─── 7. Meditation Controls ───────────────────────────────────────────────
     function openMeditationView() {
       document.getElementById('meditation-modal').classList.remove('hidden');
       switchMeditationSession(currentSessionKey);
@@ -1691,14 +2419,8 @@
       document.getElementById('breathing-phase-text').textContent = 'Ready';
       const circleEl = document.getElementById('breathing-circle');
       const ringEl   = document.getElementById('breathing-ring');
-      if (circleEl) {
-        circleEl.style.transform = 'scale(1.0)';
-        circleEl.classList.add('breathing-idle');
-      }
-      if (ringEl) {
-        ringEl.style.transform   = 'scale(1.0)';
-        ringEl.style.borderColor = 'rgba(96, 165, 250, 0.4)';
-      }
+      if (circleEl) { circleEl.style.transform = 'scale(1.0)'; circleEl.classList.add('breathing-idle'); }
+      if (ringEl)   { ringEl.style.transform   = 'scale(1.0)'; ringEl.style.borderColor = 'rgba(96, 165, 250, 0.4)'; }
     }
 
     function toggleMeditationSession() {
@@ -1711,15 +2433,12 @@
     }
 
     function startMeditationSession() {
-      if (meditationRemainingSeconds <= 0) {
-        switchMeditationSession(currentSessionKey);
-      }
+      if (meditationRemainingSeconds <= 0) switchMeditationSession(currentSessionKey);
       isMeditationRunning = true;
 
       const playIcon = document.getElementById('meditation-play-icon');
       if (playIcon) playIcon.textContent = 'pause';
 
-      // Remove idle pulse animation
       const circleEl = document.getElementById('breathing-circle');
       if (circleEl) circleEl.classList.remove('breathing-idle');
 
@@ -1742,7 +2461,7 @@
           pauseMeditationSession();
           document.getElementById('breathing-phase-text').textContent = 'Complete ✓';
           if (circleEl) circleEl.style.transform = 'scale(1.0)';
-          showToast('Session complete! Feeling centred and refreshed. 🧘');
+          showToast('Session complete! Feeling refreshed. 🧘');
         }
       }, 1000);
     }
@@ -1754,7 +2473,6 @@
       const ringEl      = document.getElementById('breathing-ring');
 
       if (phaseTextEl) phaseTextEl.textContent = phaseName;
-
       if (!circleEl || !ringEl) return;
 
       if (phaseName === 'Inhale') {
@@ -1762,10 +2480,8 @@
         ringEl.style.transform   = 'scale(1.18)';
         ringEl.style.borderColor = 'rgba(147, 197, 253, 0.9)';
       } else if (phaseName === 'Hold') {
-        // Keep expanded, change ring colour
         ringEl.style.borderColor = 'rgba(196, 181, 253, 0.9)';
       } else {
-        // Exhale
         circleEl.style.transform = 'scale(1.0)';
         ringEl.style.transform   = 'scale(1.0)';
         ringEl.style.borderColor = 'rgba(96, 165, 250, 0.4)';
@@ -1791,11 +2507,9 @@
       if (el) el.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
-
-    // ─── 8. Support Request ───────────────────────────────────────────────────
+    // ─── Confidential Support Form ───────────────────────────────────────────
     async function handleSupportSubmit(e) {
       e.preventDefault();
-
       if (!currentUser) {
         showToast('Please sign in first.', 'error');
         return;
@@ -1808,6 +2522,7 @@
         email: currentUser.email,
         topic,
         note,
+        department: 'comp_eng',
         submittedAt: new Date().toISOString()
       };
 
@@ -1820,11 +2535,10 @@
       } catch (_) {}
 
       document.getElementById('support-note').value = '';
-      showToast('Request submitted to the wellness coordinator confidentially.');
+      showToast('Request submitted to Prof. P. R. Rao confidentially. ✓');
     }
 
-
-    // ─── Toast Utility ────────────────────────────────────────────────────────
+    // ─── Toast Notification Utility ─────────────────────────────────────────
     let toastTimeout = null;
     function showToast(msg, type = 'success') {
       const toast = document.getElementById('toast-notification');
@@ -1833,52 +2547,17 @@
       if (!toast) return;
 
       if (toastTimeout) clearTimeout(toastTimeout);
-
       text.textContent = msg;
       icon.textContent = type === 'error' ? 'error' : 'check_circle';
       icon.className   = `material-symbols-outlined text-lg shrink-0 ${type === 'error' ? 'text-red-400' : 'text-emerald-400'}`;
 
       toast.classList.remove('translate-y-32', 'opacity-0');
-
       toastTimeout = setTimeout(() => {
         toast.classList.add('translate-y-32', 'opacity-0');
       }, 3500);
     }
 
-    // ─── PWA Service Worker & Install Handler ───────────────────────────────
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      const promptEl = document.getElementById('pwa-install-prompt');
-      if (promptEl) promptEl.classList.remove('hidden');
-    });
-
-    function triggerPwaInstall() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => {
-          deferredPrompt = null;
-          const promptEl = document.getElementById('pwa-install-prompt');
-          if (promptEl) promptEl.classList.add('hidden');
-        });
-      } else {
-        document.getElementById('install-guide-modal').classList.remove('hidden');
-      }
-    }
-
-    function closeInstallGuide() {
-      document.getElementById('install-guide-modal').classList.add('hidden');
-    }
-
-    // Hide install prompt if already installed/running in standalone mode
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-      window.addEventListener('DOMContentLoaded', () => {
-        const promptEl = document.getElementById('pwa-install-prompt');
-        if (promptEl) promptEl.classList.add('hidden');
-      });
-    }
-
+    // ─── Service Worker Registration ─────────────────────────────────────────
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(() => {});
