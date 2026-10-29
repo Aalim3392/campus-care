@@ -614,7 +614,7 @@ const server = http.createServer(async (req, res) => {
         },
         participation: {
           participatingUsersCount: uniqueUsers.length,
-          sampleUsersTotal: 5,
+          sampleUsersTotal: 4,
           totalValidRecords,
           users: uniqueUsers
         },
